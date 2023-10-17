@@ -12,3 +12,25 @@
 		linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
 		var(--dot-color);
 }
+
+.card-polygon-1 {
+	clip-path: polygon(
+		var(--edge-size) 0%,
+		100% 0,
+		100% calc(100% - var(--edge-size)),
+		calc(100% - var(--edge-size)) 100%,
+		0 100%,
+		0% var(--edge-size)
+	);
+}
+
+.card-polygon-2 {
+	clip-path: polygon(
+		calc(100% - var(--edge-size)) 0%, 
+		100% var(--edge-size), 
+		100% 100%, 
+		var(--edge-size) 100%,
+		0% calc(100% - var(--edge-size)),
+		0 0
+	);
+}
