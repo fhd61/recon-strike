@@ -1,8 +1,11 @@
 <script lang="ts">
-	export let title: string;
+    export let title: string;
+    export let fitAll: boolean = false;
 </script>
 
-<div class='bg-gray-100/5 w-fit h-fit backdrop-blur-sm pb-2 text-white'>
-	<h1 class="bg-gray-100/5 border-b-2 border-orange-600/70 pl-2 mb-2 font-bold">{title}</h1>
-	<slot />
+<div class={`bg-black mb-2 ${fitAll ? "h-full" : ""} polygonL`}>
+    <h2 class="capitalize bg-[#f86b10]/80 px-2 mb-2 font-semibold">{title}</h2>
+    <div class="px-2 pb-2">
+        <slot name="content" />
+    </div>
 </div>
