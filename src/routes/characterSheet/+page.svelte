@@ -1,14 +1,16 @@
-<script>
+<script lang="ts">
     import * as Collapsible from "$lib/components/ui/collapsible";
-    import { Toggle } from "$lib/components/ui/toggle";
     import Icon from "@iconify/svelte";
     import Atributte from "$lib/components/atributte.svelte";
     import Panel from "$lib/components/panel.svelte";
     import HpBar from "$lib/components/hpBar.svelte";
     import Stat from "$lib/components/stat.svelte";
+
+    let inCombatMode: Boolean;
 </script>
 
-<div class="flex flex-row max-md:flex-col text-white">
+<div class="w-full">a</div>
+<div class="flex flex-row max-md:flex-col h-96 text-white">
     <!-- Left Panel -->
     <div class="w-1/3 h-screen px-2 py-1">
         <Panel title="Rolar Dados">
@@ -51,7 +53,7 @@
                     </Stat>
                 </div>
                 <Collapsible.Root>
-                    <Collapsible.Trigger class="flex justify-between">
+                    <Collapsible.Trigger class="flex justify-between mt-2">
                         <p class="mr-48">Modificadores</p>
                         <Icon icon="bx:up-arrow" rotate={2} />
                     </Collapsible.Trigger>
@@ -66,21 +68,49 @@
             <div slot="content">
                 <p>Skill 1</p>
                 <p>Skill 2</p>
+                <Collapsible.Root>
+                    <Collapsible.Trigger class="flex justify-between mt-2">
+                        <p class="mr-48">Modificadores</p>
+                        <Icon icon="bx:up-arrow" rotate={2} />
+                    </Collapsible.Trigger>
+                    <Collapsible.Content>a</Collapsible.Content>
+                </Collapsible.Root>
             </div>
         </Panel>
         <Panel title="Combate">
             <div slot="content">
-                <div class="flex justify-center items-center">
-                    <Toggle variant="outline">Modo de combate</Toggle>
-                    <p class="flex flex-col ml-8">
-                        Turnos<span class="m-auto">1</span>
+                <div class="flex justify-between items-center">
+                    <button
+                        on:click={() => (inCombatMode = !inCombatMode)}
+                        class={inCombatMode
+                            ? "bg-[#f86b10]/80 w-40 h-9 polygonR cursor-pointer font-semibold transition-all"
+                            : "bg-[#f86b10]/30 w-40 h-9 polygonL cursor-pointer font-light transition-all"}
+                        >Comba Mode {inCombatMode ? "ON" : "OFF"}</button
+                    >
+                    <p class="flex flex-col ml-8 capitalize">
+                        Turns
+                        <span class="m-auto">1</span>
                     </p>
                 </div>
-            </div>
-        </Panel>
-        <Panel title="Histórico de dados">
-            <div slot="content">
-                <p>roladas</p>
+                <div class="flex justify-between my-1">
+                    <button
+                        disabled
+                        class="bg-[#f86b10]/30 p-2 text-sm polygonR w-28 h-8 active:bg-[#f86b10]/80 disabled:bg-[#f86b10]/20 disabled:text-gray-400 transition-all"
+                        >End Turn</button
+                    >
+                    <button
+                        disabled
+                        class="bg-[#f86b10]/30 p-2 text-sm polygonL w-28 h-8 active:bg-[#f86b10]/80 disabled:bg-[#f86b10]/20 disabled:text-gray-400 transition-all"
+                        >Start Turn</button
+                    >
+                </div>
+                <Collapsible.Root>
+                    <Collapsible.Trigger class="flex justify-between mt-2">
+                        <p class="mr-48">Modificadores</p>
+                        <Icon icon="bx:up-arrow" rotate={2} />
+                    </Collapsible.Trigger>
+                    <Collapsible.Content>Cover</Collapsible.Content>
+                </Collapsible.Root>
             </div>
         </Panel>
     </div>

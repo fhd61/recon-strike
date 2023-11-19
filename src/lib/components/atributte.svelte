@@ -6,8 +6,8 @@
 
 <div class="flex flex-col justify-center items-center text-center w-20">
     <label for={id} class="flex flex-col mb-1">
-        <span class="capitalize">{title}</span>
-        <span class="uppercase text-xs font-bold opacity-40">{shortName}</span>
+        <p class="capitalize text-xs">{title}</p>
+        <span class="uppercase text-xs font-bold italic opacity-40">{shortName}</span>
     </label>
 
     <input
