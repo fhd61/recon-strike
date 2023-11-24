@@ -1,18 +1,62 @@
 <script lang="ts">
     import * as Collapsible from "$lib/components/ui/collapsible";
     import Icon from "@iconify/svelte";
-    import Atributte from "$lib/components/atributte.svelte";
+    import Atribute from "$lib/components/atributte.svelte";
     import Panel from "$lib/components/panel.svelte";
     import HpBar from "$lib/components/hpBar.svelte";
     import Stat from "$lib/components/stat.svelte";
+    import type { IHp } from "$lib/interface/IHp";
+    import type { IAttribute } from "$lib/interface/IBaseAttribute";
 
     let inCombatMode: Boolean;
+    let hp: IHp = { currentValue: 5, maxValue: 10, bonus: {} };
+    let atributes: IAttribute[] = [
+        {
+            id: "1",
+            name: "Strength",
+            shortName: "str",
+            value: 10,
+            bonus: {
+                modifier1: 2,
+                modifier2: 1,
+            },
+        },
+        {
+            id: "2",
+            name: "Dexterity",
+            shortName: "dex",
+            value: 12,
+            bonus: {
+                modifier3: 3,
+                modifier4: 1,
+            },
+        },
+        {
+            id: "3",
+            name: "Inelegance",
+            shortName: "str",
+            value: 10,
+            bonus: {
+                modifier1: 2,
+                modifier2: 1,
+            },
+        },
+        {
+            id: "4",
+            name: "Vigor",
+            shortName: "vig",
+            value: 12,
+            bonus: {
+                modifier3: 3,
+                modifier4: 1,
+            },
+        },
+    ];
 </script>
 
-<div class="w-full">a</div>
-<div class="flex flex-row max-md:flex-col h-96 text-white">
+<div class="flex flex-row max-md:flex-col text-white">
     <!-- Left Panel -->
-    <div class="w-1/3 h-screen px-2 py-1">
+    <div class="w-1/3 h-[95vh] px-2 py-1">
         <Panel title="Rolar Dados">
             <div slot="content" class="flex">
                 <button
@@ -28,17 +72,17 @@
             </div>
         </Panel>
         <Panel title="Atributos">
-            <div slot="content" class="flex">
-                <Atributte title="Intelecto" shortName="int" id="int" />
-                <Atributte title="Agilidade" shortName="agi" id="agi" />
-                <Atributte title="Força" shortName="for" id="for" />
-                <Atributte title="Vigor" shortName="vig" id="vig" />
+            <div slot="content" class="flex items-center justify-around divide-[#f86b10]/20">
+                <Atribute data={atributes[0]}/>
+                <Atribute data={atributes[1]}/>
+                <Atribute data={atributes[2]}/>
+                <Atribute data={atributes[3]}/>
             </div>
         </Panel>
         <Panel title="Stats">
             <div slot="content">
                 <div class="flex justify-around mb-2">
-                    <HpBar currentValue={30} maxValue={100} />
+                    <HpBar data={hp} />
                 </div>
                 <div class="flex justify-evenly mb-2">
                     <Stat>
@@ -116,7 +160,7 @@
     </div>
 
     <!-- Center Panel -->
-    <div class="w-full h-screen px-2 pt-1 pb-2">
+    <div class="w-full h-[95vh] px-2 pt-1 pb-2">
         <Panel title="Taletos" fitAll={true}>
             <div slot="content" class="h-full">
                 <Collapsible.Root>
@@ -146,7 +190,7 @@
     </div>
 
     <!-- Right Panel -->
-    <div class="w-full h-screen px-2 pt-1 pb-2">
+    <div class="w-full h-[95vh] px-2 pt-1 pb-2">
         <Panel title="Equipamentos" fitAll={true}>
             <div slot="content" class="h-full">
                 <Collapsible.Root>
@@ -174,4 +218,17 @@
             </div>
         </Panel>
     </div>
+</div>
+<div
+    class="w-full h-[4.5vh] bg-black text-white flex items-center justify-between p-2"
+>
+    <button
+        class="bg-[#f86b10]/80 w-32 h-8 polygonR font-semibold transition-all active:bg-[#f86b10]"
+        >Dossier</button
+    >
+    <button
+        class="bg-[#f86b10]/80 w-8 h-8 polygonL font-semibold transition-all active:bg-[#f86b10]"
+    >
+        <Icon class="m-auto" icon="material-symbols:settings" width={24} />
+    </button>
 </div>

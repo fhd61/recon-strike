@@ -7,7 +7,7 @@ import type { IHp } from "../interface/IHp";
 
 export interface ICharacter {
     dossier: IDossier,
-    baseAttribute: {
+    attributes: {
         "agi": IAttribute,
         "int": IAttribute,
         "for": IAttribute,

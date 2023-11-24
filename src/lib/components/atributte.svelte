@@ -1,23 +1,22 @@
 <script lang="ts">
-    export let title: string;
-    export let shortName: string;
-    export let id: string;
+    import type { IAttribute } from "../interface/IBaseAttribute";
+
+    export let data: IAttribute;
+    
 </script>
 
-<div class="flex flex-col justify-center items-center text-center w-20">
-    <label for={id} class="flex flex-col mb-1">
-        <p class="capitalize text-xs">{title}</p>
-        <span class="uppercase text-xs font-bold italic opacity-40">{shortName}</span>
-    </label>
+<div class="flex flex-col items-center justify-center w-[5.5rem]">
+    <p class="capitalize text-xs">{data.name}</p>
+    <p class="uppercase text-xs font-bold italic opacity-40">
+        {data.shortName}
+    </p>
 
     <input
+        bind:value={data.value}
         type="number"
         class="w-10 bg-zinc-900 appearance-none text-center polygonR -translate-x-[0.15rem]"
-        value="1"
         max="16"
         min="0"
-        name={id}
-        {id}
     />
 </div>
 
