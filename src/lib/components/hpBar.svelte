@@ -17,7 +17,6 @@
 
     function Calc() {
         const regexPattern = /^(\d+)\s*([+\-*/])\s*(\d+)$/;
-
         const match = hpInputField.value.match(regexPattern);
 
         if (!match) return;
@@ -26,35 +25,22 @@
         const num1 = parseInt(num1Str, 10);
         const num2 = parseInt(num2Str, 10);
 
-        if (isNaN(num1) || isNaN(num2)) return;
+        if (isNaN(num1) || isNaN(num2) || (operator === "/" && num2 === 0))
+            return;
 
-        // Perform the calculation based on the operator
-        switch (operator) {
-            case "+":
-                data.currentValue = Math.floor(
-                    clamp(num1 + num2, 0, data.maxValue)
-                );
-                break;
-            case "-":
-                data.currentValue = Math.floor(
-                    clamp(num1 - num2, 0, data.maxValue)
-                );
-                break;
-            case "*":
-                data.currentValue = Math.floor(
-                    clamp(num1 * num2, 0, data.maxValue)
-                );
-                break;
-            case "/":
-                if (num2 === 0) break;
+        const operators: { [key: string]: (a: number, b: number) => number } = {
+            "+": (a, b) => a + b,
+            "-": (a, b) => a - b,
+            "*": (a, b) => a * b,
+            "/": (a, b) => (b !== 0 ? a / b : 0),
+        };
 
-                data.currentValue = Math.floor(
-                    clamp(num1 / num2, 0, data.maxValue)
-                );
-        }
+        const result = operators[operator](num1, num2);
+
+        data.currentValue = Math.floor(clamp(result, 0, data.maxValue));
     }
 
-    function HandleKeyDown(event: KeyboardEvent) {
+    function DeSelectInput(event: KeyboardEvent) {
         if (event.key !== "Enter") return;
 
         hpInputField.blur();
@@ -77,7 +63,7 @@
                     bind:this={hpInputField}
                     bind:value={data.currentValue}
                     on:focusout={Calc}
-                    on:keydown={HandleKeyDown}
+                    on:keydown={DeSelectInput}
                     type="text"
                     min="0"
                     class="bg-transparent w-8 m-auto text-right outline-none"

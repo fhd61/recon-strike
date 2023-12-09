@@ -7,51 +7,11 @@
     import Stat from "$lib/components/stat.svelte";
     import type { IHp } from "$lib/interface/IHp";
     import type { IAttribute } from "$lib/interface/IBaseAttribute";
+    import { get } from "svelte/store";
+    import { CharacterSheet as Character } from "$lib/store/character";
 
     let inCombatMode: Boolean;
-    let hp: IHp = { currentValue: 5, maxValue: 10, bonus: {} };
-    let atributes: IAttribute[] = [
-        {
-            id: "1",
-            name: "Strength",
-            shortName: "str",
-            value: 10,
-            bonus: {
-                modifier1: 2,
-                modifier2: 1,
-            },
-        },
-        {
-            id: "2",
-            name: "Dexterity",
-            shortName: "dex",
-            value: 12,
-            bonus: {
-                modifier3: 3,
-                modifier4: 1,
-            },
-        },
-        {
-            id: "3",
-            name: "Inelegance",
-            shortName: "str",
-            value: 10,
-            bonus: {
-                modifier1: 2,
-                modifier2: 1,
-            },
-        },
-        {
-            id: "4",
-            name: "Vigor",
-            shortName: "vig",
-            value: 12,
-            bonus: {
-                modifier3: 3,
-                modifier4: 1,
-            },
-        },
-    ];
+    let dossierModal: HTMLDialogElement;
 </script>
 
 <div class="flex flex-row max-md:flex-col text-white">
@@ -61,6 +21,7 @@
             <div slot="content" class="flex">
                 <button
                     class="bg-zinc-800 w-14 h-8 mr-2 polygonR inline-flex justify-center items-center active:bg-zinc-700"
+                    on:click={() => console.log($Character)}
                 >
                     <Icon icon="fa-solid:dice-d20" width="20" />
                 </button>
@@ -72,23 +33,29 @@
             </div>
         </Panel>
         <Panel title="Atributos">
-            <div slot="content" class="flex items-center justify-around divide-[#f86b10]/20">
-                <Atribute data={atributes[0]}/>
-                <Atribute data={atributes[1]}/>
-                <Atribute data={atributes[2]}/>
-                <Atribute data={atributes[3]}/>
+            <div
+                slot="content"
+                class="flex items-center justify-around divide-[#f86b10]/20"
+            >
+                <Atribute bind:data={$Character.attributes["agi"]} />
+                <Atribute bind:data={$Character.attributes["for"]} />
+                <Atribute bind:data={$Character.attributes["int"]} />
+                <Atribute bind:data={$Character.attributes["vig"]} />
             </div>
         </Panel>
         <Panel title="Stats">
             <div slot="content">
                 <div class="flex justify-around mb-2">
-                    <HpBar data={hp} />
+                    <HpBar bind:data={$Character.attributes["hp"]} />
                 </div>
                 <div class="flex justify-evenly mb-2">
-                    <Stat>
+                    <Stat bind:data={$Character.attributes["speed"]}>
                         <Icon icon="ri:run-fill" width={50} slot="icon" />
                     </Stat>
-                    <Stat inFront={true}>
+                    <Stat
+                        bind:data={$Character.attributes["def"]}
+                        inFront={true}
+                    >
                         <Icon
                             icon="clarity:shield-line"
                             width={50}
@@ -224,7 +191,7 @@
 >
     <button
         class="bg-[#f86b10]/80 w-32 h-8 polygonR font-semibold transition-all active:bg-[#f86b10]"
-        >Dossier</button
+        on:click={() => dossierModal.showModal()}>Dossier</button
     >
     <button
         class="bg-[#f86b10]/80 w-8 h-8 polygonL font-semibold transition-all active:bg-[#f86b10]"
@@ -232,3 +199,53 @@
         <Icon class="m-auto" icon="material-symbols:settings" width={24} />
     </button>
 </div>
+
+<dialog class="bg-zinc-900 text-white p-4" bind:this={dossierModal}>
+    <div class="w-[60rem] h-[45rem] flex justify-evenly">
+        <div class="flex flex-col">
+            <img
+                src="https://images.unsplash.com/photo-1701666469271-fd6c65a1e7d5?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                class="w-80 h-72"
+                alt=""
+            />
+        </div>
+        <form class="flex flex-col">
+            <div class="flex justify-between">
+                <div class="flex flex-col">
+                    <label for="name">Name</label>
+                    <input bind:value={$Character.dossier.name} class="bg-zinc-800" name="name" type="text" />
+                </div>
+                <div class="flex flex-col mx-4">
+                    <label for="callSing">Call Sing</label>
+                    <input bind:value={$Character.dossier.callSign} class="bg-zinc-800" name="callSing" type="text" />
+                </div>
+                <div class="flex flex-col">
+                    <label for="level">Level</label>
+                    <select bind:value={$Character.dossier.level} class="bg-zinc-800 w-16 h-6" name="level">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex flex-col col-span-3 my-4">
+                <label for="bio">Bio</label>
+                <textarea bind:value={$Character.dossier.bio} class="bg-zinc-800" name="notes" cols="30" rows="10"
+                ></textarea>
+            </div>
+            <div class="flex flex-col col-span-3">
+                <label for="notes">Notes</label>
+                <textarea bind:value={$Character.dossier.notes} class="bg-zinc-800" name="notes" cols="30" rows="10"
+                ></textarea>
+            </div>
+        </form>
+    </div>
+</dialog>

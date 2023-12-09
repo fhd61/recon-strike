@@ -1,7 +1,6 @@
-
 export interface IDossier {
     name: string;
-    callSing: string;
+    callSign: string;
     level: number;
     portrait: string;
     bio: string;
