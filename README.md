@@ -1,38 +1,50 @@
-# create-svelte
+## A fazer
+### Sistema de rolar dados
+- [x] Rolar D2, D4, D6, D8, D10, D12, D20 
+- [x] Bonus e modificadores
+- [x] Rodar passando um texto ex: 1d20 + 5 ou 1D6+5+6-2
+- [ ] Mostrar o Resultado
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+### Talentos e Items/Equipamentos
+- [ ] Importa a lista deles do banco de dados 
+- [ ] Implementar os modificadores
+- [ ] Menu para editar os items
 
-## Creating a project
+### Habilidades 
+- [ ] Importa a lista deles do banco de dados 
+- [ ] Implementar os modificadores
+- [ ] Sistema de cooldown 
+- [ ] Menu para editar os items
 
-If you're seeing this, you've probably already done this step. Congrats!
+### Sistema de combate 
+- [ ] Entrar e sair do modo de combate 
+- [ ] Passar ou voltar turnos
+- [ ] Sistema de cover
+- [ ] Buffs e debuffs **(Seria legal)**
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+### Save na nuvem
+- [ ] Login e logout 
+- [ ] Enviar um personagem da nuvem
+- [ ] Baixar e carregar um personagem da nuvem
+- [ ] Poder baixar o json do personagem
+- [ ] Mais de um personagem por conta **(Seria legal)**
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+### Dossier
+- [ ] Importar foto do personagem
+- [ ] Fazer URL da foto
+- [ ] Salvar foto na ficha
 
-## Developing
+### Modo Stream **(Seria legal)**
+- [ ] Pagina com o hud do personagem
+- [ ] Ser acessível sem esta logado com a conta dona do personagem
+- [ ] Mostrar rolagem mais recente
+- [ ] Atualizar em realtime
+---
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Pronto
+### Sistema de rolar dados
+### Talentos e Items/Equipamentos
+### Habilidades 
+### Sistema de combate 
+### Save na nuvem
+### Modo Stream
