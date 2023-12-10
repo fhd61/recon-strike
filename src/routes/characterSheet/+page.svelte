@@ -5,13 +5,26 @@
     import Panel from "$lib/components/panel.svelte";
     import HpBar from "$lib/components/hpBar.svelte";
     import Stat from "$lib/components/stat.svelte";
-    import type { IHp } from "$lib/interface/IHp";
-    import type { IAttribute } from "$lib/interface/IBaseAttribute";
-    import { get } from "svelte/store";
-    import { CharacterSheet as Character } from "$lib/store/character";
+    import {
+        CharacterSheet as Character,
+        type ICharacter,
+    } from "$lib/store/character";
+    import { afterUpdate, onMount } from "svelte";
 
     let inCombatMode: Boolean;
     let dossierModal: HTMLDialogElement;
+
+    onMount(() => {
+        let load: ICharacter = JSON.parse(
+            localStorage.getItem("character") as string,
+        );
+
+        $Character = load;
+    });
+
+    afterUpdate(() => {
+        localStorage.setItem("character", JSON.stringify($Character));
+    });
 </script>
 
 <div class="flex flex-row max-md:flex-col text-white">
@@ -200,7 +213,10 @@
     </button>
 </div>
 
-<dialog class="bg-zinc-900 text-white p-4" bind:this={dossierModal}>
+<dialog
+    class="bg-zinc-900 text-white p-4 backdrop:bg-zinc-950/90 open:transition-all"
+    bind:this={dossierModal}
+>
     <div class="w-[60rem] h-[45rem] flex justify-evenly">
         <div class="flex flex-col">
             <img
@@ -209,43 +225,77 @@
                 alt=""
             />
         </div>
-        <form class="flex flex-col">
-            <div class="flex justify-between">
+        <form class="flex flex-col mx-4">
+            <div class="flex justify-between mx">
                 <div class="flex flex-col">
                     <label for="name">Name</label>
-                    <input bind:value={$Character.dossier.name} class="bg-zinc-800" name="name" type="text" />
+                    <input
+                        bind:value={$Character.dossier.name}
+                        class="bg-zinc-800 px-2 py-1"
+                        placeholder="Character Name"
+                        id="name"
+                        name="name"
+                        type="text"
+                    />
                 </div>
                 <div class="flex flex-col mx-4">
                     <label for="callSing">Call Sing</label>
-                    <input bind:value={$Character.dossier.callSign} class="bg-zinc-800" name="callSing" type="text" />
+                    <input
+                        bind:value={$Character.dossier.callSign}
+                        id="callSing"
+                        class="bg-zinc-800 px-2 py-1"
+                        placeholder="CS123"
+                        name="callSing"
+                        type="text"
+                    />
                 </div>
                 <div class="flex flex-col">
                     <label for="level">Level</label>
-                    <select bind:value={$Character.dossier.level} class="bg-zinc-800 w-16 h-6" name="level">
-                        <option value="0">0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
+                    <select
+                        bind:value={$Character.dossier.level}
+                        id="level"
+                        class="bg-zinc-800 w-16 h-8 px-2 py-1"
+                        name="level"
+                    >
+                        <option value={0}>0</option>
+                        <option value={1}>1</option>
+                        <option value={2}>2</option>
+                        <option value={3}>3</option>
+                        <option value={4}>4</option>
+                        <option value={5}>5</option>
+                        <option value={6}>6</option>
+                        <option value={7}>7</option>
+                        <option value={8}>8</option>
+                        <option value={9}>9</option>
+                        <option value={10}>10</option>
                     </select>
                 </div>
             </div>
             <div class="flex flex-col col-span-3 my-4">
                 <label for="bio">Bio</label>
-                <textarea bind:value={$Character.dossier.bio} class="bg-zinc-800" name="notes" cols="30" rows="10"
+                <textarea
+                    bind:value={$Character.dossier.bio}
+                    id="bio"
+                    class="bg-zinc-800 resize-none px-2 py-1"
+                    placeholder="Character biography..."
+                    name="notes"
+                    cols="30"
+                    rows="10"
                 ></textarea>
             </div>
             <div class="flex flex-col col-span-3">
                 <label for="notes">Notes</label>
-                <textarea bind:value={$Character.dossier.notes} class="bg-zinc-800" name="notes" cols="30" rows="10"
+                <textarea
+                    bind:value={$Character.dossier.notes}
+                    class="bg-zinc-800 resize-none px-2 py-1"
+                    id="notes"
+                    placeholder="Additional notes..."
+                    name="notes"
+                    cols="30"
+                    rows="10"
                 ></textarea>
             </div>
         </form>
     </div>
+    <button on:click={() => dossierModal.close()}>Exit</button>
 </dialog>

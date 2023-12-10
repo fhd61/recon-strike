@@ -23,12 +23,12 @@ export interface ICharacter {
 
 const initialCharacterData: ICharacter = {
   dossier: {
-    name: 'Character Name',
-    callSign: 'CS123',
+    name: '',
+    callSign: '',
     level: 1,
     portrait: '',
-    bio: 'Character biography...',
-    notes: 'Additional notes...',
+    bio: '',
+    notes: '',
   },
   attributes: {
       hp: { currentValue: 100, maxValue: 100, bonus: {} },
