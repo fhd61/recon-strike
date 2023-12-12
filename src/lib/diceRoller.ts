@@ -1,4 +1,5 @@
 export interface IRollResult {
+    name: string
     rolls: number[]
     bonus: number[]
     rollsTotal: number
@@ -6,12 +7,13 @@ export interface IRollResult {
     total: number
 }
 
-export function rollFromString(rollText: string): IRollResult | null {
+export function rollFromString(rollText: string): IRollResult | void {
     const regex = /^(\d*)?d(\d+)((\s*[+-]\s*\d+\s*)+)?$/i;
     const match = rollText.match(regex);
 
     if (!match) {
         throw new Error("Invalid dice notation format");
+        return
     }
 
     const [, numberOfDice, diceType, modifiers] = match;
@@ -23,10 +25,10 @@ export function rollFromString(rollText: string): IRollResult | null {
 
     const modifierSum = modifierValues.reduce((total, modifier) => total + modifier, 0);
 
-    return rollDice(sides, numDice, [modifierSum]);
+    return rollDice("👀",sides, numDice, [modifierSum]);
 }
 
-export function rollDice(diceType: number, rollTimes: number = 1, bonus: number[] = []): IRollResult {
+export function rollDice(name:string,diceType: number, rollTimes: number = 1, bonus: number[] = []): IRollResult {
     console.log({rollTimes, bonus, diceType})
     
     let rolls = new Array<number>
@@ -40,6 +42,7 @@ export function rollDice(diceType: number, rollTimes: number = 1, bonus: number[
     rollsTotal = rolls.reduce((acc, cur) => acc + cur)
 
     return {
+        name,
         rolls,
         bonus,
         rollsTotal,

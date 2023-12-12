@@ -15,6 +15,8 @@
     import Talent from "$lib/components/talent.svelte";
     import type { IItem } from "$lib/interface/IItem";
     import { rollFromString } from "$lib/diceRoller";
+    import { toast } from '@zerodevx/svelte-toast'
+    import type { SvelteToastOptions } from "@zerodevx/svelte-toast/stores";
 
     let inCombatMode: Boolean;
     let mouseInsideModal: Boolean;
@@ -32,11 +34,19 @@
 
     afterUpdate(() => {
         localStorage.setItem("character", JSON.stringify($Character));
-        console.log(mouseInsideModal);
     });
 
     let test:IItem = {name:"Akimbo", description: "Pode usar duas armas pequenas ao mesmo tempo -3 de acerto se for duas pistolas, **-4** de acerto se for duas submetralhadoras", icon:"https://i.imgur.com/Tkl0eyo.png"}
 </script>
+
+<style>
+  :root {
+    --toastContainerTop: auto;
+    --toastContainerRight: auto;
+    --toastContainerBottom: 4rem;
+    --toastContainerLeft: calc(50vw - 4rem);
+  }
+</style>
 
 <div class="flex flex-row max-md:flex-col text-white">
     <!-- Left Panel -->
@@ -45,7 +55,10 @@
             <div slot="content" class="flex">
                 <button
                     class="bg-zinc-800 w-14 h-8 mr-2 polygonR inline-flex justify-center items-center active:bg-zinc-700"
-                    on:click={() => console.log(rollFromString(diceRollInput.value))}
+                    on:click={() =>{
+                        let res = rollFromString(diceRollInput.value) 
+                        toast.push(`${res.name}<br>${res.total}`)
+                    } }
                 >
                     <Icon icon="fa-solid:dice-d20" width="20" />
                 </button>
