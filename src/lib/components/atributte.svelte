@@ -1,12 +1,25 @@
 <script lang="ts">
+    import { rollDice } from "$lib/diceRoller";
+    import { toast } from '@zerodevx/svelte-toast'
     import type { IAttribute } from "../interface/IBaseAttribute";
 
     export let data: IAttribute;
-    
+
+    function RollAttribute() {
+        let bonus = [data.value];
+
+        for (let key in data.bonus) 
+            bonus.push(data.bonus[key]);
+
+        let res = rollDice(data.name, 20, bonus);
+        toast.push(`${res.name}<br>${res.summery}`)
+    }
 </script>
 
 <div class="flex flex-col items-center justify-center w-[5.5rem]">
-    <p class="capitalize text-xs">{data.name}</p>
+    <button class="capitalize text-xs hover:text-[#c6560d] active:text-orange-600 transition-all" on:click={() => RollAttribute()}
+        >{data.name}</button
+    >
     <p class="uppercase text-xs font-bold italic opacity-40">
         {data.shortName}
     </p>

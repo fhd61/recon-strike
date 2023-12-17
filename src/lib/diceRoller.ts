@@ -5,6 +5,7 @@ export interface IRollResult {
     rollsTotal: number
     bonusTotal: number
     total: number
+    summery: string
 }
 
 export function rollFromString(rollText: string): IRollResult | void {
@@ -25,21 +26,28 @@ export function rollFromString(rollText: string): IRollResult | void {
 
     const modifierSum = modifierValues.reduce((total, modifier) => total + modifier, 0);
 
-    return rollDice("👀",sides, numDice, [modifierSum]);
+    return rollDice("👀", sides, [modifierSum], numDice,);
 }
 
-export function rollDice(name:string,diceType: number, rollTimes: number = 1, bonus: number[] = []): IRollResult {
-    console.log({rollTimes, bonus, diceType})
-    
+export function rollDice(name: string, diceSides: number, bonus: number[] = [], rollTimes: number = 1,): IRollResult {
     let rolls = new Array<number>
-    let bonusTotal = bonus.reduce((acc, cur) => acc + cur)
+    let bonusTotal = 0
     let rollsTotal = 0
-    let summery = ""
+    let total = 0
+
+    if (bonus.length != 0)
+        bonusTotal = bonus.reduce((acc, cur) => acc + cur)
 
     for (let i = 0; i < rollTimes; i++) {
-        rolls.push(Math.ceil(Math.random() * diceType) + 1)
+        rolls.push(Math.ceil(Math.random() * diceSides) + 1)
     }
-    rollsTotal = rolls.reduce((acc, cur) => acc + cur)
+
+    if (rolls.length > 1)
+        rollsTotal = rolls.reduce((acc, cur) => acc + cur)
+    else
+        rollsTotal = rolls[0]
+
+    total = rollsTotal + bonusTotal
 
     return {
         name,
@@ -47,6 +55,7 @@ export function rollDice(name:string,diceType: number, rollTimes: number = 1, bo
         bonus,
         rollsTotal,
         bonusTotal,
-        total: rollsTotal + bonusTotal,
+        total,
+        summery: `[${rolls.toString()}] + [${bonus.toString()}] = ${total}` 
     }
 }

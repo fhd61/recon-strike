@@ -16,7 +16,6 @@
     import type { IItem } from "$lib/interface/IItem";
     import { rollFromString } from "$lib/diceRoller";
     import { toast } from '@zerodevx/svelte-toast'
-    import type { SvelteToastOptions } from "@zerodevx/svelte-toast/stores";
 
     let inCombatMode: Boolean;
     let mouseInsideModal: Boolean;
