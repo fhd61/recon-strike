@@ -15,37 +15,49 @@
     import Talent from "$lib/components/talent.svelte";
     import type { IItem } from "$lib/interface/IItem";
     import { rollFromString } from "$lib/diceRoller";
-    import { toast } from '@zerodevx/svelte-toast'
+    import { toast } from "@zerodevx/svelte-toast";
 
     let inCombatMode: Boolean;
     let mouseInsideModal: Boolean;
     let modalElement: HTMLDialogElement;
     let modalToShow: "dossier" | "settings" | "inv_talents" | "inv_equipment";
-    let diceRollInput: HTMLInputElement
+    let diceRollInput: HTMLInputElement;
+    let acCalcStat: "agi" | "int" | "for";
 
     onMount(() => {
-        let load: ICharacter = JSON.parse(
-            localStorage.getItem("character") as string,
-        );
+        let char = localStorage.getItem("character");
+        let accCalcKey = localStorage.getItem("acCalcStat");
 
-        $Character = load;
+        if (accCalcKey === null) {
+            localStorage.setItem("acCalcStat", acCalcStat);
+        } else {
+            acCalcStat = JSON.parse(
+                localStorage.getItem("acCalcStat") as "agi" | "int" | "for",
+            );
+        }
+
+        if (char === null) {
+            localStorage.setItem("character", JSON.stringify($Character));
+        } else {
+            let load: ICharacter = JSON.parse(
+                localStorage.getItem("character") as string,
+            );
+            $Character = load;
+        }
     });
 
     afterUpdate(() => {
         localStorage.setItem("character", JSON.stringify($Character));
+        localStorage.setItem("acCalcStat", JSON.stringify(acCalcStat));
     });
 
-    let test:IItem = {name:"Akimbo", description: "Pode usar duas armas pequenas ao mesmo tempo -3 de acerto se for duas pistolas, **-4** de acerto se for duas submetralhadoras", icon:"https://i.imgur.com/Tkl0eyo.png"}
+    let test: IItem = {
+        name: "Akimbo",
+        description:
+            "Pode usar duas armas pequenas ao mesmo tempo -3 de acerto se for duas pistolas, **-4** de acerto se for duas submetralhadoras",
+        icon: "https://i.imgur.com/Tkl0eyo.png",
+    };
 </script>
-
-<style>
-  :root {
-    --toastContainerTop: auto;
-    --toastContainerRight: auto;
-    --toastContainerBottom: 4rem;
-    --toastContainerLeft: calc(50vw - 4rem);
-  }
-</style>
 
 <div class="flex flex-row max-md:flex-col text-white">
     <!-- Left Panel -->
@@ -54,10 +66,10 @@
             <div slot="content" class="flex">
                 <button
                     class="bg-zinc-800 w-14 h-8 mr-2 polygonR inline-flex justify-center items-center active:bg-zinc-700"
-                    on:click={() =>{
-                        let res = rollFromString(diceRollInput.value) 
-                        toast.push(`${res.name}<br>${res.total}`)
-                    } }
+                    on:click={() => {
+                        let res = rollFromString(diceRollInput.value);
+                        toast.push(`${res?.name}<br>${res?.total}`);
+                    }}
                 >
                     <Icon icon="fa-solid:dice-d20" width="20" />
                 </button>
@@ -99,6 +111,17 @@
                             slot="icon"
                         />
                     </Stat>
+                    <Stat
+                        isAc={true}
+                        bind:acCalcStat
+                        bind:data={$Character.attributes["ac"]}
+                    >
+                        <Icon
+                            icon="game-icons:sword-slice"
+                            width={50}
+                            slot="icon"
+                        />
+                    </Stat>
                 </div>
                 <Collapsible.Root>
                     <Collapsible.Trigger class="flex justify-between mt-2">
@@ -106,8 +129,23 @@
                         <Icon icon="bx:up-arrow" rotate={2} />
                     </Collapsible.Trigger>
                     <Collapsible.Content>
-                        <p>Defesa = 5</p>
-                        <p>CA = VIG + AGI + Defesa * 2</p>
+                        <select
+                            class="uppercase bg-zinc-800"
+                            bind:value={acCalcStat}
+                        >
+                            <option value="agi"
+                                >{$Character.attributes["agi"]
+                                    .shortName}</option
+                            >
+                            <option value="int"
+                                >{$Character.attributes["int"]
+                                    .shortName}</option
+                            >
+                            <option value="for"
+                                >{$Character.attributes["for"]
+                                    .shortName}</option
+                            >
+                        </select>
                     </Collapsible.Content>
                 </Collapsible.Root>
             </div>
@@ -168,7 +206,7 @@
         <Panel title="Taletos" fitAll={true}>
             <div slot="content" class="h-full flex flex-col">
                 <button class="ml-[42.7rem]">Add</button>
-                <Talent data={test}/>
+                <Talent data={test} />
             </div>
         </Panel>
     </div>
@@ -246,3 +284,12 @@
         <Settings />
     {/if}
 </dialog>
+
+<style>
+    :root {
+        --toastContainerTop: auto;
+        --toastContainerRight: auto;
+        --toastContainerBottom: 4rem;
+        --toastContainerLeft: calc(50vw - 4rem);
+    }
+</style>
