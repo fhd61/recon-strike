@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as Collapsible from "$lib/components/ui/collapsible";
     import Icon from "@iconify/svelte";
-    import Atribute from "$lib/components/atributte.svelte";
+    import Attribute from "$lib/components/atributte.svelte";
     import Panel from "$lib/components/panel.svelte";
     import HpBar from "$lib/components/hpBar.svelte";
     import Stat from "$lib/components/stat.svelte";
@@ -16,13 +16,24 @@
     import type { IItem } from "$lib/interface/IItem";
     import { rollFromString } from "$lib/diceRoller";
     import { toast } from "@zerodevx/svelte-toast";
+    import type { ISkill } from "$lib/interface/ISkill";
+    import Ability from "$lib/components/ability.svelte";
+    import { createEventDispatcher } from "svelte";
+    import type { IHp } from "$lib/interface/IHp";
+    import { slide } from "svelte/transition";
+    import { onCombatEnd, onCombatStart, onTurnEnd, onTurnStart } from "$lib/store/events";
 
+    const dispatch = createEventDispatcher();
+
+    let turnCount = 0;
     let inCombatMode: Boolean;
     let mouseInsideModal: Boolean;
     let modalElement: HTMLDialogElement;
-    let modalToShow: "dossier" | "settings" | "inv_talents" | "inv_equipment";
     let diceRollInput: HTMLInputElement;
+    let modalToShow: "dossier" | "settings" | "inv_talents" | "inv_equipment";
     let acCalcStat: "agi" | "int" | "for";
+    let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
+    let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
 
     onMount(() => {
         let char = localStorage.getItem("character");
@@ -57,6 +68,38 @@
             "Pode usar duas armas pequenas ao mesmo tempo -3 de acerto se for duas pistolas, **-4** de acerto se for duas submetralhadoras",
         icon: "https://i.imgur.com/Tkl0eyo.png",
     };
+    let testSkill: ISkill = {
+        name: "Test",
+        description: "",
+        icon: "https://i.imgur.com/Tkl0eyo.png",
+        cooldown: 10,
+        currentCooldown: 5,
+    };
+
+    function onSelectCover() {
+        const coverBonuses = {
+            heavy: 3,
+            medium: 2,
+            light: 1,
+            none: 0,
+        };
+        coverHp.maxValue = coverBonuses[coverSelected] * 10;
+        coverHp.currentValue = coverBonuses[coverSelected] * 10;
+
+        $Character.attributes.ac.bonus["cover"] = coverBonuses[coverSelected];
+
+        console.log($Character);
+    }
+
+    onTurnEnd.on(() => {
+        testSkill.currentCooldown += 1;
+    });
+    onTurnStart.on(() => {
+        turnCount++;
+    });
+    onCombatEnd.on(() => {
+        turnCount = 0
+    })
 </script>
 
 <div class="flex flex-row max-md:flex-col text-white">
@@ -86,10 +129,10 @@
                 slot="content"
                 class="flex items-center justify-around divide-[#f86b10]/20"
             >
-                <Atribute bind:data={$Character.attributes["agi"]} />
-                <Atribute bind:data={$Character.attributes["for"]} />
-                <Atribute bind:data={$Character.attributes["int"]} />
-                <Atribute bind:data={$Character.attributes["vig"]} />
+                <Attribute bind:data={$Character.attributes["agi"]} />
+                <Attribute bind:data={$Character.attributes["for"]} />
+                <Attribute bind:data={$Character.attributes["int"]} />
+                <Attribute bind:data={$Character.attributes["vig"]} />
             </div>
         </Panel>
         <Panel title="Stats">
@@ -129,31 +172,36 @@
                         <Icon icon="bx:up-arrow" rotate={2} />
                     </Collapsible.Trigger>
                     <Collapsible.Content>
-                        <select
-                            class="uppercase bg-zinc-800"
-                            bind:value={acCalcStat}
-                        >
-                            <option value="agi"
-                                >{$Character.attributes["agi"]
-                                    .shortName}</option
+                        <label>
+                            Atributo para o CA:
+                            <select
+                                class="uppercase bg-zinc-800 p-1"
+                                bind:value={acCalcStat}
                             >
-                            <option value="int"
-                                >{$Character.attributes["int"]
-                                    .shortName}</option
-                            >
-                            <option value="for"
-                                >{$Character.attributes["for"]
-                                    .shortName}</option
-                            >
-                        </select>
+                                <option value="agi"
+                                    >{$Character.attributes["agi"]
+                                        .shortName}</option
+                                >
+                                <option value="int"
+                                    >{$Character.attributes["int"]
+                                        .shortName}</option
+                                >
+                                <option value="for"
+                                    >{$Character.attributes["for"]
+                                        .shortName}</option
+                                >
+                            </select>
+                        </label>
                     </Collapsible.Content>
                 </Collapsible.Root>
             </div>
         </Panel>
         <Panel title="habilidades">
             <div slot="content">
-                <p>Skill 1</p>
-                <p>Skill 2</p>
+                <div class="flex justify-evenly">
+                    <Ability bind:data={testSkill} />
+                    <Ability bind:data={testSkill} />
+                </div>
                 <Collapsible.Root>
                     <Collapsible.Trigger class="flex justify-between mt-2">
                         <p class="mr-48">Modificadores</p>
@@ -167,7 +215,13 @@
             <div slot="content">
                 <div class="flex justify-between items-center">
                     <button
-                        on:click={() => (inCombatMode = !inCombatMode)}
+                        on:click={() => {
+                            inCombatMode = !inCombatMode
+                            if(inCombatMode)
+                                onCombatStart.trigger()
+                            else
+                                onCombatEnd.trigger()
+                        }}
                         class={inCombatMode
                             ? "bg-[#f86b10]/80 w-40 h-9 polygonR cursor-pointer font-semibold transition-all"
                             : "bg-[#f86b10]/30 w-40 h-9 polygonL cursor-pointer font-light transition-all"}
@@ -175,17 +229,23 @@
                     >
                     <p class="flex flex-col ml-8 capitalize">
                         Turns
-                        <span class="m-auto">1</span>
+                        <span class="m-auto">{turnCount}</span>
                     </p>
                 </div>
                 <div class="flex justify-between my-1">
                     <button
-                        disabled
+                        disabled={!inCombatMode}
+                        on:click={() => {
+                            onTurnEnd.trigger();
+                        }}
                         class="bg-[#f86b10]/30 p-2 text-sm polygonR w-28 h-8 active:bg-[#f86b10]/80 disabled:bg-[#f86b10]/20 disabled:text-gray-400 transition-all"
                         >End Turn</button
                     >
                     <button
-                        disabled
+                        disabled={!inCombatMode}
+                        on:click={() => {
+                            onTurnStart.trigger();
+                        }}
                         class="bg-[#f86b10]/30 p-2 text-sm polygonL w-28 h-8 active:bg-[#f86b10]/80 disabled:bg-[#f86b10]/20 disabled:text-gray-400 transition-all"
                         >Start Turn</button
                     >
@@ -195,7 +255,29 @@
                         <p class="mr-48">Modificadores</p>
                         <Icon icon="bx:up-arrow" rotate={2} />
                     </Collapsible.Trigger>
-                    <Collapsible.Content>Cover</Collapsible.Content>
+                    <Collapsible.Content>
+                        <div>
+                            <label>
+                                Tipo de cover:
+                                <select
+                                    id="cover"
+                                    bind:value={coverSelected}
+                                    on:change={onSelectCover}
+                                    class="uppercase bg-zinc-800 p-1"
+                                >
+                                    <option value="heavy">Pesado</option>
+                                    <option value="medium">Medio</option>
+                                    <option value="light">Leve</option>
+                                    <option value="none">Nem um</option>
+                                </select>
+                            </label>
+                            {#if coverSelected !== "none"}
+                                <div in:slide out:slide class="mt-2">
+                                    <HpBar bind:data={coverHp} />
+                                </div>
+                            {/if}
+                        </div>
+                    </Collapsible.Content>
                 </Collapsible.Root>
             </div>
         </Panel>

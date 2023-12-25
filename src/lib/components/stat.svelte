@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { IAttribute } from "$lib/interface/IBaseAttribute";
     import { CharacterSheet } from "$lib/store/character";
+    import { onTurnEnd } from "$lib/store/events";
     import { afterUpdate } from "svelte";
 
     export let data: IAttribute;
@@ -10,10 +11,10 @@
 
     let valueWithBonus = 0;
 
-    function calcValueWithBonus() {
+    function calcValueWithBonus(attribute: IAttribute) {
         let bonusTotal = 0;
 
-        for (let key in data.bonus) bonusTotal += data.bonus[key];
+        for (let key in attribute.bonus) bonusTotal += attribute.bonus[key];
 
         return data.value + bonusTotal;
     }
@@ -28,7 +29,7 @@
 
     CharacterSheet.subscribe((char) => {
         char.attributes["ac"].value = calcAc();
-        valueWithBonus = calcValueWithBonus();
+        valueWithBonus = calcValueWithBonus(char.attributes["ac"]);
     });
 
     afterUpdate(() => {
@@ -39,11 +40,11 @@
 <div class="relative flex">
     {#if isAc}
         <span class="bg-black w-12 text-center absolute translate-y-3 text-sm"
-            >{$CharacterSheet.attributes["ac"].value}</span
+            >{calcValueWithBonus(data)}</span
         >
     {:else}
         <span class="bg-black w-12 text-center absolute translate-y-3 text-sm"
-            >{data.value}</span
+            >{calcValueWithBonus(data)}</span
         >
     {/if}
     <div class={`m-auto z-[${inFront ? "1" : "0"}]`}>

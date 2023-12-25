@@ -13,13 +13,13 @@
 ### Habilidades 
 - [ ] Importa a lista deles do banco de dados 
 - [ ] Implementar os modificadores
-- [ ] Sistema de cooldown 
+- [x] Sistema de cooldown 
 - [ ] Menu para editar os items
 
 ### Sistema de combate 
 - [x] Entrar e sair do modo de combate 
-- [ ] Passar ou voltar turnos
-- [ ] Sistema de cover
+- [x] Passar turnos
+- [x] Sistema de cover
 - [ ] Buffs e debuffs **(Seria legal)**
 
 ### Save na nuvem

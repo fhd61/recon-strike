@@ -3,8 +3,9 @@ export interface ISkill {
     name: string;
     description: string;
     cooldown: number;
+    currentCooldown: number;
     hp?: number;
     range?: number;
     rangeArea?: number;
-    attToModify: { [id: string]: number; };
+    attToModify?: { [id: string]: number; };
 }
