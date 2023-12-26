@@ -1,4 +1,3 @@
-export const onTurnEnd = createEventStore<void>();
 import { type IEvent, Event } from '$lib/types/event';
 import { writable } from 'svelte/store';
 
@@ -96,5 +95,6 @@ export function createEventStore<T>() {
 }
 
 export const onTurnStart = createEventStore<void>();
+export const onTurnEnd = createEventStore<void>();
 export const onCombatStart = createEventStore<void>();
 export const onCombatEnd = createEventStore<void>();
