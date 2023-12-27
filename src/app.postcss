@@ -57,3 +57,30 @@ h1, h2, h3, h4, h5 {
 		0 0
 	);
 }
+
+input, select {
+	outline: none;
+}
+
+::-webkit-scrollbar {
+	width: .55vw;
+}
+
+::-webkit-scrollbar-track {
+	background: #27272a;
+	border-radius: .25vw;
+}
+
+::-webkit-scrollbar-thumb {
+	background: hsl(240, 4%, 5%);
+	border-radius: .3vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: hsl(240, 4%, 7%);
+}
+
+@supports(scrollbar-color) {
+	scrollbar-color: #27272 ahsl(240, 4%, 5%);
+	scrollbar-width: thin;
+}
