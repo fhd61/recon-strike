@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { ISkill } from "$lib/interface/ISkill";
     import { clamp } from "$lib/utils";
-    import { bounceIn, cubicIn, elasticInOut, sineOut } from "svelte/easing";
+    import { cubicIn } from "svelte/easing";
     import { tweened } from "svelte/motion";
 
     export let data: ISkill;

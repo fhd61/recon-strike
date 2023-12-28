@@ -1,13 +1,11 @@
 <script lang="ts">
 
 	export let title: string;
-	export let fitAll: boolean = false;
+	export let height = "h-fit";
 </script>
 
 <div
-	class={`bg-black mb-2 ${
-		fitAll ? "h-full" : ""
-	} polygonL overflow-y-auto`}
+	class={`bg-black mb-2 ${height} polygonL`}
 >
 	<h2 class="capitalize bg-[#f86b10]/80 px-2 mb-2 font-semibold">
 		{title}

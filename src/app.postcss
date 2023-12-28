@@ -58,6 +58,18 @@ h1, h2, h3, h4, h5 {
 	);
 }
 
+.polygonF {
+    clip-path: polygon(
+    20% 0%, 
+    80% 0%, 
+    100% 20%, 
+    100% 80%,
+    80% 100%,
+    20% 100%, 
+    0% 80%, 
+    0% 20%);
+}
+
 input, select {
 	outline: none;
 }
@@ -67,17 +79,17 @@ input, select {
 }
 
 ::-webkit-scrollbar-track {
-	background: #27272a;
-	border-radius: .25vw;
+	background: hsl(240, 4%, 15%);
+	border-radius: .2vw;
 }
 
 ::-webkit-scrollbar-thumb {
-	background: hsl(240, 4%, 5%);
-	border-radius: .3vw;
+	background: hsl(240, 4%, 7%);
+	border-radius: .2vw;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: hsl(240, 4%, 7%);
+	background: hsl(240, 4%, 10%);
 }
 
 @supports(scrollbar-color) {
