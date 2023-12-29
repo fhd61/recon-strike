@@ -1,25 +1,26 @@
 <script lang="ts">
     import { clamp } from "$lib/utils";
-    import type { IHp } from "../interface/IHp";
     import Icon from "@iconify/svelte";
     import { taphold } from "$lib/actions/taphold";
     import { tweened } from "svelte/motion";
     import { onMount } from "svelte";
+    import type { IHp } from "$lib/interface/IHp";
 
     export let data: IHp;
     let larpValue = tweened(1);
+    let larpValue2 = tweened(1, { delay: 800 });
 
     let hpInputField: HTMLInputElement;
 
-    function Incresse() {
+    function incresse() {
         data.currentValue = clamp(data.currentValue + 1, 0, data.maxValue);
     }
 
-    function Decrease() {
+    function decrease() {
         data.currentValue = clamp(data.currentValue - 1, 0, data.maxValue);
     }
 
-    function Calc() {
+    function calc() {
         const regexPattern = /^(\d+)\s*([+\-*/])\s*(\d+)$/;
         const match = hpInputField.value.match(regexPattern);
 
@@ -44,14 +45,18 @@
         data.currentValue = Math.floor(clamp(result, 0, data.maxValue));
     }
 
-    function DeSelectInput(event: KeyboardEvent) {
+    function deSelectElement(event: KeyboardEvent) {
         if (event.key !== "Enter") return;
 
         hpInputField.blur();
         larpValue.set((data.currentValue / data.maxValue) * 100);
+        larpValue2.set((data.currentValue / data.maxValue) * 100);
     }
 
-    onMount(() => larpValue.set((data.currentValue / data.maxValue) * 100));
+    onMount(() => {
+        larpValue.set((data.currentValue / data.maxValue) * 100);
+        larpValue2.set((data.currentValue / data.maxValue) * 100);
+    });
 </script>
 
 <div class="h-8 w-full bg-red-800/60 relative polygonR">
@@ -61,8 +66,9 @@
                 class="hover:bg-zinc-800 p-1 translate-y-1 polygonR active:bg-zinc-600 transition-all"
                 use:taphold
                 on:taphold={() => {
-                    Decrease()
+                    decrease();
                     larpValue.set((data.currentValue / data.maxValue) * 100);
+                    larpValue2.set((data.currentValue / data.maxValue) * 100);
                 }}
             >
                 <Icon icon="bxs:up-arrow" rotate={3} />
@@ -70,28 +76,41 @@
             <div
                 class="flex items-center justify-center translate-y-1 w-24 h-5"
             >
+            <div class="flex">
                 <input
                     bind:this={hpInputField}
                     bind:value={data.currentValue}
-                    on:focusout={Calc}
-                    on:keydown={DeSelectInput}
+                    on:focusout={calc}
+                    on:keydown={deSelectElement}
                     type="text"
                     min={0}
-                    class="bg-transparent w-8 m-auto text-right outline-none"
+                    class="bg-transparent w-12 m-auto text-right outline-none"
                 />
-                <p class="m-auto ml-1">| {data.maxValue}</p>
+                <p class="mx-1">|</p>
+                <p class="w-12">{data.maxValue}</p>
+            </div>
             </div>
             <button
                 class="hover:bg-zinc-800 p-1 translate-y-1 polygonL active:bg-zinc-600 transition-all"
                 use:taphold
                 on:taphold={() => {
-                    Incresse();
+                    incresse();
                     larpValue.set((data.currentValue / data.maxValue) * 100);
+                    larpValue2.set((data.currentValue / data.maxValue) * 100);
                 }}
             >
                 <Icon icon="bxs:up-arrow" rotate={1} />
             </button>
         </div>
     </div>
-    <div class="h-8 bg-red-600 flex polygonR" style={`width:${$larpValue}%`} />
+    <div class="relative">
+        <div
+            class="h-8 bg-red-600 flex polygonR z-[1]"
+            style={`width:${$larpValue}%`}
+        />
+        <div
+            class="h-8 bg-red-800 flex polygonR absolute -translate-y-8 -z-[1]"
+            style={`width:${$larpValue2}%`}
+        />
+    </div>
 </div>

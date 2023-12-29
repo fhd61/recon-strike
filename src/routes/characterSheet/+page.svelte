@@ -1,21 +1,23 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
-    import Attribute from "$lib/components/atributte.svelte";
+    import Attribute from "$lib/components/characterSheet/atributte.svelte";
     import Panel from "$lib/components/panel.svelte";
-    import HpBar from "$lib/components/hpBar.svelte";
-    import Stat from "$lib/components/stat.svelte";
+    import HpBar from "$lib/components/characterSheet/hpBar.svelte";
+    import Stat from "$lib/components/characterSheet/stat.svelte";
+    import TalentsList from "$lib/components/modals/talentsList.svelte";
+    import EquipmentsList from "$lib/components/modals/equipmentList.svelte";
+    import Accordion from "$lib/components/characterSheet/accordion.svelte";
+    import Dossier from "$lib/components/modals/dossier.svelte";
+    import Settings from "$lib/components/modals/settings.svelte";
+    import Ability from "$lib/components/characterSheet/ability.svelte";
     import {
         CharacterSheet as Character,
         type ICharacter,
     } from "$lib/store/character";
     import { afterUpdate, onMount } from "svelte";
-    import Dossier from "$lib/components/modals/dossier.svelte";
-    import Settings from "$lib/components/modals/settings.svelte";
-    import type { IItem } from "$lib/interface/IItem";
     import { rollFromString } from "$lib/diceRoller";
     import { toast } from "@zerodevx/svelte-toast";
     import type { ISkill } from "$lib/interface/ISkill";
-    import Ability from "$lib/components/ability.svelte";
     import type { IHp } from "$lib/interface/IHp";
     import { slide } from "svelte/transition";
     import {
@@ -24,16 +26,20 @@
         onTurnEnd,
         onTurnStart,
     } from "$lib/store/events";
-    import Accordion from "$lib/components/accordion.svelte";
-    import TempEffect from "$lib/components/tempEffect.svelte";
+    import Talent from "$lib/components/characterSheet/talent.svelte";
 
+    export let data;
     let turnCount = 0;
     let inCombatMode: Boolean;
     let mouseInsideModal: Boolean;
     let modalElement: HTMLDialogElement;
     let diceRollInput: HTMLInputElement;
-    let modalToShow: "dossier" | "settings" | "inv_talents" | "inv_equipment" =
-        "dossier";
+    let modalToShow:
+        | "dossier"
+        | "settings"
+        | "inv_talents"
+        | "inv_equipment"
+        | "inv_ability" = "dossier";
     let acCalcStat: "agi" | "int" | "for" = "agi";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
@@ -66,12 +72,6 @@
         localStorage.setItem("acCalcStat", JSON.stringify(acCalcStat));
     });
 
-    let test: IItem = {
-        name: "Akimbo",
-        description:
-            "Pode usar duas armas pequenas ao mesmo tempo -3 de acerto se for duas pistolas, **-4** de acerto se for duas submetralhadoras",
-        icon: "https://i.imgur.com/Tkl0eyo.png",
-    };
     let testSkill: ISkill = {
         name: "Test",
         description: "",
@@ -95,12 +95,15 @@
         console.log($Character);
     }
 
+    //@ts-ignore
     onTurnEnd.on(() => {
         testSkill.currentCooldown += 1;
     });
+    //@ts-ignore
     onTurnStart.on(() => {
         turnCount++;
     });
+    //@ts-ignore
     onCombatEnd.on(() => {
         turnCount = 0;
     });
@@ -201,7 +204,13 @@
                     <Ability bind:data={testSkill} />
                 </div>
                 <Accordion>
-                    <p>test</p>
+                    <button
+                        on:click={() => {
+                            modalElement.showModal();
+                            modalToShow = "inv_ability";
+                        }}
+                        class="p-1 bg-green-800">Trocar habilidades</button
+                    >
                 </Accordion>
             </div>
         </Panel>
@@ -279,8 +288,28 @@
     <!-- Center Panel -->
     <div class="w-full h-[95vh] px-2 pt-1 pb-2">
         <Panel height="h-full" title="Taletos">
-            <div slot="content" class="h-full flex flex-col">
-                <button class="ml-[42.7rem]">Add</button>
+            <div slot="content" class="h-full flex flex-col items-end">
+                <button
+                    on:click={() => {
+                        modalElement.showModal();
+                        modalToShow = "inv_talents";
+                    }}
+                    class="h-8 w-10 bg-green-800 polygonF">Add</button
+                >
+                {#each $Character.talents as talent, i}
+                    <div in:slide out:slide>
+                        <Talent bind:data={talent} bg="bg-zinc-900">
+                            <button
+                                on:click={() => {
+                                    Character.update((c) => {
+                                        c.talents.splice(i, 1);
+                                        return c;
+                                    });
+                                }}>Remover</button
+                            >
+                        </Talent>
+                    </div>
+                {/each}
             </div>
         </Panel>
     </div>
@@ -288,7 +317,15 @@
     <!-- Right Panel -->
     <div class="w-full h-[95vh] px-2 pt-1 pb-2">
         <Panel height="h-full" title="Equipamentos">
-            <div slot="content" class="h-full"></div>
+            <div slot="content" class="h-full flex flex-col items-end">
+                <button
+                    on:click={() => {
+                        modalElement.showModal();
+                        modalToShow = "inv_equipment";
+                    }}
+                    class="h-8 w-10 bg-green-800 polygonF">Add</button
+                >
+            </div>
         </Panel>
     </div>
 </div>
@@ -333,6 +370,14 @@
         />
     {:else if modalToShow === "settings"}
         <Settings />
+    {:else if modalToShow === "inv_talents"}
+        <TalentsList
+            bind:store={$Character.talents}
+            bind:mouseInside={mouseInsideModal}
+            data={data.defaults.charTalents}
+        />
+    {:else if modalToShow === "inv_equipment"}
+        <EquipmentsList />
     {/if}
 </dialog>
 

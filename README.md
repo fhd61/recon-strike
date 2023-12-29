@@ -6,7 +6,7 @@
 - [x] Mostrar o Resultado
 
 ### Talentos e Items/Equipamentos
-- [ ] Importa a lista deles do banco de dados 
+- [/] Importa a lista deles do banco de dados 
 - [ ] Implementar os modificadores
 - [ ] Menu para editar os items
 

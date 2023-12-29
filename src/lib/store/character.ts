@@ -17,8 +17,9 @@ export interface ICharacter {
     "ac": IAttribute,
     "hp": IHp,
   },
-  skills: Array<ISkill>,
-  inventory: Array<IItem>
+  skills: ISkill[],
+  inventory: IItem[]
+  talents: IItem[]
 }
 
 export const initialCharacterData: ICharacter = {
@@ -40,10 +41,9 @@ export const initialCharacterData: ICharacter = {
     speed: { id: 'speed', name: 'Speed', shortName: 'speed', value: 1, bonus: {} },
     ac: { id: 'ac', name: 'ac', shortName: 'ac', value: 1, bonus: {} }
   },
-  skills: [
-  ],
-  inventory: [
-  ],
+  skills: [],
+  inventory: [],
+  talents: []
 };
 
 export const CharacterSheet = writable<ICharacter>(initialCharacterData)

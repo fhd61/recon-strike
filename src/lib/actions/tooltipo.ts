@@ -1,0 +1,39 @@
+export function tooltip(node: HTMLElement, params: string): { onDestroy: () => void } {
+  node.classList.add('tooltip');
+  node.setAttribute('tabindex', '0');
+
+  function handleFocus() {
+    const child = document.createElement('span');
+    child.textContent = params;
+    child.setAttribute('id', 'tooltip');
+    node.appendChild(child);
+
+    node.addEventListener('mouseleave', handleBlur);
+    node.addEventListener('blur', handleBlur);
+    node.removeEventListener('mouseenter', handleFocus);
+    node.removeEventListener('focus', handleFocus);
+  }
+
+  function handleBlur() {
+    const tooltipElement = node.querySelector('#tooltip');
+    if (tooltipElement) {
+      node.removeChild(tooltipElement);
+    }
+
+    node.removeEventListener('mouseleave', handleBlur);
+    node.removeEventListener('blur', handleBlur);
+    node.addEventListener('mouseenter', handleFocus);
+    node.addEventListener('focus', handleFocus);
+  }
+
+  node.addEventListener('mouseenter', handleFocus);
+  node.addEventListener('focus', handleFocus);
+
+  return {
+    onDestroy() {
+      node.classList.remove('tooltip');
+      node.removeEventListener('mouseenter', handleFocus);
+      node.removeEventListener('focus', handleFocus);
+    },
+  };
+}

@@ -1,4 +1,3 @@
-
 export interface IHp {
     currentValue: number;
     maxValue: number;
