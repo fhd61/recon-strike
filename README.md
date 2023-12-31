@@ -6,12 +6,13 @@
 - [x] Mostrar o Resultado
 
 ### Talentos e Items/Equipamentos
-- [/] Importa a lista deles do banco de dados 
+- [x] Importa a lista deles do banco de dados 
 - [ ] Implementar os modificadores
 - [ ] Menu para editar os items
 
 ### Habilidades 
-- [/] Importa a lista deles do banco de dados 
+- [x] Importa a lista deles do banco de dados 
+- [x] Importa os upgrades 
 - [ ] Implementar os modificadores
 - [x] Sistema de cooldown 
 - [ ] Menu para editar os items

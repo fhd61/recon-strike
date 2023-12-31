@@ -66,6 +66,7 @@
     });
 
     onMount(() => {
+        console.log(data)
         window.document.querySelector("#buffs")?.scrollIntoView(true);
         let char = localStorage.getItem("character");
         let accCalcKey = localStorage.getItem("acCalcStat");

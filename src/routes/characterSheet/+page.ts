@@ -10,12 +10,34 @@ export async function load({ fetch }) {
         return data
     }
 
-    let ptalents = await getData("api/ptalents");
+    //Talents
+    let p_talents = await getData("api/ptalents");
+    let w_talents = await getData("api/wtalents");
+    
+    //Equipaments
+    let armor = await getData("api/equipaments/armor");
+    let fireArms = await getData("api/equipaments/weapons/fireArms");
+    let melee = await getData("api/equipaments/weapons/melee");
 
+    //Skills
+    let tech = await getData("api/skills/tech");
+    let security = await getData("api/skills/security");
+    let medical = await getData("api/skills/medical");
 
     return {
         defaults: {
-            charTalents: ptalents
+            charTalents: p_talents,
+            skills: {
+                tech,
+                security,
+                medical
+            },
+            equipaments: {
+                armor,
+                fireArms,
+                melee,
+                weaponsTalents: w_talents
+            }
         }
     }
 }
