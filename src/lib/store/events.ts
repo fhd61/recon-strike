@@ -6,7 +6,7 @@ import { writable } from 'svelte/store';
  *
  * @template T - The type of data to be passed with the event.
  */
-class EventStore<T> implements IEvent<T> {
+export class EventStore<T> implements IEvent<T> {
 	/**
 	 * The underlying event instance.
 	 *

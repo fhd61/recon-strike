@@ -31,9 +31,9 @@
     {/if}
 </button>
 <button on:click={() => (open = !open)}>
-{#if open}
-    <div in:slide out:slide class="p-2 text-left">
-        <slot />
-    </div>
-{/if}
+    {#if open}
+        <div in:slide out:slide class="p-2 text-left">
+            <slot />
+        </div>
+    {/if}
 </button>

@@ -32,14 +32,14 @@ export const initialCharacterData: ICharacter = {
     notes: '',
   },
   attributes: {
-    hp: { currentValue: 100, maxValue: 100, bonus: {} },
+    hp: { currentValue: 1, maxValue: 0, bonus: {} },
     agi: { id: 'agi', name: 'Agility', shortName: 'agi', value: 1, bonus: {} },
     int: { id: 'int', name: 'Intelligence', shortName: 'int', value: 1, bonus: {} },
     for: { id: 'for', name: 'Force', shortName: 'for', value: 1, bonus: {} },
     vig: { id: 'agi', name: 'Vigor', shortName: 'vig', value: 1, bonus: {} },
-    def: { id: 'def', name: 'Defense', shortName: 'def', value: 1, bonus: {} },
-    speed: { id: 'speed', name: 'Speed', shortName: 'speed', value: 1, bonus: {} },
-    ac: { id: 'ac', name: 'ac', shortName: 'ac', value: 1, bonus: {} }
+    def: { id: 'def', name: 'Defense', shortName: 'def', value: 0, bonus: {} },
+    speed: { id: 'speed', name: 'Speed', shortName: 'speed', value: 9, bonus: {} },
+    ac: { id: 'ac', name: 'ac', shortName: 'ac', value: 0, bonus: {} }
   },
   skills: [],
   inventory: [],

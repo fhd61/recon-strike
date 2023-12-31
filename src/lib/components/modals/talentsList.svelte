@@ -4,10 +4,7 @@
     import { CharacterSheet } from "$lib/store/character";
 
     export let data: IItem[];
-    export let store: IItem[];
     export let mouseInside: Boolean = false;
-
-    let showToolTip = false;
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -17,17 +14,14 @@
     class="grid grid-flow-row flex-wrap justify-around items-center w-[50rem]"
 >
     {#each data as talent}
-        <div
-            on:mouseenter={() => (showToolTip = true)}
-            on:mouseleave={() => (showToolTip = false)}
-        >
+        <div>
             <Talent data={talent}>
                 <button
                     on:click={() => {
                         CharacterSheet.update((c) => {
-                            c.talents.push(talent)
-                            return c
-                        })
+                            c.talents.push(talent);
+                            return c;
+                        });
                     }}>Adicionar</button
                 >
             </Talent>

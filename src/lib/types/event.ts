@@ -1,4 +1,3 @@
-// liteEventStore.d.ts
 /**
  * Represents an event with optional data.
  *

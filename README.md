@@ -11,7 +11,7 @@
 - [ ] Menu para editar os items
 
 ### Habilidades 
-- [ ] Importa a lista deles do banco de dados 
+- [/] Importa a lista deles do banco de dados 
 - [ ] Implementar os modificadores
 - [x] Sistema de cooldown 
 - [ ] Menu para editar os items

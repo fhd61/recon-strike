@@ -26,6 +26,7 @@
         onTurnEnd,
         onTurnStart,
     } from "$lib/store/events";
+
     import Talent from "$lib/components/characterSheet/talent.svelte";
 
     export let data;
@@ -43,6 +44,26 @@
     let acCalcStat: "agi" | "int" | "for" = "agi";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
+    let testSkill: ISkill = {
+        name: "Test",
+        description: "",
+        icon: "https://i.imgur.com/Tkl0eyo.png",
+        cooldown: 10,
+        currentCooldown: 5,
+    };
+
+    //@ts-ignore
+    onTurnEnd.on(() => {
+        testSkill.currentCooldown += 1;
+    });
+    //@ts-ignore
+    onTurnStart.on(() => {
+        turnCount++;
+    });
+    //@ts-ignore
+    onCombatEnd.on(() => {
+        turnCount = 0;
+    });
 
     onMount(() => {
         window.document.querySelector("#buffs")?.scrollIntoView(true);
@@ -72,14 +93,6 @@
         localStorage.setItem("acCalcStat", JSON.stringify(acCalcStat));
     });
 
-    let testSkill: ISkill = {
-        name: "Test",
-        description: "",
-        icon: "https://i.imgur.com/Tkl0eyo.png",
-        cooldown: 10,
-        currentCooldown: 5,
-    };
-
     function onSelectCover() {
         const coverBonuses = {
             heavy: 3,
@@ -95,19 +108,15 @@
         console.log($Character);
     }
 
-    //@ts-ignore
-    onTurnEnd.on(() => {
-        testSkill.currentCooldown += 1;
-    });
-    //@ts-ignore
-    onTurnStart.on(() => {
-        turnCount++;
-    });
-    //@ts-ignore
-    onCombatEnd.on(() => {
-        turnCount = 0;
-    });
 </script>
+
+<svelte:head>
+    <title>
+        {$Character.dossier.name === ""
+            ? "SHD | Agente Desconhecido"
+            : `SHD | Agente ${$Character.dossier.name}`}
+    </title>
+</svelte:head>
 
 <div class="flex flex-row max-md:flex-col text-white">
     <!-- Left Panel -->
@@ -220,7 +229,9 @@
                     <button
                         on:click={() => {
                             inCombatMode = !inCombatMode;
+                            //@ts-ignore
                             if (inCombatMode) onCombatStart.trigger();
+                            //@ts-ignore
                             else onCombatEnd.trigger();
                         }}
                         class={inCombatMode
@@ -237,6 +248,7 @@
                     <button
                         disabled={!inCombatMode}
                         on:click={() => {
+                            //@ts-ignore
                             onTurnEnd.trigger();
                         }}
                         class="bg-[#f86b10]/50 p-2 text-sm polygonR w-28 h-8 active:bg-[#f86b10]/80 disabled:bg-[#f86b10]/20 disabled:text-gray-400 transition-all"
@@ -245,6 +257,7 @@
                     <button
                         disabled={!inCombatMode}
                         on:click={() => {
+                            //@ts-ignore
                             onTurnStart.trigger();
                         }}
                         class="bg-[#f86b10]/50 p-2 text-sm polygonL w-28 h-8 active:bg-[#f86b10]/80 disabled:bg-[#f86b10]/20 disabled:text-gray-400 transition-all"
@@ -296,20 +309,22 @@
                     }}
                     class="h-8 w-10 bg-green-800 polygonF">Add</button
                 >
-                {#each $Character.talents as talent, i}
-                    <div in:slide out:slide>
-                        <Talent bind:data={talent} bg="bg-zinc-900">
-                            <button
-                                on:click={() => {
-                                    Character.update((c) => {
-                                        c.talents.splice(i, 1);
-                                        return c;
-                                    });
-                                }}>Remover</button
-                            >
-                        </Talent>
-                    </div>
-                {/each}
+                {#if $Character.talents}
+                    {#each $Character.talents as talent, i}
+                        <div in:slide out:slide>
+                            <Talent bind:data={talent} bg="bg-zinc-900">
+                                <button
+                                    on:click={() => {
+                                        Character.update((c) => {
+                                            c.talents.splice(i, 1);
+                                            return c;
+                                        });
+                                    }}>Remover</button
+                                >
+                            </Talent>
+                        </div>
+                    {/each}
+                {/if}
             </div>
         </Panel>
     </div>
@@ -372,7 +387,6 @@
         <Settings />
     {:else if modalToShow === "inv_talents"}
         <TalentsList
-            bind:store={$Character.talents}
             bind:mouseInside={mouseInsideModal}
             data={data.defaults.charTalents}
         />

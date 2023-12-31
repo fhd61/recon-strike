@@ -1,5 +1,5 @@
 export interface IItem {
-    icon: string;
+    icon?: string;
     name: string;
     description: string;
     attToModify?: { [id: string]: number; };

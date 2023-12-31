@@ -7,5 +7,6 @@ export interface ISkill {
     hp?: number;
     range?: number;
     rangeArea?: number;
+    duration?: number;
     attToModify?: { [id: string]: number; };
 }

@@ -5,10 +5,11 @@
     import { tweened } from "svelte/motion";
     import { onMount } from "svelte";
     import type { IHp } from "$lib/interface/IHp";
+    import { CharacterSheet } from "$lib/store/character";
 
     export let data: IHp;
-    let larpValue = tweened(1);
-    let larpValue2 = tweened(1, { delay: 800 });
+    let larpValue = tweened(0);
+    let larpValue2 = tweened(0, { delay: 800 });
 
     let hpInputField: HTMLInputElement;
 
@@ -54,9 +55,18 @@
     }
 
     onMount(() => {
-        larpValue.set((data.currentValue / data.maxValue) * 100);
-        larpValue2.set((data.currentValue / data.maxValue) * 100);
+        setTimeout(() => {
+            larpValue.set((data.currentValue / data.maxValue) * 100);
+            larpValue2.set((data.currentValue / data.maxValue) * 100);
+        }, 100);
     });
+
+    $:{
+        const vig = $CharacterSheet.attributes["vig"].value
+        const def = $CharacterSheet.attributes["def"].value
+
+        data.maxValue = vig * 6 + def 
+    }
 </script>
 
 <div class="h-8 w-full bg-red-800/60 relative polygonR">
@@ -76,19 +86,19 @@
             <div
                 class="flex items-center justify-center translate-y-1 w-24 h-5"
             >
-            <div class="flex">
-                <input
-                    bind:this={hpInputField}
-                    bind:value={data.currentValue}
-                    on:focusout={calc}
-                    on:keydown={deSelectElement}
-                    type="text"
-                    min={0}
-                    class="bg-transparent w-12 m-auto text-right outline-none"
-                />
-                <p class="mx-1">|</p>
-                <p class="w-12">{data.maxValue}</p>
-            </div>
+                <div class="flex">
+                    <input
+                        bind:this={hpInputField}
+                        bind:value={data.currentValue}
+                        on:focusout={calc}
+                        on:keydown={deSelectElement}
+                        type="text"
+                        min={0}
+                        class="bg-transparent w-12 m-auto text-right outline-none"
+                    />
+                    <p class="mx-1">|</p>
+                    <p class="w-12">{data.maxValue}</p>
+                </div>
             </div>
             <button
                 class="hover:bg-zinc-800 p-1 translate-y-1 polygonL active:bg-zinc-600 transition-all"
