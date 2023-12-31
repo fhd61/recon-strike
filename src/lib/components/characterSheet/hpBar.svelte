@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { clamp } from "$lib/utils";
+    import { MathUtils } from "$lib/utils";
     import Icon from "@iconify/svelte";
     import { taphold } from "$lib/actions/taphold";
     import { tweened } from "svelte/motion";
@@ -14,11 +14,11 @@
     let hpInputField: HTMLInputElement;
 
     function incresse() {
-        data.currentValue = clamp(data.currentValue + 1, 0, data.maxValue);
+        data.currentValue = MathUtils.clamp(data.currentValue + 1, 0, data.maxValue);
     }
 
     function decrease() {
-        data.currentValue = clamp(data.currentValue - 1, 0, data.maxValue);
+        data.currentValue = MathUtils.clamp(data.currentValue - 1, 0, data.maxValue);
     }
 
     function calc() {
@@ -43,7 +43,7 @@
 
         const result = operators[operator](num1, num2);
 
-        data.currentValue = Math.floor(clamp(result, 0, data.maxValue));
+        data.currentValue = Math.floor(MathUtils.clamp(result, 0, data.maxValue));
     }
 
     function deSelectElement(event: KeyboardEvent) {

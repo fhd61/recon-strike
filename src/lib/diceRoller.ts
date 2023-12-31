@@ -1,3 +1,6 @@
+import { text } from "@sveltejs/kit"
+import { StringUtils } from "./utils"
+
 export interface IRollResult {
 	name: string
 	rolls: number[]
@@ -9,23 +12,9 @@ export interface IRollResult {
 }
 
 export function rollFromString(rollText: string): IRollResult | void {
-	const regex = /^(\d*)?d(\d+)((\s*[+-]\s*\d+\s*)+)?$/i;
-	const match = rollText.match(regex);
+	const { sides, modifierSum, rollTimes } = StringUtils.parseDiceNotation(rollText)
 
-	if (!match) {
-		throw new Error("Invalid dice notation format");
-	}
-
-	const [, numberOfDice, diceType, modifiers] = match;
-	const numDice = numberOfDice ? parseInt(numberOfDice) : 1;
-	const sides = parseInt(diceType);
-
-	const parsedModifiers = modifiers ? modifiers.match(/[+-]?\s*\d+/g) || [] : [];
-	const modifierValues = parsedModifiers.map(modifier => parseInt(modifier.replace(/\s+/g, "")));
-
-	const modifierSum = modifierValues.reduce((total, modifier) => total + modifier, 0);
-
-	return rollDice("👀", sides, [modifierSum], numDice,);
+	return rollDice("👀", sides, [modifierSum], rollTimes);
 }
 
 export function rollDice(name: string, diceSides: number, bonus: number[] = [], rollTimes: number = 1,): IRollResult {

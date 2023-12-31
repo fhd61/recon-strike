@@ -1,3 +1,32 @@
-export function clamp(num:number, min:number, max:number) {
-    return Math.min(Math.max(num, min), max)
+export class MathUtils {
+    static clamp(num: number, min: number, max: number) {
+        return Math.min(Math.max(num, min), max)
+    }
+}
+
+export class StringUtils {
+    static parseDiceNotation(text: string) {
+        const regex = /^(\d*)?d(\d+)((\s*[+-]\s*\d+\s*)+)?$/i;
+        const match = text.match(regex);
+
+        if (!match) {
+            throw new Error(`Invalid dice notation format: ${text}`);
+        }
+
+        const [, numberOfDice, diceType, modifiers] = match;
+
+        const rollTimes = numberOfDice ? parseInt(numberOfDice) : 1;
+        const sides = parseInt(diceType);
+
+        const parsedModifiers = modifiers ? modifiers.match(/[+-]?\s*\d+/g) || [] : [];
+        const modifierValues = parsedModifiers.map(modifier => parseInt(modifier.replace(/\s+/g, "")));
+
+        const modifierSum = modifierValues.reduce((total, modifier) => total + modifier, 0);
+
+        return {
+            sides,
+            rollTimes,
+            modifierSum
+        };
+    }
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { ISkill } from "$lib/interface/ISkill";
-    import { clamp } from "$lib/utils";
+    import { MathUtils } from "$lib/utils";
     import { cubicIn } from "svelte/easing";
     import { tweened } from "svelte/motion";
 
@@ -10,7 +10,7 @@
     let tweenedValue = tweened(cooldonwPercentage, { easing: cubicIn });
     $: {
         cooldonwPercentage = (data.currentCooldown / data.cooldown) * 100;
-        cooldonwPercentage = clamp(cooldonwPercentage, 0, 100);
+        cooldonwPercentage = MathUtils.clamp(cooldonwPercentage, 0, 100);
 
         tweenedValue.set(cooldonwPercentage);
 
