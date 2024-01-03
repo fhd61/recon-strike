@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { IItem } from "$lib/interface/IItem";
+    import type { IItem } from "$lib/types/interface/IItem";
     import Accordion from "./accordion.svelte";
     import { marked } from "marked";
 
@@ -10,7 +10,7 @@
 </script>
 
 <div class={`w-[45rem] flex flex-col ${bg} px-2 m-1 polygonL`}>
-    <Accordion icon={data.icon} label={data.name}>
+    <Accordion closeOnInteract={false} icon={data.icon} label={data.name}>
         <div class="flex flex-col items-start">
             {@html htmlDescription}
             <div class="mt-2">

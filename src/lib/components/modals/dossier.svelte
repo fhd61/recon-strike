@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { IDossier } from "$lib/interface/IDossier";
+    import type { IDossier } from "$lib/types/interface/IDossier";
 
     export let data: IDossier;
     export let mouseInside:Boolean = false

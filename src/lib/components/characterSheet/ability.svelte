@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { ISkill } from "$lib/interface/ISkill";
+    import type { ISkill } from "$lib/types/interface/ISkill";
     import { MathUtils } from "$lib/utils";
     import { cubicIn } from "svelte/easing";
     import { tweened } from "svelte/motion";

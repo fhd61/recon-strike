@@ -1,4 +1,4 @@
-import type { IItem } from "$lib/interface/IItem"
+import type { IItem } from "$lib/types/interface/IItem"
 
 export function GET() {
     return new Response(JSON.stringify(content))

@@ -4,7 +4,7 @@
     import { taphold } from "$lib/actions/taphold";
     import { tweened } from "svelte/motion";
     import { onMount } from "svelte";
-    import type { IHp } from "$lib/interface/IHp";
+    import type { IHp } from "$lib/types/interface/IHp";
     import { CharacterSheet } from "$lib/store/character";
 
     export let data: IHp;

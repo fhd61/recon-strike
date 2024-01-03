@@ -5,6 +5,7 @@
     export let label = "Modificadores";
     export let icon = "";
     export let open = false;
+    export let closeOnInteract = false;
 </script>
 
 <button
@@ -30,7 +31,13 @@
         />
     {/if}
 </button>
-<button on:click={() => (open = !open)}>
+<button
+    on:click={() => {
+        if (!closeOnInteract) return;
+
+        open = !open;
+    }}
+>
     {#if open}
         <div in:slide out:slide class="p-2 text-left">
             <slot />

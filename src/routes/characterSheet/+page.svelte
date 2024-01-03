@@ -17,8 +17,8 @@
     import { afterUpdate, onMount } from "svelte";
     import { rollFromString } from "$lib/diceRoller";
     import { toast } from "@zerodevx/svelte-toast";
-    import type { ISkill } from "$lib/interface/ISkill";
-    import type { IHp } from "$lib/interface/IHp";
+    import type { ISkill } from "$lib/types/interface/ISkill.js";
+    import type { IHp } from "$lib/types/interface/IHp.js";
     import { slide } from "svelte/transition";
     import {
         onCombatEnd,
@@ -66,7 +66,7 @@
     });
 
     onMount(() => {
-        console.log(data)
+        console.log(data);
         window.document.querySelector("#buffs")?.scrollIntoView(true);
         let char = localStorage.getItem("character");
         let accCalcKey = localStorage.getItem("acCalcStat");
@@ -108,7 +108,6 @@
 
         console.log($Character);
     }
-
 </script>
 
 <svelte:head>
@@ -392,7 +391,10 @@
             data={data.defaults.charTalents}
         />
     {:else if modalToShow === "inv_equipment"}
-        <EquipmentsList />
+        <EquipmentsList
+            bind:mouseInside={mouseInsideModal}
+            data={{ ...data.defaults.equipments }}
+        />
     {/if}
 </dialog>
 

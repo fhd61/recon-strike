@@ -1,3 +1,8 @@
+import { get } from "svelte/store";
+import { CharacterSheet } from "./store/character";
+import type { IItem } from "./types/interface/IItem";
+import type { IWeapon } from "./types/interface/IWeapon";
+
 export class MathUtils {
     static clamp(num: number, min: number, max: number) {
         return Math.min(Math.max(num, min), max)
@@ -28,5 +33,32 @@ export class StringUtils {
             rollTimes,
             modifierSum
         };
+    }
+}
+
+export class CharacterUtils {
+    static modifyAttribute(attribute:string, value:number) {
+        if(!Object.keys(get(CharacterSheet).attributes).includes(attribute)){
+            throw new Error("Try to get a non existing attribute in character")
+        }
+
+        CharacterSheet.update(c => {
+            //@ts-ignore
+            c.attributes[attribute].value = value
+            return c
+        })
+    }   
+
+    static addItemToInventory(item: IItem | IWeapon) {
+        if ("hit" in item)
+            CharacterSheet.update(c => {
+                c.inventory.weapons.push(item)
+                return c
+            })
+        else
+            CharacterSheet.update(c => {
+                c.inventory.equipments.push(item)
+                return c
+            })
     }
 }

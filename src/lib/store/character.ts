@@ -1,9 +1,10 @@
 import { writable } from "svelte/store";
-import type { IDossier } from "../interface/IDossier";
-import type { IAttribute } from "../interface/IBaseAttribute";
-import type { ISkill } from "../interface/ISkill";
-import type { IItem } from "../interface/IItem";
-import type { IHp } from "../interface/IHp";
+import type { IDossier } from "../types/interface/IDossier";
+import type { IAttribute } from "../types/interface/IBaseAttribute";
+import type { ISkill } from "../types/interface/ISkill";
+import type { IItem } from "../types/interface/IItem";
+import type { IHp } from "../types/interface/IHp";
+import type { IWeapon } from "$lib/types/interface/IWeapon";
 
 export interface ICharacter {
   dossier: IDossier,
@@ -18,7 +19,7 @@ export interface ICharacter {
     "hp": IHp,
   },
   skills: ISkill[],
-  inventory: IItem[]
+  inventory: { equipments: IItem[], weapons: IWeapon[] }
   talents: IItem[]
 }
 
@@ -42,7 +43,7 @@ export const initialCharacterData: ICharacter = {
     ac: { id: 'ac', name: 'ac', shortName: 'ac', value: 0, bonus: {} }
   },
   skills: [],
-  inventory: [],
+  inventory: { equipments: [], weapons: [] },
   talents: []
 };
 

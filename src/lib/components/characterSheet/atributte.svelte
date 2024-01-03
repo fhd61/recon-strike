@@ -1,6 +1,6 @@
 <script lang="ts">
     import { rollDice } from "$lib/diceRoller";
-    import type { IAttribute } from "$lib/interface/IBaseAttribute";
+    import type { IAttribute } from "$lib/types/interface/IBaseAttribute";
     import { toast } from "@zerodevx/svelte-toast";
 
     export let data: IAttribute;

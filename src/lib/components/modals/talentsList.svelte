@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { IItem } from "$lib/interface/IItem";
+    import type { IItem } from "$lib/types/interface/IItem";
     import Talent from "../characterSheet/talent.svelte";
     import { CharacterSheet } from "$lib/store/character";
 

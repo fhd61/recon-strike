@@ -1,4 +1,3 @@
-import { text } from "@sveltejs/kit"
 import { StringUtils } from "./utils"
 
 export interface IRollResult {

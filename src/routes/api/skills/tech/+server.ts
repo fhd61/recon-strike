@@ -1,4 +1,4 @@
-import type { ISkill } from "$lib/interface/ISkill";
+import type { ISkill } from "$lib/types/interface/ISkill";
 
 export function GET() {
     return new Response(JSON.stringify(content))

@@ -1,4 +1,4 @@
-import type { IWeapon } from "$lib/interface/IWeapon"
+import type { IWeapon } from "$lib/types/interface/IWeapon"
 
 export function GET() {
     return new Response(JSON.stringify(content))
