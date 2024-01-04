@@ -1,9 +1,8 @@
 <script lang="ts">
-    export let width = "w-12"
-    export let height = "h-12"
+    export let style = "h-20 w-20"
 </script>
 
-<div class={`${width} ${height}`}>
+<div class={style}>
     <svg
         xmlns="http://www.w3.org/2000/svg"
         version="1.1"
