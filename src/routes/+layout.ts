@@ -3,7 +3,7 @@ import { createSupabaseLoadClient } from '@supabase/auth-helpers-sveltekit'
 const url: string = import.meta.env.VITE_SUPABASEURL;
 const key: string = import.meta.env.VITE_SUPABASE_KEY;
 
-export const load = async ({ fetch, data, depends }) => {
+export async function load({ fetch, data, depends }) {
   depends('supabase:auth')
 
   const supabase = createSupabaseLoadClient({
