@@ -1,4 +1,6 @@
-export interface IWeapon {
+import type { IEquitable } from "./IEquitable"
+
+export interface IWeapon extends IEquitable{
     name: string
     hit: string
     modifier: string

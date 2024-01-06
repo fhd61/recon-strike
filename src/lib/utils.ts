@@ -1,7 +1,8 @@
 import { get } from "svelte/store";
-import { CharacterSheet } from "./store/character";
+import { CharacterSheet, EAttribute } from "./store/character";
 import type { IItem } from "./types/interface/IItem";
 import type { IWeapon } from "./types/interface/IWeapon";
+import type { IBonus } from "./types/interface/IBonus";
 
 export class MathUtils {
     static clamp(num: number, min: number, max: number) {
@@ -37,17 +38,41 @@ export class StringUtils {
 }
 
 export class CharacterUtils {
-    static modifyAttribute(attribute:string, value:number) {
-        if(!Object.keys(get(CharacterSheet).attributes).includes(attribute)){
+    static removeBonusOfAttribute(attribute: EAttribute, name: string) {
+        if (!Object.keys(get(CharacterSheet).attributes).includes(attribute)) {
             throw new Error("Try to get a non existing attribute in character")
         }
 
         CharacterSheet.update(c => {
-            //@ts-ignore
+            delete (c.attributes[attribute] as IBonus).bonus[name]
+            return c
+        })
+    }
+
+    static addBonusToAttribute(attribute: EAttribute, name: string, value: number) {
+        if (!Object.keys(get(CharacterSheet).attributes).includes(attribute)) {
+            throw new Error("Try to get a non existing attribute in character")
+        }
+
+        CharacterSheet.update(c => {
+            (c.attributes[attribute] as IBonus).bonus[name] = value
+            return c
+        })
+    }
+
+    static modifyAttribute(attribute: EAttribute, value: number) {
+        if (!Object.keys(get(CharacterSheet).attributes).includes(attribute)) {
+            throw new Error("Try to get a non existing attribute in character")
+        }
+
+        CharacterSheet.update(c => {
+            if (attribute === EAttribute.hp)
+                return c
+
             c.attributes[attribute].value = value
             return c
         })
-    }   
+    }
 
     static addItemToInventory(item: IItem | IWeapon) {
         if ("hit" in item)

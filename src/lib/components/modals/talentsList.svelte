@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { IItem } from "$lib/types/interface/IItem";
-    import Talent from "../characterSheet/talent.svelte";
+    import Talent from "../characterSheet/itemPanel.svelte";
     import { CharacterSheet } from "$lib/store/character";
 
     export let data: IItem[];

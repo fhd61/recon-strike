@@ -27,7 +27,9 @@
         onTurnStart,
     } from "$lib/store/events";
 
-    import Talent from "$lib/components/characterSheet/talent.svelte";
+    import ItemPanel from "$lib/components/characterSheet/itemPanel.svelte";
+    import TabGroup from "$lib/components/tabs/tabGroup.svelte";
+    import Tab from "$lib/components/tabs/tab.svelte";
 
     export let data;
     let turnCount = 0;
@@ -310,20 +312,23 @@
                     class="h-8 w-10 bg-green-800 polygonF">Add</button
                 >
                 {#if $Character.talents}
-                    {#each $Character.talents as talent, i}
-                        <div in:slide out:slide>
-                            <Talent bind:data={talent} bg="bg-zinc-900">
-                                <button
-                                    on:click={() => {
-                                        Character.update((c) => {
-                                            c.talents.splice(i, 1);
-                                            return c;
-                                        });
-                                    }}>Remover</button
-                                >
-                            </Talent>
-                        </div>
-                    {/each}
+                    <div class="h-[52rem] overflow-y-auto overflow-x-hidden">
+                        {#each $Character.talents as talent, i}
+                            <div in:slide out:slide>
+                                <ItemPanel bind:data={talent} bg="bg-zinc-900">
+                                    <button
+                                        class="bg-red-700 hover:bg-red-600 active:bg-red-700 mt-2 p-1 polygonL transition-all"
+                                        on:click={() => {
+                                            Character.update((c) => {
+                                                c.talents.splice(i, 1);
+                                                return c;
+                                            });
+                                        }}>Remover</button
+                                    >
+                                </ItemPanel>
+                            </div>
+                        {/each}
+                    </div>
                 {/if}
             </div>
         </Panel>
@@ -331,15 +336,54 @@
 
     <!-- Right Panel -->
     <div class="w-full h-[95vh] px-2 pt-1 pb-2">
-        <Panel height="h-full" title="Equipamentos">
+        <Panel height="h-full" title="Inventario">
             <div slot="content" class="h-full flex flex-col items-end">
-                <button
-                    on:click={() => {
-                        modalElement.showModal();
-                        modalToShow = "inv_equipment";
-                    }}
-                    class="h-8 w-10 bg-green-800 polygonF">Add</button
+                <TabGroup
+                    groupStyle="flex w-full mb-2 justify-around items-center bg-zinc-900 h-10 polygonR capitalize"
+                    tabStyle="h-full w-full hover:bg-orange-800 active:bg-orange-600 font-semibold transition-all"
                 >
+                    <Tab id={0} title="Equipados" />
+                    <Tab id={1} title="Arsenal" />
+                    <Tab id={2} title="Equipamentos">
+                        <div class="flex w-full justify-end mb-1">
+                            <button
+                                on:click={() => {
+                                    modalElement.showModal();
+                                    modalToShow = "inv_equipment";
+                                }}
+                                class="h-8 w-10 bg-green-800 polygonF"
+                                >Add</button
+                            >
+                        </div>
+                        {#if $Character.inventory.equipments}
+                            <div
+                                class="h-[52rem] overflow-y-auto overflow-x-hidden"
+                            >
+                                {#each $Character.inventory.equipments as items, i}
+                                    <div in:slide out:slide>
+                                        <ItemPanel
+                                            bind:data={items}
+                                            bg="bg-zinc-900"
+                                        >
+                                            <button
+                                                class="bg-red-700 hover:bg-red-600 active:bg-red-700 mt-2 p-1 polygonL transition-all"
+                                                on:click={() => {
+                                                    Character.update((c) => {
+                                                        c.inventory.equipments.splice(
+                                                            i,
+                                                            1,
+                                                        );
+                                                        return c;
+                                                    });
+                                                }}>Remover</button
+                                            >
+                                        </ItemPanel>
+                                    </div>
+                                {/each}
+                            </div>
+                        {/if}
+                    </Tab>
+                </TabGroup>
             </div>
         </Panel>
     </div>

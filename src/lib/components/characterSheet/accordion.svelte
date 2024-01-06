@@ -10,37 +10,32 @@
 
 <button
     on:click={() => (open = !open)}
-    class="w-full flex justify-between items-center mt-2"
+    class={`w-full flex justify-between items-center mt-2 ${icon ? "" : "p-3"}`}
 >
-    {#if icon !== ""}
-        <div class="flex items-center text-left">
+    <div class="flex items-center text-left">
+        {#if icon}
             <img src={icon} class="w-12 -translate-y-1 mr-2" alt="" />
-            <span>{label}</span>
-        </div>
-        <Icon
-            icon="bx:up-arrow"
-            rotate={2}
-            class={` ${open ? "rotate-180" : ""} transition-all ml-2`}
-        />
-    {:else}
+        {/if}
         <span>{label}</span>
-        <Icon
-            icon="bx:up-arrow"
-            rotate={2}
-            class={` ${open ? "rotate-180" : ""} transition-all ml-2`}
-        />
-    {/if}
+    </div>
+    <Icon
+        icon="bx:up-arrow"
+        rotate={2}
+        class={` ${open ? "rotate-180" : ""} transition-all ml-2`}
+    />
 </button>
-<button
-    on:click={() => {
-        if (!closeOnInteract) return;
+{#if open}
+    <button
+        in:slide
+        out:slide
+        on:click={() => {
+            if (!closeOnInteract) return;
 
-        open = !open;
-    }}
->
-    {#if open}
-        <div in:slide out:slide class="p-2 text-left">
+            open = !open;
+        }}
+    >
+        <div class="p-2 text-left">
             <slot />
         </div>
-    {/if}
-</button>
+    </button>
+{/if}

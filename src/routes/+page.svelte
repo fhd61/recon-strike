@@ -2,7 +2,6 @@
     import { goto } from "$app/navigation";
     import typewriter from "$lib/animations/typewriter.js";
     import Logo from "$lib/components/logo.svelte";
-    import { clientSession } from "$lib/store/client.js";
     import Icon from "@iconify/svelte";
     import type { Session } from "@supabase/supabase-js";
     import { onMount } from "svelte";

@@ -23,6 +23,17 @@ export interface ICharacter {
   talents: IItem[]
 }
 
+export enum EAttribute {
+    agi = "agi",
+    int = "int",
+    for = "for",
+    vig = "vig",
+    def = "def",
+    speed = "speed",
+    ac = "ac",
+    hp = "hp",
+}
+
 export const initialCharacterData: ICharacter = {
   dossier: {
     name: '',
