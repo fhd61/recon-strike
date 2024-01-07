@@ -1,6 +1,7 @@
 <script lang="ts">
     import { getContext, onDestroy, setContext } from "svelte";
     import type { Writable } from "svelte/store";
+    import { fade, fly, slide } from "svelte/transition";
 
     export let title: string;
     export let id: number;
@@ -21,8 +22,11 @@
     });
 </script>
 
-<div>
-    {#if id === $selectedTab}
+{#if id === $selectedTab}
+    <div
+        in:slide={{ duration: 100, axis: "x" }}
+        out:slide={{ duration: 100, axis: "x" }}
+    >
         <slot />
-    {/if}
-</div>
+    </div>
+{/if}

@@ -3,11 +3,13 @@
     import typewriter from "$lib/animations/typewriter.js";
     import Logo from "$lib/components/logo.svelte";
     import Icon from "@iconify/svelte";
-    import type { Session } from "@supabase/supabase-js";
     import { onMount } from "svelte";
     import { fade, slide } from "svelte/transition";
 
     export let data;
+
+    let { supabase } = data;
+    $: ({ supabase } = data);
 
     let loadingTexts = [
         "Download armory data",
@@ -17,17 +19,13 @@
     ];
     let textIndex = 0;
 
-    let { supabase } = data;
-    $: ({ supabase } = data);
-
-    let animate = false;
     onMount(() => {
         setInterval(() => {
             if (textIndex === loadingTexts.length - 1) return;
             else textIndex++;
         }, 3000);
 
-        isLogged()
+        isLogged();
     });
 
     async function signInWithDiscord() {
@@ -40,7 +38,7 @@
         const session = await supabase.auth.getSession();
 
         if (session) {
-            goto("/characters")
+            goto("/characters");
         } else {
             console.log("User is not logged in");
         }

@@ -14,12 +14,12 @@
         CharacterSheet as Character,
         type ICharacter,
     } from "$lib/store/character";
-    import { afterUpdate, onMount } from "svelte";
+    import { onMount } from "svelte";
     import { rollFromString } from "$lib/diceRoller";
     import { toast } from "@zerodevx/svelte-toast";
     import type { ISkill } from "$lib/types/interface/ISkill.js";
     import type { IHp } from "$lib/types/interface/IHp.js";
-    import { slide } from "svelte/transition";
+    import { fade, slide } from "svelte/transition";
     import {
         onCombatEnd,
         onCombatStart,
@@ -32,6 +32,7 @@
     import Tab from "$lib/components/tabs/tab.svelte";
 
     export let data;
+
     let turnCount = 0;
     let inCombatMode: Boolean;
     let mouseInsideModal: Boolean;
@@ -89,11 +90,6 @@
             );
             $Character = load;
         }
-    });
-
-    afterUpdate(() => {
-        localStorage.setItem("character", JSON.stringify($Character));
-        localStorage.setItem("acCalcStat", JSON.stringify(acCalcStat));
     });
 
     function onSelectCover() {
@@ -335,7 +331,7 @@
     </div>
 
     <!-- Right Panel -->
-    <div class="w-full h-[95vh] px-2 pt-1 pb-2">
+    <div class="w-full h-[95vh] px-2 pt-1 pb-2 overflow-y-clip">
         <Panel height="h-full" title="Inventario">
             <div slot="content" class="h-full flex flex-col items-end">
                 <TabGroup
@@ -414,7 +410,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <dialog
-    class="bg-zinc-900 text-white p-4 backdrop:bg-zinc-950/90 open:transition-all"
+    class="bg-zinc-900 text-white p-4 backdrop:bg-zinc-950/90 open:transition-all polygonL"
     bind:this={modalElement}
     on:click={() => {
         if (mouseInsideModal) return;
@@ -424,8 +420,9 @@
 >
     {#if modalToShow === "dossier"}
         <Dossier
+            dbClient={{ session: data.session, supabase: data.supabase }}
             bind:mouseInside={mouseInsideModal}
-            bind:data={$Character.dossier}
+            bind:dossier={$Character.dossier}
         />
     {:else if modalToShow === "settings"}
         <Settings />

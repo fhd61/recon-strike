@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { onMount, setContext } from "svelte";
+    import { setContext } from "svelte";
     import { writable, type Writable } from "svelte/store";
+    import { slide } from "svelte/transition";
 
     export let groupStyle = "";
     export let tabStyle = "";
     export let selectedTab = 0;
 
     let selectedTabStore = writable(selectedTab);
-    let tabGroup: HTMLDivElement;
 
     $: $selectedTabStore = selectedTab;
     $: updateValue($selectedTabStore);
@@ -46,7 +46,6 @@
         titles[index].title = title;
         titles = titles;
     }
-
 </script>
 
 <div class={groupStyle}>
