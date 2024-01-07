@@ -1,8 +1,9 @@
 import { get } from "svelte/store";
-import { CharacterSheet, EAttribute } from "./store/character";
+import { CharacterSheet, EAttribute, type ICharacter } from "./store/character";
 import type { IItem } from "./types/interface/IItem";
 import type { IWeapon } from "./types/interface/IWeapon";
 import type { IBonus } from "./types/interface/IBonus";
+import { error } from "@sveltejs/kit";
 
 export class MathUtils {
     static clamp(num: number, min: number, max: number) {
@@ -85,5 +86,25 @@ export class CharacterUtils {
                 c.inventory.equipments.push(item)
                 return c
             })
+    }
+
+    static serializedChar() {
+        return JSON.stringify(get(CharacterSheet))
+    }
+
+    static saveToLocalStorage() {
+        localStorage.setItem("character", this.serializedChar())
+    }
+
+    static loadCharFromLocalStorage() {
+        const rawData = localStorage.getItem("character")
+
+        if (rawData) {
+            const char = JSON.parse(rawData) as ICharacter
+
+            return char
+        }
+        else 
+            throw new Error("Character not found, or invalid")
     }
 }

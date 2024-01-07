@@ -69,28 +69,26 @@
     });
 
     onMount(() => {
-        console.log(data);
-        window.document.querySelector("#buffs")?.scrollIntoView(true);
-        let char = localStorage.getItem("character");
-        let accCalcKey = localStorage.getItem("acCalcStat");
-
-        if (accCalcKey === null) {
-            localStorage.setItem("acCalcStat", acCalcStat);
-        } else {
-            acCalcStat = JSON.parse(
-                localStorage.getItem("acCalcStat") as "agi" | "int" | "for",
-            );
-        }
-
-        if (char === null) {
-            localStorage.setItem("character", JSON.stringify($Character));
-        } else {
-            let load: ICharacter = JSON.parse(
-                localStorage.getItem("character") as string,
-            );
-            $Character = load;
-        }
+        setInterval(() => {
+            // saveOnDb();
+        }, 10000);
     });
+
+    async function saveOnDb() {
+        const query = await data.supabase.from("cloud_save").select("json");
+        if (query.data === null) {
+            return;
+        }
+
+        const chars = JSON.parse(query.data[0].json) as ICharacter[];
+        console.log(chars);
+        chars.push($Character)
+
+        const res = await data.supabase
+            .from("cloud_save")
+            .upsert([{ json: [JSON.stringify(chars)] }]);
+        console.log(res);
+    }
 
     function onSelectCover() {
         const coverBonuses = {
@@ -185,7 +183,7 @@
                         Atributo para o CA:
                         <select
                             class="uppercase bg-zinc-800 p-1"
-                            bind:value={acCalcStat}
+                            bind:value={$Character.attributes["ac"].use}
                         >
                             <option value="agi"
                                 >{$Character.attributes["agi"]

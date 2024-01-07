@@ -51,7 +51,7 @@ export const initialCharacterData: ICharacter = {
     vig: { id: 'agi', name: 'Vigor', shortName: 'vig', value: 1, bonus: {} },
     def: { id: 'def', name: 'Defense', shortName: 'def', value: 0, bonus: {} },
     speed: { id: 'speed', name: 'Speed', shortName: 'speed', value: 9, bonus: {} },
-    ac: { id: 'ac', name: 'ac', shortName: 'ac', value: 0, bonus: {} }
+    ac: { id: 'ac', name: 'ac', shortName: 'ac', value: 0, bonus: {}, use:"agi" }
   },
   skills: [],
   inventory: { equipments: [], weapons: [] },
