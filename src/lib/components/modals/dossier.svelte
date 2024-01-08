@@ -12,7 +12,8 @@
 
     let inputFile: HTMLInputElement;
     let portraitUrl = dossier.portrait;
-    let noImage = "https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/avatars/Placeholder/noImage.png"
+    let noImage =
+        "https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/avatars/Placeholder/noImage.png";
 
     $: portraitUrl = dossier.portrait;
 
@@ -41,13 +42,22 @@
     on:mouseleave={() => (mouseInside = false)}
 >
     <div class="flex flex-col">
-        <img src={portraitUrl? portraitUrl : noImage} class="w-80 h-72 polygon" alt="" />
-        <div class="bg-zinc-700 hover:bg-orange-600 mt-2 p-1 text-center polygonR transition-all">
-            <label class="w-full cursor-pointer" for="files">Selecionar foto</label>
+        <img
+            src={portraitUrl ? portraitUrl : noImage}
+            class="w-80 h-72 polygon"
+            alt=""
+        />
+        <div
+            class="bg-zinc-700 hover:bg-orange-600 mt-2 p-1 text-center polygonR transition-all"
+        >
+            <label class="w-full cursor-pointer" for="files"
+                >Selecionar foto</label
+            >
             <input
                 id="files"
                 class="w-full hidden"
                 type="file"
+                accept="image/png, image/jpg, image/webp"
                 bind:this={inputFile}
                 on:change={(e) => {
                     uploadImgToStorage(inputFile.files[0]);
