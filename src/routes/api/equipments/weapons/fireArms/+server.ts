@@ -6,6 +6,7 @@ export function GET() {
 
 const content: IWeapon[] = [
     {
+        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Assault_Icon.webp",
         name: "Rifle de Assalto",
         hit: "1d20",
         modifier: "INT/2",
@@ -15,6 +16,7 @@ const content: IWeapon[] = [
         critMult: 1.5
     },
     {
+        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/SMG_Icon.webp",
         name: "Submetralhadora",
         hit: "1d20",
         modifier: "AGI/2",
@@ -24,6 +26,7 @@ const content: IWeapon[] = [
         critMult: 1.2
     },
     {
+        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Shotgun_Icon.webp",
         name: "Escopeta",
         hit: "1d20",
         modifier: "FOR/2",
@@ -33,6 +36,7 @@ const content: IWeapon[] = [
         critMult: 1.4
     },
     {
+        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Pistol_Icon.webp",
         name: "Pistola",
         hit: "1d20",
         modifier: "AGI/2",
@@ -42,6 +46,7 @@ const content: IWeapon[] = [
         critMult: 1.5
     },
     {
+        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Marskman_Icon.webp",
         name: "Rifle de Precisão",
         hit: "1d20",
         modifier: "INT/2",
@@ -51,6 +56,7 @@ const content: IWeapon[] = [
         critMult: 1.8
     },
     {
+        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/LMG_Icon.webp",
         name: "LMG",
         hit: "1d20",
         modifier: "FOR/2",

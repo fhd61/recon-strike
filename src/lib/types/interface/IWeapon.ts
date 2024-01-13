@@ -1,6 +1,8 @@
 import type { IEquitable } from "./IEquitable"
 
 export interface IWeapon extends IEquitable{
+    icon?: string
+    description?: string
     name: string
     hit: string
     modifier: string

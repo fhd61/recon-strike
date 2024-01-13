@@ -1,12 +1,10 @@
 <script lang="ts">
     import { setContext } from "svelte";
     import { writable, type Writable } from "svelte/store";
-    import { slide } from "svelte/transition";
 
-    export let groupStyle = "";
-    export let tabStyle = "";
     export let selectedTab = 0;
-
+    
+    let props = $$restProps
     let selectedTabStore = writable(selectedTab);
 
     $: $selectedTabStore = selectedTab;
@@ -48,11 +46,11 @@
     }
 </script>
 
-<div class={groupStyle}>
+<div class={props.class}>
     {#each titles as { id, title }}
         <button
             class:selected={$selectedTabStore === id}
-            class={tabStyle}
+            class="w-full h-full hover:bg-orange-950 transition-all"
             on:click={() => ($selectedTabStore = id)}>{title}</button
         >
     {/each}

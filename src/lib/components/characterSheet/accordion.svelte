@@ -4,6 +4,7 @@
 
     export let label = "Modificadores";
     export let icon = "";
+    export let iconClass = "w-12 -translate-y-1 mr-2"
     export let open = false;
     export let closeOnInteract = false;
 </script>
@@ -14,7 +15,7 @@
 >
     <div class="flex items-center text-left">
         {#if icon}
-            <img src={icon} class="w-12 -translate-y-1 mr-2" alt="" />
+            <img src={icon} class={iconClass} alt="" />
         {/if}
         <span>{label}</span>
     </div>

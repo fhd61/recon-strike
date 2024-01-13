@@ -6,12 +6,13 @@
 
     export let data: IItem;
     export let bg = "bg-zinc-950";
+    export let iconClass = ""
 
     $: htmlDescription = marked(data.description);
 </script>
 
 <div class={`w-[45rem] flex flex-col ${bg} px-2 m-1 polygonL`}>
-    <Accordion closeOnInteract={false} icon={data.icon} label={data.name}>
+    <Accordion closeOnInteract={false} {iconClass} icon={data.icon} label={data.name}>
         <div class="flex flex-col items-start">
             {@html htmlDescription}
             <div class="mt-2">

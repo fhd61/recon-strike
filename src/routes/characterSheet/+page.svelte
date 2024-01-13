@@ -19,7 +19,7 @@
     import { toast } from "@zerodevx/svelte-toast";
     import type { ISkill } from "$lib/types/interface/ISkill.js";
     import type { IHp } from "$lib/types/interface/IHp.js";
-    import { fade, slide } from "svelte/transition";
+    import { slide } from "svelte/transition";
     import {
         onCombatEnd,
         onCombatStart,
@@ -30,6 +30,7 @@
     import ItemPanel from "$lib/components/characterSheet/itemPanel.svelte";
     import TabGroup from "$lib/components/tabs/tabGroup.svelte";
     import Tab from "$lib/components/tabs/tab.svelte";
+    import { CharacterUtils } from "$lib/utils.js";
 
     export let data;
 
@@ -333,8 +334,7 @@
         <Panel height="h-full" title="Inventario">
             <div slot="content" class="h-full flex flex-col items-end">
                 <TabGroup
-                    groupStyle="flex w-full mb-2 justify-around items-center bg-zinc-900 h-10 polygonR capitalize"
-                    tabStyle="h-full w-full hover:bg-orange-800 active:bg-orange-600 font-semibold transition-all"
+                    class="flex w-full mb-2 justify-around items-center bg-zinc-900 h-10 polygonR capitalize"
                 >
                     <Tab id={0} title="Equipados" />
                     <Tab id={1} title="Arsenal" />
@@ -353,11 +353,12 @@
                             <div
                                 class="h-[52rem] overflow-y-auto overflow-x-hidden"
                             >
-                                {#each $Character.inventory.equipments as items, i}
+                                {#each $Character.inventory.equipments as item, i}
                                     <div in:slide out:slide>
                                         <ItemPanel
-                                            bind:data={items}
+                                            bind:data={item}
                                             bg="bg-zinc-900"
+                                            iconClass="w-10 h-10 object-scale-down mr-2 -translate-y-1"
                                         >
                                             <button
                                                 class="bg-red-700 hover:bg-red-600 active:bg-red-700 mt-2 p-1 polygonL transition-all"
@@ -370,6 +371,12 @@
                                                         return c;
                                                     });
                                                 }}>Remover</button
+                                            >
+                                            <button
+                                                class="bg-green-700 hover:bg-red-600 active:bg-red-700 mt-2 p-1 polygonL transition-all"
+                                                on:click={() => {
+                                                    item.isEquipped = !item.isEquipped
+                                                }}>{!item.isEquipped ? "Equipar" : "Desequipar"}</button
                                             >
                                         </ItemPanel>
                                     </div>
