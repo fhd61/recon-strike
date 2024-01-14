@@ -3,7 +3,6 @@ import { CharacterSheet, EAttribute, type ICharacter } from "./store/character";
 import type { IItem } from "./types/interface/IItem";
 import type { IWeapon } from "./types/interface/IWeapon";
 import type { IBonus } from "./types/interface/IBonus";
-import { error } from "@sveltejs/kit";
 
 export class MathUtils {
     static clamp(num: number, min: number, max: number) {
@@ -38,6 +37,18 @@ export class StringUtils {
     }
 }
 
+export class EAttributeUtils {
+    static stringToAttribute(value: string) {
+        let attribute: EAttribute | undefined = EAttribute[value as keyof typeof EAttribute];
+
+        if (attribute !== undefined) {
+            return attribute
+        } else {
+            throw new Error("Invalid attribute")
+        }
+    }
+}
+
 export class CharacterUtils {
     static removeBonusOfAttribute(attribute: EAttribute, name: string) {
         if (!Object.keys(get(CharacterSheet).attributes).includes(attribute)) {
@@ -59,6 +70,14 @@ export class CharacterUtils {
             (c.attributes[attribute] as IBonus).bonus[name] = value
             return c
         })
+    }
+
+    static getAttribute(attribute:EAttribute){
+        if (!Object.keys(get(CharacterSheet).attributes).includes(attribute)) {
+            throw new Error("Try to get a non existing attribute in character")
+        }
+
+        return get(CharacterSheet).attributes[attribute]
     }
 
     static modifyAttribute(attribute: EAttribute, value: number) {
@@ -88,6 +107,19 @@ export class CharacterUtils {
             })
     }
 
+    static removeItemToInventory(item: IItem | IWeapon) {
+        if ("hit" in item)
+            CharacterSheet.update(c => {
+                let i = c.inventory.weapons.indexOf(item)
+                c.inventory.weapons.splice(i, 1)
+                return c
+            })
+        else
+            CharacterSheet.update(c => {
+                c.inventory.equipments.push(item)
+                return c
+            })
+    }
     static serializedChar() {
         return JSON.stringify(get(CharacterSheet))
     }
@@ -104,7 +136,7 @@ export class CharacterUtils {
 
             return char
         }
-        else 
+        else
             throw new Error("Character not found, or invalid")
     }
 }

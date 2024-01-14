@@ -1,6 +1,5 @@
 <script lang="ts">
     import type { IItem } from "$lib/types/interface/IItem";
-    import { onMount } from "svelte";
     import Accordion from "./accordion.svelte";
     import { marked } from "marked";
 

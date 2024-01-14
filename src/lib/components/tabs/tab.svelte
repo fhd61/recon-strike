@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { getContext, onDestroy, setContext } from "svelte";
+    import { getContext, onDestroy } from "svelte";
     import type { Writable } from "svelte/store";
-    import { fade, fly, slide } from "svelte/transition";
+    import { slide } from "svelte/transition";
 
     export let title: string;
     export let id: number;
@@ -24,8 +24,8 @@
 
 {#if id === $selectedTab}
     <div
-        in:slide={{ duration: 100, axis: "x" }}
-        out:slide={{ duration: 100, axis: "x" }}
+        in:slide={{ duration: 120, axis: "x", delay: 300 }}
+        out:slide={{ duration: 120, axis: "x" }}
     >
         <slot />
     </div>

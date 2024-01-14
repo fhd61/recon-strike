@@ -30,7 +30,8 @@
     import ItemPanel from "$lib/components/characterSheet/itemPanel.svelte";
     import TabGroup from "$lib/components/tabs/tabGroup.svelte";
     import Tab from "$lib/components/tabs/tab.svelte";
-    import { CharacterUtils } from "$lib/utils.js";
+    import ItemDisplay from "$lib/components/characterSheet/Invetory/ItemDisplay.svelte";
+    import WeaponDisplay from "$lib/components/characterSheet/Invetory/weaponDisplay.svelte";
 
     export let data;
 
@@ -44,6 +45,7 @@
         | "settings"
         | "inv_talents"
         | "inv_equipment"
+        | "inv_weapons"
         | "inv_ability" = "dossier";
     let acCalcStat: "agi" | "int" | "for" = "agi";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
@@ -83,7 +85,7 @@
 
         const chars = JSON.parse(query.data[0].json) as ICharacter[];
         console.log(chars);
-        chars.push($Character)
+        chars.push($Character);
 
         const res = await data.supabase
             .from("cloud_save")
@@ -336,8 +338,24 @@
                 <TabGroup
                     class="flex w-full mb-2 justify-around items-center bg-zinc-900 h-10 polygonR capitalize"
                 >
-                    <Tab id={0} title="Equipados" />
-                    <Tab id={1} title="Arsenal" />
+                    <Tab id={0} title="Equipados"/>
+                    <Tab id={1} title="Arsenal">
+                        <div class="flex w-full justify-end mb-1">
+                            <button
+                                on:click={() => {
+                                    modalElement.showModal();
+                                    modalToShow = "inv_weapons";
+                                }}
+                                class="h-8 w-10 bg-green-800 polygonF"
+                                >Add</button
+                            >
+                        </div>
+                        {#each $Character.inventory.weapons as item}
+                            <div>
+                                <WeaponDisplay bind:item />
+                            </div>
+                        {/each}
+                    </Tab>
                     <Tab id={2} title="Equipamentos">
                         <div class="flex w-full justify-end mb-1">
                             <button
@@ -353,32 +371,9 @@
                             <div
                                 class="h-[52rem] overflow-y-auto overflow-x-hidden"
                             >
-                                {#each $Character.inventory.equipments as item, i}
-                                    <div in:slide out:slide>
-                                        <ItemPanel
-                                            bind:data={item}
-                                            bg="bg-zinc-900"
-                                            iconClass="w-10 h-10 object-scale-down mr-2 -translate-y-1"
-                                        >
-                                            <button
-                                                class="bg-red-700 hover:bg-red-600 active:bg-red-700 mt-2 p-1 polygonL transition-all"
-                                                on:click={() => {
-                                                    Character.update((c) => {
-                                                        c.inventory.equipments.splice(
-                                                            i,
-                                                            1,
-                                                        );
-                                                        return c;
-                                                    });
-                                                }}>Remover</button
-                                            >
-                                            <button
-                                                class="bg-green-700 hover:bg-red-600 active:bg-red-700 mt-2 p-1 polygonL transition-all"
-                                                on:click={() => {
-                                                    item.isEquipped = !item.isEquipped
-                                                }}>{!item.isEquipped ? "Equipar" : "Desequipar"}</button
-                                            >
-                                        </ItemPanel>
+                                {#each $Character.inventory.equipments as item}
+                                    <div>
+                                        <ItemDisplay bind:item />
                                     </div>
                                 {/each}
                             </div>
@@ -438,6 +433,12 @@
         />
     {:else if modalToShow === "inv_equipment"}
         <EquipmentsList
+            bind:mouseInside={mouseInsideModal}
+            data={{ ...data.defaults.equipments }}
+        />
+    {:else if modalToShow === "inv_weapons"}
+        <EquipmentsList
+            index={1}
             bind:mouseInside={mouseInsideModal}
             data={{ ...data.defaults.equipments }}
         />

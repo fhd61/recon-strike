@@ -9,11 +9,13 @@
 
     export let data: { armor: IItem[]; fireArms: IWeapon[]; melee: IWeapon[] };
     export let mouseInside: Boolean = false;
+    export let index = 0
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div on:mouseenter={() => (mouseInside = true)}>
     <TabGroup
+        selectedTab={index}
         class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
     >
         <Tab id={0} title="Colete">
@@ -33,7 +35,12 @@
         <Tab id={1} title="Armas">
             {#each data.fireArms as item}
                 <WeaponPanel data={item}>
-
+                    <button
+                        on:click={() =>
+                            CharacterUtils.addItemToInventory(item)
+                            }
+                        >Adicionar</button
+                    >
                 </WeaponPanel>
             {/each}
         </Tab>
