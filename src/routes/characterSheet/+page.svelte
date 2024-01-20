@@ -72,10 +72,25 @@
     });
 
     onMount(() => {
+        let char: ICharacter | undefined = JSON.parse(
+            localStorage.getItem("character") as string,
+        );
+        if (char) Character.set(char);
+
         setInterval(() => {
             // saveOnDb();
         }, 10000);
+
+        setInterval(() => {
+            saveLocal()
+        }, 10000);
     });
+
+    async function saveLocal() {
+        let json = JSON.stringify($Character)
+
+        localStorage.setItem("character", json)
+    }
 
     async function saveOnDb() {
         const query = await data.supabase.from("cloud_save").select("json");
@@ -338,7 +353,7 @@
                 <TabGroup
                     class="flex w-full mb-2 justify-around items-center bg-zinc-900 h-10 polygonR capitalize"
                 >
-                    <Tab id={0} title="Equipados"/>
+                    <Tab id={0} title="Equipados" />
                     <Tab id={1} title="Arsenal">
                         <div class="flex w-full justify-end mb-1">
                             <button
@@ -413,7 +428,8 @@
     class="bg-zinc-900 text-white p-4 backdrop:bg-zinc-950/90 open:transition-all polygonL"
     bind:this={modalElement}
     on:click={() => {
-        if (mouseInsideModal) return;
+        if (mouseInsideModal) 
+            return;
 
         modalElement.close();
     }}

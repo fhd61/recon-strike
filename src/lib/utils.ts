@@ -5,6 +5,10 @@ import type { IWeapon } from "./types/interface/IWeapon";
 import type { IBonus } from "./types/interface/IBonus";
 
 export class MathUtils {
+    static randomNumber(max:number) {
+        return Math.ceil(Math.random() * max) + 1
+    }
+
     static clamp(num: number, min: number, max: number) {
         return Math.min(Math.max(num, min), max)
     }
