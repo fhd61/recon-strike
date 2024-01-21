@@ -1,9 +1,7 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import callSingGenerator from "$lib/callSingGenerator.js";
     import CharacterSelector from "$lib/components/characterSelector.svelte";
     import CreateChar from "$lib/components/modals/createChar.svelte";
-    import nameGenerator from "$lib/nameGenerator.js";
     import type { ICharacter } from "$lib/store/character.js";
     import { onMount } from "svelte";
     export let data;

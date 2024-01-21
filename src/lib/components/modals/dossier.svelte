@@ -2,6 +2,9 @@
     import type { IDossier } from "$lib/types/interface/IDossier";
     import { v4 as uuidv4 } from "uuid";
     import type { Session, SupabaseClient } from "@supabase/supabase-js";
+    import Icon from "@iconify/svelte";
+    import callSingGenerator from "$lib/callSingGenerator";
+    import nameGenerator from "$lib/nameGenerator";
 
     export let dossier: IDossier;
     export let mouseInside: Boolean = false;
@@ -32,6 +35,10 @@
         dossier.portrait = url.data.publicUrl;
 
         return url;
+    }
+
+    function genName() {
+        nameGenerator().then((res) => (dossier.name = res));
     }
 </script>
 
@@ -65,10 +72,19 @@
             />
         </div>
     </div>
-    <form class="flex flex-col mx-4">
+    <div class="flex flex-col mx-4">
         <div class="flex justify-between mx">
             <div class="flex flex-col">
-                <label for="name">Name</label>
+                <label for="name">
+                    Name
+
+                    <button
+                        class="hover:scale-110 transition-all"
+                        on:click={genName}
+                    >
+                        <Icon icon="fa6-solid:dice" />
+                    </button>
+                </label>
                 <input
                     bind:value={dossier.name}
                     class="bg-zinc-800 px-2 py-1 polygonL"
@@ -79,7 +95,17 @@
                 />
             </div>
             <div class="flex flex-col mx-4">
-                <label for="callSing">Call Sing</label>
+                <label for="callSing">
+                    Call Sing
+                    <button
+                        class="hover:scale-110 transition-all"
+                        on:click={() => {
+                            dossier.callSign = callSingGenerator();
+                        }}
+                    >
+                        <Icon icon="fa6-solid:dice" />
+                    </button>
+                </label>
                 <input
                     bind:value={dossier.callSign}
                     id="callSing"
@@ -135,5 +161,5 @@
                 rows="10"
             ></textarea>
         </div>
-    </form>
+    </div>
 </div>

@@ -1,4 +1,5 @@
 import type { IEquitable } from "./IEquitable"
+import type { IItem } from "./IItem"
 
 export interface IWeapon extends IEquitable{
     icon?: string
@@ -11,4 +12,5 @@ export interface IWeapon extends IEquitable{
     range: number
     critValue: number
     critMult: number
+    mods?: IItem[]
 }

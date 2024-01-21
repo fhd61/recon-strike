@@ -57,7 +57,7 @@
     }
 
     function genName() {
-        nameGenerator().then(res =>  dossier.name = res);
+        nameGenerator().then((res) => (dossier.name = res));
     }
 </script>
 
@@ -95,7 +95,10 @@
             <div class="flex flex-col">
                 <label for="name">
                     Nome
-                    <button on:click={genName}>
+                    <button
+                        class="hover:scale-110 transition-all"
+                        on:click={genName}
+                    >
                         <Icon icon="fa6-solid:dice" />
                     </button>
                 </label>
@@ -112,6 +115,7 @@
                 <label for="callSing">
                     Call Sing
                     <button
+                        class="hover:scale-110 transition-all"
                         on:click={() => {
                             dossier.callSign = callSingGenerator();
                         }}

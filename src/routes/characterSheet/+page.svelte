@@ -82,14 +82,14 @@
         }, 10000);
 
         setInterval(() => {
-            saveLocal()
+            saveLocal();
         }, 10000);
     });
 
     async function saveLocal() {
-        let json = JSON.stringify($Character)
+        let json = JSON.stringify($Character);
 
-        localStorage.setItem("character", json)
+        localStorage.setItem("character", json);
     }
 
     async function saveOnDb() {
@@ -226,15 +226,13 @@
                     <Ability bind:data={testSkill} />
                     <Ability bind:data={testSkill} />
                 </div>
-                <Accordion>
-                    <button
-                        on:click={() => {
-                            modalElement.showModal();
-                            modalToShow = "inv_ability";
-                        }}
-                        class="p-1 bg-green-800">Trocar habilidades</button
-                    >
-                </Accordion>
+                <button
+                    on:click={() => {
+                        modalElement.showModal();
+                        modalToShow = "inv_ability";
+                    }}
+                    class="mt-2 p-1 bg-green-800 hover:bg-green-900 active:bg-green-700 transition-all polygonL">Trocar Habilidades</button
+                >
             </div>
         </Panel>
         <Panel height="h-fit" title="Combate">
@@ -428,8 +426,7 @@
     class="bg-zinc-900 text-white p-4 backdrop:bg-zinc-950/90 open:transition-all polygonL"
     bind:this={modalElement}
     on:click={() => {
-        if (mouseInsideModal) 
-            return;
+        if (mouseInsideModal) return;
 
         modalElement.close();
     }}
@@ -453,6 +450,12 @@
             data={{ ...data.defaults.equipments }}
         />
     {:else if modalToShow === "inv_weapons"}
+        <EquipmentsList
+            index={1}
+            bind:mouseInside={mouseInsideModal}
+            data={{ ...data.defaults.equipments }}
+        />
+    {:else if modalToShow === "inv_ability"}
         <EquipmentsList
             index={1}
             bind:mouseInside={mouseInsideModal}
