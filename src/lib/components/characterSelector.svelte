@@ -1,6 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-        import type { ICharacter } from "$lib/store/character";
+    import type { ICharacter } from "$lib/store/character";
 
     export let data:ICharacter
 

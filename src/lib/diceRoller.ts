@@ -17,7 +17,7 @@ export function rollFromString(rollText: string): IRollResult | void {
 }
 
 export function rollDice(name: string, diceSides: number, bonus: number[] = [], rollTimes: number = 1,): IRollResult {
-	let rolls = new Array<number>
+	const rolls = new Array<number>
 	let bonusTotal = 0
 	let rollsTotal = 0
 	let total = 0

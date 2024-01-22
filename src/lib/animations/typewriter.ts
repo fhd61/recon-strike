@@ -62,7 +62,7 @@ function getAllTextNodes(node: Node): Text[] {
     if (node.nodeType === 3) {
         return [node as Text];
     } else if (node.hasChildNodes()) {
-        let list: Text[] = [];
+        const list: Text[] = [];
         for (const child of node.childNodes) {
             getAllTextNodes(child).forEach((textNode) => list.push(textNode));
         }

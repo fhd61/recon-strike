@@ -1,5 +1,5 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
-const { addDynamicIconSelectors } = require('@iconify/tailwind');
+import { addDynamicIconSelectors } from "@iconify/tailwind";
 
 /** @type {import('tailwindcss').Config} */
 const config = {

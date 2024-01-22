@@ -29,7 +29,7 @@
     });
 
     async function signInWithDiscord() {
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        await supabase.auth.signInWithOAuth({
             provider: "discord",
         });
     }

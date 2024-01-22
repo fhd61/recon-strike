@@ -8,7 +8,7 @@
     import WeaponPanel from "../characterSheet/weaponPanel.svelte";
 
     export let data: { armor: IItem[]; fireArms: IWeapon[]; melee: IWeapon[] };
-    export let mouseInside: Boolean = false;
+    export let mouseInside: boolean = false;
     export let index = 0
 </script>
 

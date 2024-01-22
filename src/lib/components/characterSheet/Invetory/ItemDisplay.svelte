@@ -1,8 +1,5 @@
 <script lang="ts">
     import ItemPanel from "$lib/components/characterSheet/itemPanel.svelte";
-    import {
-        CharacterSheet as Character,
-    } from "$lib/store/character";
     import type { IItem } from "$lib/types/interface/IItem";
     import { CharacterUtils, EAttributeUtils } from "$lib/utils";
 

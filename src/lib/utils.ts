@@ -43,7 +43,7 @@ export class StringUtils {
 
 export class EAttributeUtils {
     static stringToAttribute(value: string) {
-        let attribute: EAttribute | undefined = EAttribute[value as keyof typeof EAttribute];
+        const attribute: EAttribute | undefined = EAttribute[value as keyof typeof EAttribute];
 
         if (attribute !== undefined) {
             return attribute
@@ -114,7 +114,7 @@ export class CharacterUtils {
     static removeItemToInventory(item: IItem | IWeapon) {
         if ("hit" in item)
             CharacterSheet.update(c => {
-                let i = c.inventory.weapons.indexOf(item)
+                const i = c.inventory.weapons.indexOf(item)
                 c.inventory.weapons.splice(i, 1)
                 return c
             })

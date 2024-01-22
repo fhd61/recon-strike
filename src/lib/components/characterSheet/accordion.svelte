@@ -4,14 +4,15 @@
 
     export let label = "Modificadores";
     export let icon = "";
-    export let iconClass = "w-12 -translate-y-1 mr-2"
+    export let iconClass = "w-12 -translate-y-1 mr-2";
     export let open = false;
     export let closeOnInteract = false;
+    let props = $$restProps
 </script>
 
 <button
     on:click={() => (open = !open)}
-    class={`w-full flex justify-between items-center mt-2 ${icon ? "" : "p-3"}`}
+    class={`w-full flex justify-between items-center mt-2 ${icon ? "" : "p-3"} ${props.class}`}
 >
     <div class="flex items-center text-left">
         {#if icon}
@@ -25,18 +26,16 @@
         class={` ${open ? "rotate-180" : ""} transition-all ml-2`}
     />
 </button>
-{#if open}
-    <button
-        in:slide
-        out:slide
-        on:click={() => {
-            if (!closeOnInteract) return;
+<button
+    on:click={() => {
+        if (!closeOnInteract) return;
 
-            open = !open;
-        }}
-    >
-        <div class="p-2 text-left">
+        open = !open;
+    }}
+>
+    {#if open}
+        <div in:slide out:slide class="p-2 text-left">
             <slot />
         </div>
-    </button>
-{/if}
+    {/if}
+</button>

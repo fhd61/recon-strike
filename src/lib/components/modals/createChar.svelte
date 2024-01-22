@@ -18,7 +18,7 @@
     };
 
     export const dispatcher = createEventDispatcher();
-    export let mouseInside: Boolean = false;
+    export let mouseInside: boolean = false;
     export let dbClient: {
         session: Session | null;
         supabase: SupabaseClient<any, "public", any>;

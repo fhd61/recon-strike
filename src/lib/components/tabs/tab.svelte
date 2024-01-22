@@ -23,10 +23,9 @@
 </script>
 
 {#if id === $selectedTab}
-    <div
-        in:slide={{ duration: 120, axis: "x", delay: 300 }}
-        out:slide={{ duration: 120, axis: "x" }}
-    >
-        <slot />
+    <div>
+        <div in:slide>
+            <slot />
+        </div>
     </div>
 {/if}

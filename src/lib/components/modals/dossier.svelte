@@ -7,7 +7,7 @@
     import nameGenerator from "$lib/nameGenerator";
 
     export let dossier: IDossier;
-    export let mouseInside: Boolean = false;
+    export let mouseInside: boolean = false;
     export let dbClient: {
         session: Session | null;
         supabase: SupabaseClient<any, "public", any>;
@@ -66,7 +66,9 @@
                 type="file"
                 accept="image/png, image/jpg, image/webp"
                 bind:this={inputFile}
-                on:change={(e) => {
+                on:change={() => {
+                    if (inputFile.files == null) return;
+                    
                     uploadImgToStorage(inputFile.files[0]);
                 }}
             />

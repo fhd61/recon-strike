@@ -1,7 +1,6 @@
 <script lang="ts">
     import type { IAttribute } from "$lib/types/interface/IBaseAttribute";
     import { CharacterSheet } from "$lib/store/character";
-    import { onTurnEnd } from "$lib/store/events";
     import { afterUpdate } from "svelte";
 
     export let data: IAttribute;

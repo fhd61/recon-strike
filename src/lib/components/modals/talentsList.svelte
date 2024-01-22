@@ -4,7 +4,7 @@
     import { CharacterSheet } from "$lib/store/character";
 
     export let data: IItem[];
-    export let mouseInside: Boolean = false;
+    export let mouseInside: boolean = false;
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->

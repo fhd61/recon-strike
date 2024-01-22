@@ -32,12 +32,13 @@
     import Tab from "$lib/components/tabs/tab.svelte";
     import ItemDisplay from "$lib/components/characterSheet/Invetory/ItemDisplay.svelte";
     import WeaponDisplay from "$lib/components/characterSheet/Invetory/weaponDisplay.svelte";
+    import SkillList from "$lib/components/modals/skillList.svelte";
 
     export let data;
 
     let turnCount = 0;
-    let inCombatMode: Boolean;
-    let mouseInsideModal: Boolean;
+    let inCombatMode: boolean;
+    let mouseInsideModal: boolean;
     let modalElement: HTMLDialogElement;
     let diceRollInput: HTMLInputElement;
     let modalToShow:
@@ -58,15 +59,15 @@
         currentCooldown: 5,
     };
 
-    //@ts-ignore
+    //@ts-expect-error
     onTurnEnd.on(() => {
         testSkill.currentCooldown += 1;
     });
-    //@ts-ignore
+    //@ts-expect-error 
     onTurnStart.on(() => {
         turnCount++;
     });
-    //@ts-ignore
+    //@ts-expect-error
     onCombatEnd.on(() => {
         turnCount = 0;
     });
@@ -231,7 +232,8 @@
                         modalElement.showModal();
                         modalToShow = "inv_ability";
                     }}
-                    class="mt-2 p-1 bg-green-800 hover:bg-green-900 active:bg-green-700 transition-all polygonL">Trocar Habilidades</button
+                    class="mt-2 p-1 bg-green-800 hover:bg-green-900 active:bg-green-700 transition-all polygonL"
+                    >Trocar Habilidades</button
                 >
             </div>
         </Panel>
@@ -241,9 +243,9 @@
                     <button
                         on:click={() => {
                             inCombatMode = !inCombatMode;
-                            //@ts-ignore
+                            //@ts-expect-error
                             if (inCombatMode) onCombatStart.trigger();
-                            //@ts-ignore
+                            //@ts-expect-error
                             else onCombatEnd.trigger();
                         }}
                         class={inCombatMode
@@ -260,7 +262,7 @@
                     <button
                         disabled={!inCombatMode}
                         on:click={() => {
-                            //@ts-ignore
+                            //@ts-expect-error
                             onTurnEnd.trigger();
                         }}
                         class="bg-[#f86b10]/50 p-2 text-sm polygonR w-28 h-8 active:bg-[#f86b10]/80 disabled:bg-[#f86b10]/20 disabled:text-gray-400 transition-all"
@@ -269,7 +271,7 @@
                     <button
                         disabled={!inCombatMode}
                         on:click={() => {
-                            //@ts-ignore
+                            //@ts-expect-error
                             onTurnStart.trigger();
                         }}
                         class="bg-[#f86b10]/50 p-2 text-sm polygonL w-28 h-8 active:bg-[#f86b10]/80 disabled:bg-[#f86b10]/20 disabled:text-gray-400 transition-all"
@@ -456,10 +458,10 @@
             data={{ ...data.defaults.equipments }}
         />
     {:else if modalToShow === "inv_ability"}
-        <EquipmentsList
-            index={1}
+        <SkillList
+            skillSlot={0}
             bind:mouseInside={mouseInsideModal}
-            data={{ ...data.defaults.equipments }}
+            data={data.defaults.skills}
         />
     {/if}
 </dialog>

@@ -11,7 +11,7 @@
 
     let modalElement: HTMLDialogElement;
     let characters: ICharacter[] = [];
-    let mouseInsideModal: Boolean;
+    let mouseInsideModal: boolean;
 
     onMount(() => {
         getRows();
