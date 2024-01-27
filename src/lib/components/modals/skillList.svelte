@@ -1,5 +1,6 @@
 <script lang="ts">
     import ItemPanel from "../characterSheet/itemPanel.svelte";
+    import { CharacterSheet } from "$lib/store/character";
     import { CharacterUtils } from "$lib/utils";
     import TabGroup from "../tabs/tabGroup.svelte";
     import Tab from "../tabs/tab.svelte";
@@ -37,11 +38,14 @@
                     <Accordion class="bg-zinc-900" label="Padrão">
                         <div>
                             {#each data.tech as skill}
-                                <ItemPanel
-                                    iconClass="w-10"
-                                    data={{ ...skill }}
-                                >
-                                <button>Equipar</button>
+                                <ItemPanel iconClass="w-10" data={{ ...skill }}>
+                                    <button
+                                        class="bg-green-600 hover:bg-green-700 active:bg-green-500 p-2 polygonR"
+                                        on:click={() => {
+                                            CharacterUtils.swapSkill(0, skill);
+                                            console.log($CharacterSheet.skills);
+                                        }}>Equipar</button
+                                    >
                                 </ItemPanel>
                             {/each}
                         </div>
@@ -49,10 +53,14 @@
                     <Accordion label="Upgrades">
                         <div>
                             {#each data.upgrades.tech as skill}
-                                <ItemPanel
-                                    iconClass="w-10"
-                                    data={{ ...skill }}
-                                />
+                                <ItemPanel iconClass="w-10" data={{ ...skill }}>
+                                    <button
+                                        on:click={() => {
+                                            CharacterUtils.swapSkill(0, skill);
+                                            console.log($CharacterSheet.skills);
+                                        }}>Equipar</button
+                                    >
+                                </ItemPanel>
                             {/each}
                         </div>
                     </Accordion>
@@ -60,14 +68,28 @@
                 <Tab id={1} title="Medicina">
                     <div>
                         {#each data.medical as skill}
-                            <ItemPanel iconClass="w-10" data={{ ...skill }} />
+                            <ItemPanel iconClass="w-10" data={{ ...skill }}>
+                                <button
+                                    on:click={() => {
+                                        CharacterUtils.swapSkill(0, skill);
+                                        console.log($CharacterSheet.skills);
+                                    }}>Equipar</button
+                                >
+                            </ItemPanel>
                         {/each}
                     </div>
                 </Tab>
                 <Tab id={2} title="Segurança">
                     <div>
                         {#each data.security as skill}
-                            <ItemPanel iconClass="w-10" data={{ ...skill }} />
+                            <ItemPanel iconClass="w-10" data={{ ...skill }}>
+                                <button
+                                    on:click={() => {
+                                        CharacterUtils.swapSkill(0, skill);
+                                        console.log($CharacterSheet.skills);
+                                    }}>Equipar</button
+                                >
+                            </ItemPanel>
                         {/each}
                     </div>
                 </Tab>
@@ -82,35 +104,57 @@
                     <Accordion class="bg-zinc-900" label="Padrão">
                         <div>
                             {#each data.tech as skill}
-                                <ItemPanel
-                                    iconClass="w-10"
-                                    data={{ ...skill }}
-                                />
+                                <ItemPanel iconClass="w-10" data={{ ...skill }}>
+                                    <button
+                                        on:click={() => {
+                                            CharacterUtils.swapSkill(1, skill);
+                                            console.log($CharacterSheet.skills);
+                                        }}>Equipar</button
+                                    >
+                                </ItemPanel>
                             {/each}
                         </div>
                     </Accordion>
                     <Accordion label="Upgrades">
                         <div>
                             {#each data.upgrades.tech as skill}
-                                <ItemPanel
-                                    iconClass="w-10"
-                                    data={{ ...skill }}
-                                />
+                                <ItemPanel iconClass="w-10" data={{ ...skill }}>
+                                    <button
+                                        on:click={() => {
+                                            CharacterUtils.swapSkill(1, skill);
+                                            console.log($CharacterSheet.skills);
+                                        }}>Equipar</button
+                                    >
+                                </ItemPanel>
                             {/each}
                         </div>
                     </Accordion>
                 </Tab>
                 <Tab id={1} title="Medicina">
                     <div>
-                        {#each data.tech as skill}
-                            <ItemPanel iconClass="w-10" data={{ ...skill }} />
+                        {#each data.medical as skill}
+                            <ItemPanel iconClass="w-10" data={{ ...skill }}>
+                                <button
+                                    on:click={() => {
+                                        CharacterUtils.swapSkill(1, skill);
+                                        console.log($CharacterSheet.skills);
+                                    }}>Equipar</button
+                                >
+                            </ItemPanel>
                         {/each}
                     </div>
                 </Tab>
                 <Tab id={2} title="Segurança">
                     <div>
-                        {#each data.tech as skill}
-                            <ItemPanel iconClass="w-10" data={{ ...skill }} />
+                        {#each data.security as skill}
+                            <ItemPanel iconClass="w-10" data={{ ...skill }}>
+                                <button
+                                    on:click={() => {
+                                        CharacterUtils.swapSkill(1, skill);
+                                        console.log($CharacterSheet.skills);
+                                    }}>Equipar</button
+                                >
+                            </ItemPanel>
                         {/each}
                     </div>
                 </Tab>

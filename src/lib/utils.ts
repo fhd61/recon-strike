@@ -3,9 +3,10 @@ import { CharacterSheet, EAttribute, type ICharacter } from "./store/character";
 import type { IItem } from "./types/interface/IItem";
 import type { IWeapon } from "./types/interface/IWeapon";
 import type { IBonus } from "./types/interface/IBonus";
+import type { ISkill } from "./types/interface/ISkill";
 
 export class MathUtils {
-    static randomNumber(max:number) {
+    static randomNumber(max: number) {
         return Math.ceil(Math.random() * max) + 1
     }
 
@@ -54,6 +55,14 @@ export class EAttributeUtils {
 }
 
 export class CharacterUtils {
+    static swapSkill(index: number, skill: ISkill) {
+        CharacterSheet.update((c) => {
+            c.skills[index] = skill;
+
+            return c
+        })
+    }
+
     static removeBonusOfAttribute(attribute: EAttribute, name: string) {
         if (!Object.keys(get(CharacterSheet).attributes).includes(attribute)) {
             throw new Error("Try to get a non existing attribute in character")
@@ -76,7 +85,7 @@ export class CharacterUtils {
         })
     }
 
-    static getAttribute(attribute:EAttribute){
+    static getAttribute(attribute: EAttribute) {
         if (!Object.keys(get(CharacterSheet).attributes).includes(attribute)) {
             throw new Error("Try to get a non existing attribute in character")
         }
