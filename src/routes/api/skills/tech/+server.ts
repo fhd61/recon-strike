@@ -12,7 +12,7 @@ const content: ISkill[] = [
         cooldown: 4,
         range: 4,
         rangeArea: 2,
-        currentCooldown: 0,
+        currentCooldown: 4,
     },
     {
         icon: "https://i.imgur.com/xl33Tef.png",
@@ -21,7 +21,7 @@ const content: ISkill[] = [
         cooldown: 5,
         range: 5,
         rangeArea: 3,
-        currentCooldown: 0,
+        currentCooldown: 4,
     },
     {
         icon: "https://i.imgur.com/m8E45qo.png",
@@ -30,6 +30,6 @@ const content: ISkill[] = [
         cooldown: 4,
         range: 2,
         rangeArea: 6,
-        currentCooldown: 0,
+        currentCooldown: 4,
     },
 ]

@@ -8,6 +8,7 @@
     import { CharacterSheet } from "$lib/store/character";
 
     export let data: IHp;
+    export let isChar = true;
     let larpValue = tweened(0);
     let larpValue2 = tweened(0, { delay: 800 });
 
@@ -65,7 +66,8 @@
         const vig = $CharacterSheet.attributes["vig"].value
         const def = $CharacterSheet.attributes["def"].value
 
-        data.maxValue = vig * 6 + def 
+        if(isChar)
+            data.maxValue = vig * 6 + def 
     }
 </script>
 

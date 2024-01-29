@@ -51,25 +51,28 @@
     let acCalcStat: "agi" | "int" | "for" = "agi";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
-    let testSkill: ISkill = {
-        name: "Test",
-        description: "",
-        icon: "https://i.imgur.com/Tkl0eyo.png",
-        cooldown: 10,
-        currentCooldown: 5,
-    };
 
     //@ts-expect-error
     onTurnEnd.on(() => {
-        testSkill.currentCooldown += 1;
+        if ($Character.skills[0]) $Character.skills[0].currentCooldown++;
+
+        if ($Character.skills[1]) $Character.skills[1].currentCooldown++;
     });
-    //@ts-expect-error 
+    //@ts-expect-error
     onTurnStart.on(() => {
         turnCount++;
     });
     //@ts-expect-error
     onCombatEnd.on(() => {
         turnCount = 0;
+
+        if ($Character.skills[0].hp != undefined)
+            $Character.skills[0].hp.currentValue =
+                $Character.skills[0].hp.maxValue;
+
+        if ($Character.skills[1].hp != undefined)
+            $Character.skills[1].hp.currentValue =
+                $Character.skills[1].hp.maxValue;
     });
 
     onMount(() => {
@@ -223,18 +226,45 @@
         </Panel>
         <Panel title="habilidades">
             <div slot="content">
-                <div class="flex justify-evenly">
-                    <Ability bind:data={testSkill} />
-                    <Ability bind:data={testSkill} />
+                <div>
+                    <div class="flex justify-evenly">
+                        {#if $Character.skills[0]}
+                            <Ability bind:data={$Character.skills[0]} />
+                        {/if}
+                        {#if $Character.skills[1]}
+                            <Ability bind:data={$Character.skills[1]} />
+                        {/if}
+                    </div>
+                    <button
+                        on:click={() => {
+                            modalElement.showModal();
+                            modalToShow = "inv_ability";
+                        }}
+                        class="mt-2 p-1 bg-green-800 hover:bg-green-900 active:bg-green-700 transition-all polygonL"
+                        >Trocar Habilidades</button
+                    >
                 </div>
-                <button
-                    on:click={() => {
-                        modalElement.showModal();
-                        modalToShow = "inv_ability";
-                    }}
-                    class="mt-2 p-1 bg-green-800 hover:bg-green-900 active:bg-green-700 transition-all polygonL"
-                    >Trocar Habilidades</button
-                >
+                <div>
+                    {#if $Character.skills[0] || $Character.skills[1]}
+                        <Accordion>
+                            {#if $Character.skills[0].hp !== undefined}
+                                <p>{$Character.skills[0].name}</p>
+                                <HpBar
+                                    isChar={false}
+                                    data={$Character.skills[0].hp}
+                                />
+                            {/if}
+                            <div class="my-2" />
+                            {#if $Character.skills[1].hp !== undefined}
+                                <p>{$Character.skills[1].name}</p>
+                                <HpBar
+                                    isChar={false}
+                                    data={$Character.skills[1].hp}
+                                />
+                            {/if}
+                        </Accordion>
+                    {/if}
+                </div>
             </div>
         </Panel>
         <Panel height="h-fit" title="Combate">
