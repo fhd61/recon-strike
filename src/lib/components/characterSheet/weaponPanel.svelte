@@ -38,7 +38,7 @@
     }
 
     function rollDamage() {
-        let dice = StringUtils.parseDiceNotation(data.hit);
+        let dice = StringUtils.parseDiceNotation(data.damage);
         let att = data.modifier.toLocaleLowerCase().split("/");
         let mod = CharacterUtils.getAttribute(
             EAttributeUtils.stringToAttribute(att[0]),
