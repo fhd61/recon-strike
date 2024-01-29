@@ -326,7 +326,7 @@
                     </label>
                     {#if coverSelected !== "none"}
                         <div in:slide out:slide class="mt-2">
-                            <HpBar bind:data={coverHp} />
+                            <HpBar isChar={false} bind:data={coverHp} />
                         </div>
                     {/if}
                     <hr class="border-orange-900 my-2" />
