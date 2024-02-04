@@ -21,8 +21,9 @@
         <Tab id={0} title="Colete">
             {#each data.armor as item}
                 <div>
-                    <ItemPanel iconClass="w-10 h-10 object-scale-down mr-2 -translate-y-1" data={item}>
+                    <ItemPanel iconClass="w-9 h-19 object-scale-down" data={item}>
                         <button
+                            class="btn-success ml-1 mb-2"
                             on:click={() =>
                                 CharacterUtils.addItemToInventory(item)
                                 }
@@ -34,8 +35,9 @@
         </Tab>
         <Tab id={1} title="Armas">
             {#each data.fireArms as item}
-                <WeaponPanel data={item}>
+                <WeaponPanel showDices={false} data={item}>
                     <button
+                        class="btn-success ml-1 mb-2"
                         on:click={() =>
                             CharacterUtils.addItemToInventory(item)
                             }

@@ -10,7 +10,7 @@
     $: htmlDescription = marked(data.description);
 </script>
 
-<div class={`w-[45rem] flex flex-col ${bg} px-2 m-1 polygonL`}>
+<div class={`w-[45rem] flex flex-col ${bg} p-1 m-1 polygonL`}>
     <Accordion closeOnInteract={false} {iconClass} icon={data.icon} label={data.name}>
         <div class="flex flex-col items-start">
             {@html htmlDescription}

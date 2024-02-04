@@ -54,6 +54,11 @@
     let saveInterval: string | number | NodeJS.Timeout | undefined;
 
     //@ts-expect-error
+    onTurnEnd.on(() => {
+        turnCount++;
+    });
+
+    //@ts-expect-error
     onCombatEnd.on(() => {
         turnCount = 0;
     });
@@ -180,8 +185,7 @@
                             modalElement.showModal();
                             modalToShow = "inv_ability";
                         }}
-                        class="mt-2 p-1 bg-green-800 hover:bg-green-900 active:bg-green-700 transition-all polygonL"
-                        >Trocar Habilidades</button
+                        class="btn-success mt-2">Trocar Habilidades</button
                     >
                 </div>
                 <div></div>
@@ -189,7 +193,7 @@
         </Panel>
         <Panel height="h-fit" title="Combate">
             <div slot="content">
-                <div class="flex justify-between items-center">
+                <div class="flex flex-col justify-between">
                     <div class="flex justify-between items-center">
                         <button
                             on:click={() => {
@@ -200,9 +204,11 @@
                                 else onCombatEnd.trigger();
                             }}
                             class={inCombatMode
-                                ? "bg-[#f86b10]/80 w-40 h-9 polygonR cursor-pointer font-semibold transition-all"
-                                : "bg-[#f86b10]/30 w-40 h-9 polygonL cursor-pointer font-light transition-all"}
-                            >Modo de combate {inCombatMode ? "ON" : "OFF"}</button
+                                ? "bg-[#f86b10]/80 w-40 h-12 mb-2 polygonR cursor-pointer font-semibold transition-all"
+                                : "bg-[#f86b10]/30 w-40 h-12 mb-2 polygonL cursor-pointer font-light transition-all"}
+                            >Modo de combate {inCombatMode
+                                ? "ON"
+                                : "OFF"}</button
                         >
                         <p class="flex flex-col ml-8 capitalize">
                             Turns
@@ -257,9 +263,7 @@
                         <hr class="border-orange-900 my-2" />
                         <div class="flex justify-between items-center mb-2">
                             <span>Buffs e Debuffs</span>
-                            <button class="w-9 p-1 mr-1 bg-green-800 polygonF"
-                                >+
-                            </button>
+                            <button class="btn-success">+ </button>
                         </div>
                         <!-- Colocar buffs e Debuffs aqui -->
                     </div>
@@ -267,7 +271,6 @@
             </div></Panel
         >
     </div>
-
     <!-- Center Panel -->
     <div class="w-full h-[95vh] px-2 pt-1 pb-2">
         <Panel height="h-full" title="Taletos">
@@ -277,15 +280,19 @@
                         modalElement.showModal();
                         modalToShow = "inv_talents";
                     }}
-                    class="h-8 w-10 bg-green-800 polygonF">Add</button
+                    class="btn-success mb-2">Adicionar</button
                 >
                 {#if $Character.talents}
                     <div class="h-[52rem] overflow-y-auto overflow-x-hidden">
                         {#each $Character.talents as talent, i}
                             <div in:slide out:slide>
-                                <ItemPanel bind:data={talent} bg="bg-zinc-900">
+                                <ItemPanel
+                                    bind:data={talent}
+                                    iconClass="w-10"
+                                    bg="bg-zinc-900"
+                                >
                                     <button
-                                        class="bg-red-700 hover:bg-red-600 active:bg-red-700 mt-2 p-1 polygonL transition-all"
+                                        class="btn-error mb-2 ml-1"
                                         on:click={() => {
                                             Character.update((c) => {
                                                 c.talents.splice(i, 1);
@@ -301,7 +308,6 @@
             </div>
         </Panel>
     </div>
-
     <!-- Right Panel -->
     <div class="w-full h-[95vh] px-2 pt-1 pb-2 overflow-y-clip">
         <Panel height="h-full" title="Inventario">
@@ -317,8 +323,7 @@
                                     modalElement.showModal();
                                     modalToShow = "inv_weapons";
                                 }}
-                                class="h-8 w-10 bg-green-800 polygonF"
-                                >Add</button
+                                class="btn-success">Adicionar</button
                             >
                         </div>
                     </Tab>
@@ -329,8 +334,7 @@
                                     modalElement.showModal();
                                     modalToShow = "inv_equipment";
                                 }}
-                                class="h-8 w-10 bg-green-800 polygonF"
-                                >Add</button
+                                class="btn-success">Adicionar</button
                             >
                         </div>
                         {#if $Character.inventory.equipments}
@@ -384,25 +388,30 @@
             bind:mouseInside={mouseInsideModal}
             bind:dossier={$Character.dossier}
         />
-    {:else if modalToShow === "settings"}
+    {/if}
+    {#if modalToShow === "settings"}
         <Settings />
-    {:else if modalToShow === "inv_talents"}
+    {/if}
+    {#if modalToShow === "inv_talents"}
         <TalentsList
             bind:mouseInside={mouseInsideModal}
             data={data.defaults.charTalents}
         />
-    {:else if modalToShow === "inv_equipment"}
+    {/if}
+    {#if modalToShow === "inv_equipment"}
         <EquipmentsList
             bind:mouseInside={mouseInsideModal}
             data={{ ...data.defaults.equipments }}
         />
-    {:else if modalToShow === "inv_weapons"}
+    {/if}
+    {#if modalToShow === "inv_weapons"}
         <EquipmentsList
             index={1}
             bind:mouseInside={mouseInsideModal}
             data={{ ...data.defaults.equipments }}
         />
-    {:else if modalToShow === "inv_ability"}
+    {/if}
+    {#if modalToShow === "inv_ability"}
         <SkillList
             skillSlot={0}
             bind:mouseInside={mouseInsideModal}

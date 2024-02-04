@@ -30,7 +30,7 @@
         <button class="btn-error">logout</button>
         </form>
         <button
-            class="btn-primary"
+            class="btn-success"
             on:click={() => modalElement.showModal()}>Criar Personagem</button
         >
     </div>

@@ -7,6 +7,7 @@
     import type { IAttribute } from "$lib/types/interface/IBaseAttribute";
 
     export let data: IWeapon;
+    export let showDices: boolean = true;
     export let bg = "bg-zinc-950";
 
     function rollHit() {
@@ -46,7 +47,9 @@
         let hasTalent = $CharacterSheet.talents.find(
             (t) => t.name == "Tiro fatal",
         );
-        let bonus = hasTalent ? [mod.value === 1 ? mod.value : Math.floor(mod.value / 2)] : []
+        let bonus = hasTalent
+            ? [mod.value === 1 ? mod.value : Math.floor(mod.value / 2)]
+            : [];
 
         console.log(
             rollDice(data.name + " | Dano", dice.sides, bonus, dice.rollTimes),
@@ -57,7 +60,7 @@
 <div class={`w-[45rem] flex flex-col ${bg} px-2 m-1 polygonL`}>
     <Accordion
         closeOnInteract={false}
-        iconClass="w-10 h-10 object-scale-down mr-2 -translate-y-1"
+        iconClass="w-10 h-9 object-scale-down"
         icon={data.icon}
         label={data.name}
     >
@@ -68,26 +71,28 @@
                 <p>Critico: {data.critMult}</p>
                 <p>Alcance: {data.range}m</p>
             </div>
-            <div class="mt-2 flex justify-between">
-                <button
-                    on:click={rollHit}
-                    class="bg-orange-700 hover:bg-orange-900 transition-all w-fit h-full p-2 polygonL"
-                    >Rolar Acerto</button
-                >
-                <button
-                    on:click={rollDamage}
-                    class="bg-orange-700 hover:bg-orange-900 transition-all w-fit h-full p-2 polygonL mx-3"
-                    >Rolar dano</button
-                >
-                <button
-                    on:click={() =>{
-                        rollHit()
-                        rollDamage()
-                    }}
-                    class="bg-orange-700 hover:bg-orange-900 transition-all w-fit h-full p-2 polygonL"
-                    >Rolar Acerto + Rolar dano</button
-                >
-            </div>
+            {#if showDices}
+                <div class="mt-2 flex justify-between">
+                    <button
+                        on:click={rollHit}
+                        class="bg-orange-700 hover:bg-orange-900 transition-all w-fit h-full p-2 polygonL"
+                        >Rolar Acerto</button
+                    >
+                    <button
+                        on:click={rollDamage}
+                        class="bg-orange-700 hover:bg-orange-900 transition-all w-fit h-full p-2 polygonL mx-3"
+                        >Rolar dano</button
+                    >
+                    <button
+                        on:click={() => {
+                            rollHit();
+                            rollDamage();
+                        }}
+                        class="bg-orange-700 hover:bg-orange-900 transition-all w-fit h-full p-2 polygonL"
+                        >Rolar Acerto + Rolar dano</button
+                    >
+                </div>
+            {/if}
             <div class="mt-2">
                 <slot />
             </div>

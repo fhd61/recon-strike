@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { IItem } from "$lib/types/interface/IItem";
-    import Talent from "../characterSheet/itemPanel.svelte";
+    import ItemPanel from "../characterSheet/itemPanel.svelte";
     import { CharacterSheet } from "$lib/store/character";
 
     export let data: IItem[];
@@ -15,8 +15,9 @@
 >
     {#each data as talent}
         <div>
-            <Talent data={talent}>
+            <ItemPanel iconClass="w-12" data={talent}>
                 <button
+                    class="btn-success mb-2 ml-1"
                     on:click={() => {
                         CharacterSheet.update((c) => {
                             c.talents.push(talent);
@@ -24,7 +25,7 @@
                         });
                     }}>Adicionar</button
                 >
-            </Talent>
+            </ItemPanel>
         </div>
     {/each}
 </div>

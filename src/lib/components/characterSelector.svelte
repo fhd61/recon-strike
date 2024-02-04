@@ -8,6 +8,7 @@
     function LoadChar(){
         localStorage.setItem("character", JSON.stringify(data))
         localStorage.setItem("index", index.toString())
+
         goto("/characterSheet")
     }
 </script>
