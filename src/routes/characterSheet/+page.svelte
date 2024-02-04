@@ -63,14 +63,6 @@
     //@ts-expect-error
     onCombatEnd.on(() => {
         turnCount = 0;
-
-        if ($Character.skills[0].hp != undefined)
-            $Character.skills[0].hp.currentValue =
-                $Character.skills[0].hp.maxValue;
-
-        if ($Character.skills[1].hp != undefined)
-            $Character.skills[1].hp.currentValue =
-                $Character.skills[1].hp.maxValue;
     });
 
     onMount(() => {
@@ -217,25 +209,6 @@
                     >
                 </div>
                 <div>
-                    {#if $Character.skills[0] || $Character.skills[1]}
-                        <Accordion>
-                            {#if $Character.skills[0].hp !== undefined}
-                                <p>{$Character.skills[0].name}</p>
-                                <HpBar
-                                    isChar={false}
-                                    data={$Character.skills[0].hp}
-                                />
-                            {/if}
-                            <div class="my-2" />
-                            {#if $Character.skills[1].hp !== undefined}
-                                <p>{$Character.skills[1].name}</p>
-                                <HpBar
-                                    isChar={false}
-                                    data={$Character.skills[1].hp}
-                                />
-                            {/if}
-                        </Accordion>
-                    {/if}
                 </div>
             </div>
         </Panel>

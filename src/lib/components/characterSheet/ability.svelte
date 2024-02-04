@@ -3,6 +3,7 @@
     import { MathUtils } from "$lib/utils";
     import { cubicIn } from "svelte/easing";
     import { tweened } from "svelte/motion";
+    import { fade } from "svelte/transition";
 
     export let data: ISkill;
     let isInCooldown = false;
@@ -28,11 +29,27 @@
     }}
 >
     <div class="w-full h-full bg-orange-900 polygonL relative">
-        <img
-            src={data.icon}
-            class="h-12 p-1 z-[1] absolute translate-x-10"
-            alt={data.name}
+        <div class="relative">
+            <img
+                src={data.icon}
+                class={`h-12 p-1 z-[1] absolute translate-x-10 ${
+                    isInCooldown ? "-translate-y-2" : "-translate-y-1"
+                } transition-all`}
+                alt={data.name}
+            />
+            {#if isInCooldown}
+                <p
+                    in:fade
+                    out:fade
+                    class="w-12 text-center absolute translate-x-[2.5rem] translate-y-7"
+                >
+                    {MathUtils.clamp(data.currentCooldown, 0, data.cooldown)}
+                </p>
+            {/if}
+        </div>
+        <div
+            class="bg-orange-600/60 h-full"
+            style={`width:${$tweenedValue}%`}
         />
-        <div class="bg-orange-600/60 h-full" style={`width:${$tweenedValue}%`} />
     </div>
 </button>
