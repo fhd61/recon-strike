@@ -26,14 +26,17 @@
 
 <div class="flex flex-col text-white">
     <div class="flex justify-end mt-2">
+        <form action="/logout" method="post">
+        <button class="btn-error">logout</button>
+        </form>
         <button
-            class="bg-green-600 hover:bg-green-800 active:bg-green-500 p-2 transition-all polygonL mr-3"
+            class="btn-primary"
             on:click={() => modalElement.showModal()}>Criar Personagem</button
         >
     </div>
     <div>
-        {#each characters as char}
-            <CharacterSelector data={char} />
+        {#each characters as char, index}
+            <CharacterSelector {index} data={char} />
         {/each}
     </div>
 </div>
