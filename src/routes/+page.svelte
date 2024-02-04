@@ -13,10 +13,10 @@
 
     let loadingTexts = [
         "",
-        "Download armory data",
-        "Import SHD resources",
-        "Connecting to ISSAC",
-        "Loading SHD dashboard",
+        "Download armory data...",
+        "Import SHD resources...",
+        "Connecting to ISSAC...",
+        "Loading SHD dashboard...",
     ];
     let textIndex = 0;
 
@@ -70,7 +70,7 @@
             {:else}
                 {#key textIndex}
                     <p in:typewriter={{speed: 30}} class="text-lg h-full">
-                        {loadingTexts[textIndex]}...
+                        {loadingTexts[textIndex]}
                     </p>
                 {/key}
             {/if}
