@@ -54,16 +54,6 @@
     let saveInterval: string | number | NodeJS.Timeout | undefined;
 
     //@ts-expect-error
-    onTurnEnd.on(() => {
-        if ($Character.skills[0]) $Character.skills[0].currentCooldown++;
-
-        if ($Character.skills[1]) $Character.skills[1].currentCooldown++;
-    });
-    //@ts-expect-error
-    onTurnStart.on(() => {
-        turnCount++;
-    });
-    //@ts-expect-error
     onCombatEnd.on(() => {
         turnCount = 0;
     });
@@ -212,7 +202,7 @@
                             class={inCombatMode
                                 ? "bg-[#f86b10]/80 w-40 h-9 polygonR cursor-pointer font-semibold transition-all"
                                 : "bg-[#f86b10]/30 w-40 h-9 polygonL cursor-pointer font-light transition-all"}
-                            >Comba Mode {inCombatMode ? "ON" : "OFF"}</button
+                            >Modo de combate {inCombatMode ? "ON" : "OFF"}</button
                         >
                         <p class="flex flex-col ml-8 capitalize">
                             Turns

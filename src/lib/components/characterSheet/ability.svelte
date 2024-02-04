@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onTurnEnd } from "$lib/store/events";
     import type { ISkill } from "$lib/types/interface/ISkill";
     import { MathUtils } from "$lib/utils";
     import { cubicIn } from "svelte/easing";
@@ -17,6 +18,10 @@
 
         if (cooldonwPercentage == 100) isInCooldown = false;
     }
+    //@ts-expect-error
+    onTurnEnd.on(() => {
+        data.currentCooldown ++
+    });
 </script>
 
 <button
