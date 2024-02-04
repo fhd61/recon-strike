@@ -3,7 +3,6 @@
     import Attribute from "$lib/components/characterSheet/atributte.svelte";
     import Panel from "$lib/components/panel.svelte";
     import HpBar from "$lib/components/characterSheet/hpBar.svelte";
-    import Stat from "$lib/components/characterSheet/stat.svelte";
     import TalentsList from "$lib/components/modals/talentsList.svelte";
     import EquipmentsList from "$lib/components/modals/equipmentList.svelte";
     import Accordion from "$lib/components/characterSheet/accordion.svelte";
@@ -17,7 +16,6 @@
     import { onMount } from "svelte";
     import { rollFromString } from "$lib/diceRoller";
     import { toast } from "@zerodevx/svelte-toast";
-    import type { ISkill } from "$lib/types/interface/ISkill.js";
     import type { IHp } from "$lib/types/interface/IHp.js";
     import { slide } from "svelte/transition";
     import {
@@ -30,9 +28,10 @@
     import ItemPanel from "$lib/components/characterSheet/itemPanel.svelte";
     import TabGroup from "$lib/components/tabs/tabGroup.svelte";
     import Tab from "$lib/components/tabs/tab.svelte";
-    import ItemDisplay from "$lib/components/characterSheet/Invetory/ItemDisplay.svelte";
-    import WeaponDisplay from "$lib/components/characterSheet/Invetory/weaponDisplay.svelte";
     import SkillList from "$lib/components/modals/skillList.svelte";
+    import Speed from "$lib/components/characterSheet/stats/speed.svelte";
+    import Ca from "$lib/components/characterSheet/stats/ca.svelte";
+    import Def from "$lib/components/characterSheet/stats/def.svelte";
 
     export let data;
 
@@ -48,7 +47,6 @@
         | "inv_equipment"
         | "inv_weapons"
         | "inv_ability" = "dossier";
-    let acCalcStat: "agi" | "int" | "for" = "agi";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
 
@@ -175,53 +173,27 @@
                     <HpBar bind:data={$Character.attributes["hp"]} />
                 </div>
                 <div class="flex justify-evenly mb-2">
-                    <Stat bind:data={$Character.attributes["speed"]}>
-                        <Icon icon="ri:run-fill" width={50} slot="icon" />
-                    </Stat>
-                    <Stat
-                        bind:data={$Character.attributes["def"]}
-                        inFront={true}
-                    >
-                        <Icon
-                            icon="clarity:shield-line"
-                            width={50}
-                            slot="icon"
-                        />
-                    </Stat>
-                    <Stat
-                        isAc={true}
-                        bind:acCalcStat
-                        bind:data={$Character.attributes["ac"]}
-                    >
-                        <Icon
-                            icon="game-icons:sword-slice"
-                            width={50}
-                            slot="icon"
-                        />
-                    </Stat>
+                    <Speed />
+                    <Ca />
+                    <Def />
                 </div>
-                <Accordion>
-                    <label>
-                        Atributo para o CA:
-                        <select
-                            class="uppercase bg-zinc-800 p-1"
-                            bind:value={$Character.attributes["ac"].use}
-                        >
-                            <option value="agi"
-                                >{$Character.attributes["agi"]
-                                    .shortName}</option
-                            >
-                            <option value="int"
-                                >{$Character.attributes["int"]
-                                    .shortName}</option
-                            >
-                            <option value="for"
-                                >{$Character.attributes["for"]
-                                    .shortName}</option
-                            >
-                        </select>
-                    </label>
-                </Accordion>
+                {#if $Character.talents.find((item) => item.name === "Melhor da turma")}
+                    <div in:slide out:slide>
+                        <Accordion>
+                            <label>
+                                Atributo para o CA:
+                                <select
+                                    class="uppercase bg-zinc-800 p-1"
+                                    bind:value={$Character.attributes["ac"].use}
+                                >
+                                    <option value="agi">AGI</option>
+                                    <option value="int">INT</option>
+                                    <option value="for">FOR</option>
+                                </select>
+                            </label>
+                        </Accordion>
+                    </div>
+                {/if}
             </div>
         </Panel>
         <Panel title="habilidades">
@@ -395,11 +367,6 @@
                                 >Add</button
                             >
                         </div>
-                        {#each $Character.inventory.weapons as item}
-                            <div>
-                                <WeaponDisplay bind:item />
-                            </div>
-                        {/each}
                     </Tab>
                     <Tab id={2} title="Equipamentos">
                         <div class="flex w-full justify-end mb-1">
@@ -415,13 +382,7 @@
                         {#if $Character.inventory.equipments}
                             <div
                                 class="h-[52rem] overflow-y-auto overflow-x-hidden"
-                            >
-                                {#each $Character.inventory.equipments as item}
-                                    <div>
-                                        <ItemDisplay bind:item />
-                                    </div>
-                                {/each}
-                            </div>
+                            ></div>
                         {/if}
                     </Tab>
                 </TabGroup>

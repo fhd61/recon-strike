@@ -5,5 +5,5 @@ export interface IAttribute extends IBonus {
     name:string,
     shortName:string,
     value: number;
-    use?: string
+    use?:"agi" | "int" | "for"  
 }
