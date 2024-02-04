@@ -4,6 +4,7 @@ import type { IItem } from "./types/interface/IItem";
 import type { IWeapon } from "./types/interface/IWeapon";
 import type { IBonus } from "./types/interface/IBonus";
 import type { ISkill } from "./types/interface/ISkill";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export class MathUtils {
     static randomNumber(max: number) {
@@ -139,6 +140,39 @@ export class CharacterUtils {
 
     static saveToLocalStorage() {
         localStorage.setItem("character", this.serializedChar())
+    }
+
+    static async saveOnDb(dbClient: SupabaseClient) {
+        const { data: dbChar, error: err } = await dbClient
+            .from("cloud_save")
+            .select("json");
+        const index = localStorage.getItem("index")
+        const tempArr: ICharacter[] = [];
+        const charToSave = get(CharacterSheet)
+
+        if (err) {
+            console.log(err);
+            return;
+        }
+        if (dbChar[0] == null) {
+            tempArr.push(charToSave);
+
+            const res = await dbClient 
+                .from("cloud_save")
+                .upsert([{ json: [JSON.stringify(tempArr)] }]);
+
+            console.log(res);
+        } else {
+            const charArr = JSON.parse(dbChar[0].json) as ICharacter[];
+
+            charArr[Number.parseInt(index!)] = charToSave;
+
+            const res = await dbClient
+                .from("cloud_save")
+                .upsert([{ json: [JSON.stringify(charArr)] }]);
+
+            console.log(res);
+        }
     }
 
     static loadCharFromLocalStorage() {

@@ -13,7 +13,7 @@
         CharacterSheet as Character,
         type ICharacter,
     } from "$lib/store/character";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { rollFromString } from "$lib/diceRoller";
     import { toast } from "@zerodevx/svelte-toast";
     import type { IHp } from "$lib/types/interface/IHp.js";
@@ -32,6 +32,7 @@
     import Speed from "$lib/components/characterSheet/stats/speed.svelte";
     import Ca from "$lib/components/characterSheet/stats/ca.svelte";
     import Def from "$lib/components/characterSheet/stats/def.svelte";
+    import { CharacterUtils } from "$lib/utils.js";
 
     export let data;
 
@@ -49,6 +50,7 @@
         | "inv_ability" = "dossier";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
+    let saveInterval: string | number | NodeJS.Timeout | undefined;
 
     //@ts-expect-error
     onTurnEnd.on(() => {
@@ -69,37 +71,20 @@
         let char: ICharacter | undefined = JSON.parse(
             localStorage.getItem("character") as string,
         );
+
         if (char) Character.set(char);
 
-        setInterval(() => {
-            // saveOnDb();
-        }, 10000);
-
-        setInterval(() => {
-            saveLocal();
-        }, 10000);
+        saveInterval = setInterval(saveLocal, 10000)
     });
 
+    onDestroy(() => {
+        clearInterval(saveInterval)
+    })
+
     async function saveLocal() {
-        let json = JSON.stringify($Character);
+        CharacterUtils.saveToLocalStorage()
 
-        localStorage.setItem("character", json);
-    }
-
-    async function saveOnDb() {
-        const query = await data.supabase.from("cloud_save").select("json");
-        if (query.data === null) {
-            return;
-        }
-
-        const chars = JSON.parse(query.data[0].json) as ICharacter[];
-        console.log(chars);
-        chars.push($Character);
-
-        const res = await data.supabase
-            .from("cloud_save")
-            .upsert([{ json: [JSON.stringify(chars)] }]);
-        console.log(res);
+        CharacterUtils.saveOnDb(data.supabase)
     }
 
     function onSelectCover() {

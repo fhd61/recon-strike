@@ -3,9 +3,11 @@
     import type { ICharacter } from "$lib/store/character";
 
     export let data:ICharacter
+    export let index: number
 
     function LoadChar(){
         localStorage.setItem("character", JSON.stringify(data))
+        localStorage.setItem("index", index.toString())
         goto("/characterSheet")
     }
 </script>

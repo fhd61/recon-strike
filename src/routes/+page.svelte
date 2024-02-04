@@ -28,16 +28,8 @@
         isLogged();
     });
 
-    async function signInWithDiscord() {
-        await supabase.auth.signInWithOAuth({
-            provider: "discord",
-        });
-    }
-
     async function isLogged() {
-        const session = await supabase.auth.getSession();
-
-        if (session) {
+        if (data.session) {
             goto("/characters");
         } else {
             console.log("User is not logged in");
@@ -58,10 +50,9 @@
         <Logo style="w-96 h-96" />
         <div class="h-16">
             {#if textIndex === loadingTexts.length - 1}
-                <form action="">
+                <form action="/login" method="post">
                     <button
                         in:slide
-                        on:click={signInWithDiscord}
                         type="submit"
                         class="flex justify-center items-center h-full w-72 p-1 bg-orange-600 polygonL hover:bg-orange-700 active:bg-orange-500 transition-all"
                     >
