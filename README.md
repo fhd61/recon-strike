@@ -4,15 +4,18 @@
 - [x] Importa a lista deles do banco de dados 
 - [x] Implementar os modificadores
 - [ ] Equipar mods nas armas
+- [ ] Equipar taletos nas armas
 - [ ] Menu para editar os items
+- [ ] Menu para criar items e armas 
 
 ### Habilidades 
 - [x] Importa a lista deles do banco de dados 
 - [x] Importa os upgrades 
 - [x] Sistema de cooldown 
-- [ ] Menu para trocar as Habilidades 
+- [x] Menu para trocar as Habilidades 
 - [ ] Mostar barra de vida da skill 
 - [ ] Implementar os modificadores
+- [ ] Importar os upgrades
 
 ### Sistema de combate 
 - [x] Entrar e sair do modo de combate 
