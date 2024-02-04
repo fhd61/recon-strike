@@ -12,6 +12,7 @@
     $: ({ supabase } = data);
 
     let loadingTexts = [
+        "",
         "Download armory data",
         "Import SHD resources",
         "Connecting to ISSAC",
@@ -23,7 +24,7 @@
         setInterval(() => {
             if (textIndex === loadingTexts.length - 1) return;
             else textIndex++;
-        }, 3000);
+        }, 1300);
 
         isLogged();
     });
@@ -38,7 +39,7 @@
 </script>
 
 <svelte:head>
-    <title>SHD - Loading</title>
+    <title>SHD {textIndex === loadingTexts.length - 1 ? "" : "- Loading"}</title>
 </svelte:head>
 
 <div
@@ -46,7 +47,7 @@
     in:fade
     out:fade
 >
-    <div class="flex flex-col justify-center items-center">
+    <div class="flex flex-col justify-center items-center text-center">
         <Logo style="w-96 h-96" />
         <div class="h-16">
             {#if textIndex === loadingTexts.length - 1}
@@ -68,7 +69,7 @@
                 </form>
             {:else}
                 {#key textIndex}
-                    <p in:typewriter={{ delay: 500 }} class="text-lg h-full">
+                    <p in:typewriter={{speed: 30}} class="text-lg h-full">
                         {loadingTexts[textIndex]}...
                     </p>
                 {/key}
