@@ -38,6 +38,7 @@
 
     let turnCount = 0;
     let inCombatMode: boolean;
+    let turnStarted: boolean;
     let mouseInsideModal: boolean;
     let modalElement: HTMLDialogElement;
     let diceRollInput: HTMLInputElement;
@@ -74,17 +75,17 @@
 
         if (char) Character.set(char);
 
-        saveInterval = setInterval(saveLocal, 10000)
+        saveInterval = setInterval(saveLocal, 10000);
     });
 
     onDestroy(() => {
-        clearInterval(saveInterval)
-    })
+        clearInterval(saveInterval);
+    });
 
     async function saveLocal() {
-        CharacterUtils.saveToLocalStorage()
+        CharacterUtils.saveToLocalStorage();
 
-        CharacterUtils.saveOnDb(data.supabase)
+        CharacterUtils.saveOnDb(data.supabase);
     }
 
     function onSelectCover() {
@@ -193,83 +194,88 @@
                         >Trocar Habilidades</button
                     >
                 </div>
-                <div>
-                </div>
+                <div></div>
             </div>
         </Panel>
         <Panel height="h-fit" title="Combate">
             <div slot="content">
                 <div class="flex justify-between items-center">
-                    <button
-                        on:click={() => {
-                            inCombatMode = !inCombatMode;
-                            //@ts-expect-error
-                            if (inCombatMode) onCombatStart.trigger();
-                            //@ts-expect-error
-                            else onCombatEnd.trigger();
-                        }}
-                        class={inCombatMode
-                            ? "bg-[#f86b10]/80 w-40 h-9 polygonR cursor-pointer font-semibold transition-all"
-                            : "bg-[#f86b10]/30 w-40 h-9 polygonL cursor-pointer font-light transition-all"}
-                        >Comba Mode {inCombatMode ? "ON" : "OFF"}</button
-                    >
-                    <p class="flex flex-col ml-8 capitalize">
-                        Turns
-                        <span class="m-auto">{turnCount}</span>
-                    </p>
-                </div>
-                <div class="flex justify-between my-1">
-                    <button
-                        disabled={!inCombatMode}
-                        on:click={() => {
-                            //@ts-expect-error
-                            onTurnEnd.trigger();
-                        }}
-                        class="bg-[#f86b10]/50 p-2 text-sm polygonR w-28 h-8 active:bg-[#f86b10]/80 disabled:bg-[#f86b10]/20 disabled:text-gray-400 transition-all"
-                        >End Turn</button
-                    >
-                    <button
-                        disabled={!inCombatMode}
-                        on:click={() => {
-                            //@ts-expect-error
-                            onTurnStart.trigger();
-                        }}
-                        class="bg-[#f86b10]/50 p-2 text-sm polygonL w-28 h-8 active:bg-[#f86b10]/80 disabled:bg-[#f86b10]/20 disabled:text-gray-400 transition-all"
-                        >Start Turn</button
-                    >
-                </div>
-                <hr class="border-orange-900 my-2" />
-                <div>
-                    <label>
-                        Tipo de cover:
-                        <select
-                            id="cover"
-                            bind:value={coverSelected}
-                            on:change={onSelectCover}
-                            class="uppercase bg-zinc-800 p-1"
+                    <div class="flex justify-between items-center">
+                        <button
+                            on:click={() => {
+                                inCombatMode = !inCombatMode;
+                                //@ts-expect-error
+                                if (inCombatMode) onCombatStart.trigger();
+                                //@ts-expect-error
+                                else onCombatEnd.trigger();
+                            }}
+                            class={inCombatMode
+                                ? "bg-[#f86b10]/80 w-40 h-9 polygonR cursor-pointer font-semibold transition-all"
+                                : "bg-[#f86b10]/30 w-40 h-9 polygonL cursor-pointer font-light transition-all"}
+                            >Comba Mode {inCombatMode ? "ON" : "OFF"}</button
                         >
-                            <option value="heavy">Pesado</option>
-                            <option value="medium">Medio</option>
-                            <option value="light">Leve</option>
-                            <option value="none">Nem um</option>
-                        </select>
-                    </label>
-                    {#if coverSelected !== "none"}
-                        <div in:slide out:slide class="mt-2">
-                            <HpBar isChar={false} bind:data={coverHp} />
-                        </div>
-                    {/if}
-                    <hr class="border-orange-900 my-2" />
-                    <div class="flex justify-between items-center mb-2">
-                        <span>Buffs e Debuffs</span>
-                        <button class="w-9 p-1 mr-1 bg-green-800 polygonF"
-                            >+
-                        </button>
+                        <p class="flex flex-col ml-8 capitalize">
+                            Turns
+                            <span class="m-auto">{turnCount}</span>
+                        </p>
                     </div>
-                    <!-- Colocar buffs e Debuffs aqui -->
+                    <div class="flex justify-between my-1">
+                        <button
+                            disabled={!inCombatMode}
+                            on:click={() => {
+                                if (turnStarted) {
+                                    //@ts-expect-error
+                                    onTurnEnd.trigger();
+                                    turnStarted = false;
+                                } else {
+                                    //@ts-expect-error
+                                    onTurnStart.trigger();
+                                    turnStarted = true;
+                                }
+                            }}
+                            class={`p-2 text-sm polygonR h-8 active:bg-[#f86b10]/80 disabled:bg-[#f86b10]/20 disabled:text-gray-400 transition-all ${
+                                turnStarted
+                                    ? "polygonR bg-[#f86b10]/80"
+                                    : "polygonL bg-[#f86b10]/40"
+                            }`}
+                            >{turnStarted
+                                ? "Encerrar Turno"
+                                : "Começar Turno"}</button
+                        >
+                    </div>
+                    <hr class="border-orange-900 my-2" />
+                    <div>
+                        <label>
+                            Tipo de cover:
+                            <select
+                                id="cover"
+                                bind:value={coverSelected}
+                                on:change={onSelectCover}
+                                class="uppercase bg-zinc-800 p-1"
+                            >
+                                <option value="heavy">Pesado</option>
+                                <option value="medium">Medio</option>
+                                <option value="light">Leve</option>
+                                <option value="none">Nem um</option>
+                            </select>
+                        </label>
+                        {#if coverSelected !== "none"}
+                            <div in:slide out:slide class="mt-2">
+                                <HpBar isChar={false} bind:data={coverHp} />
+                            </div>
+                        {/if}
+                        <hr class="border-orange-900 my-2" />
+                        <div class="flex justify-between items-center mb-2">
+                            <span>Buffs e Debuffs</span>
+                            <button class="w-9 p-1 mr-1 bg-green-800 polygonF"
+                                >+
+                            </button>
+                        </div>
+                        <!-- Colocar buffs e Debuffs aqui -->
+                    </div>
                 </div>
-            </div>
-        </Panel>
+            </div></Panel
+        >
     </div>
 
     <!-- Center Panel -->
