@@ -125,7 +125,7 @@
                     bind:this={diceRollInput}
                     type="text"
                     placeholder="1d20 + 2"
-                    class="w-full bg-zinc-900 appearance-none text-center polygonR"
+                    class="w-full input-default"
                 />
             </div>
         </Panel>
