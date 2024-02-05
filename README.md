@@ -5,7 +5,9 @@
 - [x] Importa a lista deles do banco de dados 
 - [x] Implementar os modificadores
 - [ ] Equipar mods nas armas
+- [ ] Equipar taletos nas armas
 - [ ] Menu para editar os items
+- [ ] Menu para criar items e armas 
 
 ### Habilidades
 
@@ -15,6 +17,7 @@
 - [x] Menu para trocar as Habilidades 
 - [ ] Mostar barra de vida da skill 
 - [ ] Implementar os modificadores
+- [ ] Importar os upgrades
 
 ### Sistema de combate
 
