@@ -7,7 +7,7 @@
 - [ ] Equipar mods nas armas
 - [ ] Equipar taletos nas armas
 - [ ] Menu para editar os items
-- [ ] Menu para criar items e armas 
+- [/] Menu para criar items e armas 
 
 ### Habilidades
 
