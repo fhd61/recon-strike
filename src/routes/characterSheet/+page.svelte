@@ -33,6 +33,7 @@
     import Ca from "$lib/components/characterSheet/stats/ca.svelte";
     import Def from "$lib/components/characterSheet/stats/def.svelte";
     import { CharacterUtils } from "$lib/utils.js";
+    import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
 
     export let data;
 
@@ -67,7 +68,7 @@
         let char: ICharacter | undefined = JSON.parse(
             localStorage.getItem("character") as string,
         );
-
+        
         if (char) Character.set(char);
 
         saveInterval = setInterval(saveLocal, 10000);
@@ -94,7 +95,6 @@
         coverHp.currentValue = coverBonuses[coverSelected] * 10;
 
         $Character.attributes.ac.bonus["cover"] = coverBonuses[coverSelected];
-
         console.log($Character);
     }
 </script>
@@ -315,7 +315,14 @@
                 <TabGroup
                     class="flex w-full mb-2 justify-around items-center bg-zinc-900 h-10 polygonR capitalize"
                 >
-                    <Tab id={0} title="Equipados" />
+                    <Tab id={0} title="Equipados">
+                          {#each CharacterUtils.equipadedItems() as item}
+                            <ItemPanel data={item} bg="bg-zinc-900" iconClass="w-9"/>
+                          {/each}  
+                          {#each CharacterUtils.equipadedWeapons() as weapon}
+                            <WeaponPanel bg="bg-zinc-900" data={weapon}/>
+                          {/each}  
+                    </Tab>
                     <Tab id={1} title="Arsenal">
                         <div class="flex w-full justify-end mb-1">
                             <button
@@ -326,6 +333,41 @@
                                 class="btn-success">Adicionar</button
                             >
                         </div>
+                        {#if $Character.inventory.weapons}
+                            <div
+                                class="h-[52rem] overflow-y-auto overflow-x-hidden"
+                            >
+                                {#each $Character.inventory.weapons as weapon}
+                                    <WeaponPanel
+                                        data={weapon}
+                                        bg="bg-zinc-900"
+                                        showDices={true}
+                                    >
+                                        <button
+                                            on:click={() =>
+                                                (weapon.isEquipped =
+                                                    !weapon.isEquipped)}
+                                            class={`${
+                                                weapon.isEquipped
+                                                    ? "btn-error"
+                                                    : "btn-success"
+                                            } transition-all`}
+                                            >{weapon.isEquipped
+                                                ? "Desequipar"
+                                                : "Equipar"}</button
+                                        >
+                                        <button
+                                            on:click={() => {
+                                                CharacterUtils.removeItemToInventory(
+                                                    weapon,
+                                                );
+                                            }}
+                                            class="btn-error">Deletar</button
+                                        >
+                                    </WeaponPanel>
+                                {/each}
+                            </div>
+                        {/if}
                     </Tab>
                     <Tab id={2} title="Equipamentos">
                         <div class="flex w-full justify-end mb-1">
@@ -340,7 +382,33 @@
                         {#if $Character.inventory.equipments}
                             <div
                                 class="h-[52rem] overflow-y-auto overflow-x-hidden"
-                            ></div>
+                            >
+                                {#each $Character.inventory.equipments as item}
+                                    <ItemPanel bg="bg-zinc-900" data={item} iconClass="w-8">
+                                        <button
+                                            on:click={() =>
+                                                (item.isEquipped =
+                                                    !item.isEquipped)}
+                                            class={`${
+                                                item.isEquipped
+                                                    ? "btn-error"
+                                                    : "btn-success"
+                                            } transition-all`}
+                                            >{item.isEquipped
+                                                ? "Desequipar"
+                                                : "Equipar"}</button
+                                        >
+                                        <button
+                                            on:click={() => {
+                                                CharacterUtils.removeItemToInventory(
+                                                    item,
+                                                );
+                                            }}
+                                            class="btn-error">Deletar</button
+                                        >
+                                    </ItemPanel>
+                                {/each}
+                            </div>
                         {/if}
                     </Tab>
                 </TabGroup>

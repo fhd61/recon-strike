@@ -130,10 +130,12 @@ export class CharacterUtils {
             })
         else
             CharacterSheet.update(c => {
-                c.inventory.equipments.push(item)
+                const i = c.inventory.equipments.indexOf(item)
+                c.inventory.equipments.splice(i, 1)
                 return c
             })
     }
+
     static serializedChar() {
         return JSON.stringify(get(CharacterSheet))
     }
@@ -185,5 +187,23 @@ export class CharacterUtils {
         }
         else
             throw new Error("Character not found, or invalid")
+    }
+
+    static equipadedWeapons(){
+       const arr = get(CharacterSheet)
+       .inventory
+       .weapons
+       .filter(item => item.isEquipped === true)
+
+       return arr
+    }
+
+    static equipadedItems(){
+       const arr = get(CharacterSheet)
+       .inventory
+       .equipments
+       .filter(item => item.isEquipped === true)
+
+       return arr
     }
 }
