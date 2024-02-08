@@ -2,7 +2,7 @@
     import type { IItem } from "$lib/types/interface/IItem";
     import ItemPanel from "../characterSheet/itemPanel.svelte";
     import type { IWeapon } from "$lib/types/interface/IWeapon";
-    import { CharacterUtils } from "$lib/utils";
+    import { CharacterUtils, StringUtils } from "$lib/utils";
     import TabGroup from "../tabs/tabGroup.svelte";
     import Tab from "../tabs/tab.svelte";
     import WeaponPanel from "../characterSheet/weaponPanel.svelte";
@@ -13,11 +13,25 @@
     export let index = 0;
 
     let reRender = false;
-    let itemAttToMod: Array<{ id: string; value: number }> = [];
-    let tempItem: IItem = {
+    let validHitDice = true;
+    let validDamageDice: boolean;
+    const regex = /^(\d*)?d(\d+)((\s*[+-]\s*\d+\s*)+)?$/i;
+    const itemAttToMod: Array<{ id: string; value: number }> = [];
+    const tempItem: IItem = {
         name: "",
         description: "",
         isEquipped: false,
+    };
+    const tempWeapon: IWeapon = {
+        name: "",
+        description: "",
+        hit: "1d20",
+        damage: "1d8",
+        modifier: "agi",
+        damageType: undefined,
+        range: 10,
+        critValue: 20,
+        critMult: 1.3,
     };
 
     function addModToItem() {
@@ -39,17 +53,20 @@
     }
 
     function createItem() {
-        let newItem = {...tempItem}
-        let mods: { [id: string]: number } = {}
-        
-        itemAttToMod.map((mod) => {
-            mods[mod.id] = mods.value
-        })
-        newItem.attToModify = mods
+        let newItem = { ...tempItem };
+        let mods: { [id: string]: number } = {};
 
-        $CharacterSheet.inventory.equipments.push({...newItem})
-        console.log($CharacterSheet.inventory.equipments)
+        itemAttToMod.map((mod) => {
+            mods[mod.id] = mods.value;
+        });
+        newItem.attToModify = mods;
+
+        $CharacterSheet.inventory.equipments.push({ ...newItem });
+        console.log($CharacterSheet.inventory.equipments);
     }
+
+    $: validHitDice = regex.test(tempWeapon.hit);
+    $: validDamageDice = regex.test(tempWeapon.damage);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -143,11 +160,121 @@
                 </div>
             </div>
             <div class="flex justify-end my-1">
-                <button on:click={createItem} class="btn-success">Criar Item</button>
+                <button on:click={createItem} class="btn-success"
+                    >Criar Item</button
+                >
             </div></Tab
         >
         <Tab id={3} title="Criar Arma">
-            <div></div>
+            <div>
+                <div class="flex flex-col">
+                    <label class="flex flex-col">
+                        Nome
+                        <input
+                            class="input-darker p-2"
+                            type="text"
+                            bind:value={tempWeapon.name}
+                        />
+                    </label>
+                    <label class="flex flex-col mt-4">
+                        Descrição
+                        <textarea
+                            class="input-darker p-2 h-44"
+                            bind:value={tempWeapon.description}
+                        />
+                    </label>
+                </div>
+                <div class="flex my-4">
+                    <label class="flex flex-col w-44">
+                        Dado de Acerto {@html validHitDice
+                            ? ""
+                            : "<strong class='text-red-500 absolute -translate-y-4'>Dado invalido</strong>"}
+                        <input
+                            bind:value={tempWeapon.hit}
+                            class="input-darker p-2 placeholder:opacity-10"
+                            title="Tipo de dano invalido"
+                            pattern="/^(\d*)?d(\d+)((\s*[+-]\s*\d+\s*)+)?$/i"
+                            placeholder="1d20"
+                            type="text"
+                        />
+                    </label>
+                    <label class="flex flex-col w-44 ml-6">
+                        Dado de Dano {@html validDamageDice
+                            ? ""
+                            : "<strong class='text-red-500 absolute -translate-y-4'>Dado invalido</strong>"}
+                        <input
+                            bind:value={tempWeapon.damage}
+                            class="input-darker p-2 placeholder:opacity-10"
+                            title="Tipo de dano invalido"
+                            pattern="/^(\d*)?d(\d+)((\s*[+-]\s*\d+\s*)+)?$/i"
+                            placeholder="1d8"
+                            type="text"
+                        />
+                    </label>
+                    <label class="ml-6">
+                        <p>Modificador de Acerto</p>
+                        <select
+                            bind:value={tempWeapon.modifier}
+                            class="p-1 w-44 h-10 uppercase bg-zinc-950/50"
+                        >
+                            <option value="agi">AGI</option>
+                            <option value="int">INT</option>
+                            <option value="for">FOR</option>
+                            <option value="vig">VIG</option>
+                            <option value="def">Defesa</option>
+                            <option value="ca">GA</option>
+                            <option value="speed">Deslocamento</option>
+                            <option value="hp">Vida</option>
+                        </select>
+                    </label>
+                    <label class="ml-6">
+                        <p>Tipo de Dano</p>
+                        <select
+                            bind:value={tempWeapon.damageType}
+                            class="p-1 w-44 h-10 uppercase bg-zinc-950/50"
+                        >
+                            <option value={undefined}>-</option>
+                            <option value="slashing">Corte</option>
+                            <option value="bludgeoning">Contusão</option>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <div class="flex">
+                        <label class="flex flex-col w-20">
+                            Critico
+                            <input
+                                bind:value={tempWeapon.critValue}
+                                type="number"
+                                class="input-darker p-2"
+                            />
+                        </label>
+                        <label class="flex flex-col w-20 mx-20">
+                            Multiplicador
+                            <input
+                                bind:value={tempWeapon.critMult}
+                                type="number"
+                                class="input-darker p-2"
+                            />
+                        </label>
+                        <label class="flex flex-col w-20">
+                            Alcance
+                            <input
+                                bind:value={tempWeapon.range}
+                                type="number"
+                                class="input-darker p-2"
+                            />
+                        </label>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-4">
+                <button
+                    disabled={!validHitDice || !validDamageDice}
+                    class="btn-success disabled:bg-green-900 disabled:opacity-30 transition-all"
+                    >Criar Arma</button
+                >
+                </div>
+            </div>
         </Tab>
     </TabGroup>
 </div>

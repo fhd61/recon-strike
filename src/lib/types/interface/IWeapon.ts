@@ -13,4 +13,5 @@ export interface IWeapon extends IEquitable{
     critValue: number
     critMult: number
     mods?: IItem[]
+    talents?: IItem[]
 }
