@@ -65,6 +65,11 @@
         console.log($CharacterSheet.inventory.equipments);
     }
 
+    function createWeapon() {
+        $CharacterSheet.inventory.weapons.push({ ...tempWeapon });
+        console.log($CharacterSheet.inventory.weapons);
+    }
+
     $: validHitDice = regex.test(tempWeapon.hit);
     $: validDamageDice = regex.test(tempWeapon.damage);
 </script>
@@ -270,6 +275,7 @@
                 <div class="flex justify-end mt-4">
                 <button
                     disabled={!validHitDice || !validDamageDice}
+                    on:click={createWeapon}
                     class="btn-success disabled:bg-green-900 disabled:opacity-30 transition-all"
                     >Criar Arma</button
                 >
