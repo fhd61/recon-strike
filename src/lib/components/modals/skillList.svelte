@@ -7,15 +7,16 @@
     import type { ISkill } from "$lib/types/interface/ISkill";
     import Accordion from "../characterSheet/accordion.svelte";
 
+
     export let data: {
-        tech: ISkill[];
-        security: ISkill[];
-        medical: ISkill[];
+        tech: ISkill[],
+        security: ISkill[],
+        medical: ISkill[],
         upgrades: {
-            tech: ISkill[];
-            security: ISkill[];
-            medical: ISkill[];
-        };
+            techUpgrades: ISkill[],
+            securityUpgrades: ISkill[],
+            medicalUpgrades: ISkill[]
+        }
     };
 
     export let mouseInside: boolean = false;

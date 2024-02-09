@@ -8,6 +8,7 @@
     import Accordion from "$lib/components/characterSheet/accordion.svelte";
     import Dossier from "$lib/components/modals/dossier.svelte";
     import Settings from "$lib/components/modals/settings.svelte";
+    import ModList from "$lib/components/modals/modsList.svelte";
     import Ability from "$lib/components/characterSheet/ability.svelte";
     import {
         CharacterSheet as Character,
@@ -34,6 +35,8 @@
     import Def from "$lib/components/characterSheet/stats/def.svelte";
     import { CharacterUtils } from "$lib/utils.js";
     import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
+    import ModsList from "$lib/components/modals/modsList.svelte";
+    import type { IWeapon } from "$lib/types/interface/IWeapon.js";
 
     export let data;
 
@@ -41,6 +44,7 @@
     let inCombatMode: boolean;
     let turnStarted: boolean;
     let mouseInsideModal: boolean;
+    let weaponToAddMod: IWeapon;
     let modalElement: HTMLDialogElement;
     let diceRollInput: HTMLInputElement;
     let modalToShow:
@@ -49,7 +53,8 @@
         | "inv_talents"
         | "inv_equipment"
         | "inv_weapons"
-        | "inv_ability" = "dossier";
+        | "inv_ability"
+        | "inv_mods" = "dossier";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
     let saveInterval: string | number | NodeJS.Timeout | undefined;
@@ -68,7 +73,7 @@
         let char: ICharacter | undefined = JSON.parse(
             localStorage.getItem("character") as string,
         );
-        
+
         if (char) Character.set(char);
 
         saveInterval = setInterval(saveLocal, 10000);
@@ -316,12 +321,16 @@
                     class="flex w-full mb-2 justify-around items-center bg-zinc-900 h-10 polygonR capitalize"
                 >
                     <Tab id={0} title="Equipados">
-                          {#each CharacterUtils.equipadedItems() as item}
-                            <ItemPanel data={item} bg="bg-zinc-900" iconClass="w-9"/>
-                          {/each}  
-                          {#each CharacterUtils.equipadedWeapons() as weapon}
-                            <WeaponPanel bg="bg-zinc-900" data={weapon}/>
-                          {/each}  
+                        {#each CharacterUtils.equipadedItems() as item}
+                            <ItemPanel
+                                data={item}
+                                bg="bg-zinc-900"
+                                iconClass="w-9"
+                            />
+                        {/each}
+                        {#each CharacterUtils.equipadedWeapons() as weapon}
+                            <WeaponPanel bg="bg-zinc-900" data={weapon} />
+                        {/each}
                     </Tab>
                     <Tab id={1} title="Arsenal">
                         <div class="flex w-full justify-end mb-1">
@@ -343,27 +352,52 @@
                                         bg="bg-zinc-900"
                                         showDices={true}
                                     >
-                                        <button
-                                            on:click={() =>
-                                                (weapon.isEquipped =
-                                                    !weapon.isEquipped)}
-                                            class={`${
-                                                weapon.isEquipped
-                                                    ? "btn-error"
-                                                    : "btn-success"
-                                            } transition-all`}
-                                            >{weapon.isEquipped
-                                                ? "Desequipar"
-                                                : "Equipar"}</button
-                                        >
-                                        <button
-                                            on:click={() => {
-                                                CharacterUtils.removeItemToInventory(
-                                                    weapon,
-                                                );
-                                            }}
-                                            class="btn-error">Deletar</button
-                                        >
+                                        <div class="flex justify-between w-[44rem]">
+                                            <div>
+                                                <button
+                                                    on:click={() =>
+                                                        (weapon.isEquipped =
+                                                            !weapon.isEquipped)}
+                                                    class={`${
+                                                        weapon.isEquipped
+                                                            ? "btn-error"
+                                                            : "btn-success"
+                                                    } transition-all`}
+                                                    >{weapon.isEquipped
+                                                        ? "Desequipar"
+                                                        : "Equipar"}</button
+                                                >
+                                                <button
+                                                    on:click={() => {
+                                                        CharacterUtils.removeItemToInventory(
+                                                            weapon,
+                                                        );
+                                                    }}
+                                                    class="btn-error"
+                                                    >Deletar</button
+                                                >
+                                            </div>
+                                            <div class="">
+                                                <button
+                                                    class="btn-success"
+                                                    on:click={() => {
+                                                        modalToShow =
+                                                            "inv_mods";
+                                                        modalElement.showModal();
+                                                        weaponToAddMod = weapon;
+                                                    }}>Colocar Mods</button
+                                                >
+                                                <button
+                                                    class="btn-success"
+                                                    on:click={() => {
+                                                        modalToShow =
+                                                            "inv_mods";
+                                                        modalElement.showModal();
+                                                        weaponToAddMod = weapon;
+                                                    }}>Colocar Talento</button
+                                                >
+                                            </div>
+                                        </div>
                                     </WeaponPanel>
                                 {/each}
                             </div>
@@ -384,7 +418,11 @@
                                 class="h-[52rem] overflow-y-auto overflow-x-hidden"
                             >
                                 {#each $Character.inventory.equipments as item}
-                                    <ItemPanel bg="bg-zinc-900" data={item} iconClass="w-8">
+                                    <ItemPanel
+                                        bg="bg-zinc-900"
+                                        data={item}
+                                        iconClass="w-8"
+                                    >
                                         <button
                                             on:click={() =>
                                                 (item.isEquipped =
@@ -484,6 +522,13 @@
             skillSlot={0}
             bind:mouseInside={mouseInsideModal}
             data={data.defaults.skills}
+        />
+    {/if}
+    {#if modalToShow === "inv_mods"}
+        <ModsList
+            bind:weapon={weaponToAddMod}
+            bind:mouseInside={mouseInsideModal}
+            data={data.defaults.equipments.mods}
         />
     {/if}
 </dialog>

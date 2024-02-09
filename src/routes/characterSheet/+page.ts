@@ -13,42 +13,37 @@ export async function load({ fetch }) {
 
     //Talents
     const p_talents = await getData("api/ptalents") as IItem[];
-    const w_talents = await getData("api/wtalents") as IItem[];
 
-    //Equipaments
-    const armor = await getData("api/equipments/armor") as IItem[];
-    const fireArms = await getData("api/equipments/weapons/fireArms") as IWeapon[];
-    const melee = await getData("api/equipments/weapons/melee") as IWeapon[];
+    const equipments = {
+        armor: await getData("api/equipments/armor") as IItem[],
+        fireArms: await getData("api/equipments/weapons/fireArms") as IWeapon[],
+        melee: await getData("api/equipments/weapons/melee") as IWeapon[],
+        w_talents: await getData("api/wtalents") as IItem[],
+        mods: {
+            muzzles: await getData("api/equipments/weapons/mods/muzzle") as IItem[],
+            optics: await getData("api/equipments/weapons/mods/optics") as IItem[],
+            underbarrel: await getData("api/equipments/weapons/mods/underbarrel") as IItem[]
+        }
+    }
 
-    //Skills
-    const tech = await getData("api/skills/tech") as ISkill[];
-    const security = await getData("api/skills/security") as ISkill[];
-    const medical = await getData("api/skills/medical") as ISkill[];
+    const skills = {
+        tech: await getData("api/skills/tech") as ISkill[],
+        security: await getData("api/skills/security") as ISkill[],
+        medical: await getData("api/skills/medical") as ISkill[],
+        upgrades: {
+            techUpgrades: await getData("api/skills/tech/upgrade") as ISkill[],
+            securityUpgrades: await getData("api/skills/security/upgrade") as ISkill[],
+            medicalUpgrades: await getData("api/skills/medical/upgrade") as ISkill[]
+        }
+    }
 
     //Skills upgrades
-    const techUpgrades = await getData("api/skills/tech/upgrade") as ISkill[];
-    const securityUpgrades = await getData("api/skills/security/upgrade") as ISkill[];
-    const medicalUpgrades = await getData("api/skills/medical/upgrade") as ISkill[];
 
     return {
         defaults: {
             charTalents: p_talents,
-            skills: {
-                tech,
-                security,
-                medical,
-                upgrades: {
-                    tech: techUpgrades,
-                    security: securityUpgrades,
-                    medical: medicalUpgrades
-                }
-            },
-            equipments: {
-                armor,
-                fireArms,
-                melee,
-                weaponsTalents: w_talents
-            }
+            skills,
+            equipments
         }
     }
 }

@@ -5,6 +5,7 @@
     import { CharacterSheet } from "$lib/store/character";
     import { rollDice } from "$lib/diceRoller";
     import type { IAttribute } from "$lib/types/interface/IBaseAttribute";
+    import { toast } from "@zerodevx/svelte-toast";
 
     export let data: IWeapon;
     export let showDices: boolean = true;
@@ -21,20 +22,25 @@
         );
 
         if (hasTalent) {
-            console.log(
-                rollDice(data.name, dice.sides, [mod.value], dice.rollTimes),
+            const res = rollDice(
+                data.name,
+                dice.sides,
+                [mod.value],
+                dice.rollTimes,
             );
+
+            toast.push(`${res?.name}<br>${res?.total}`);
         } else {
             let div = Number.parseInt(att[1]);
 
-            console.log(
-                rollDice(
-                    data.name + " | Acerto",
-                    dice.sides,
-                    [mod.value === 1 ? mod.value : Math.floor(mod.value / div)],
-                    dice.rollTimes,
-                ),
+            const res = rollDice(
+                data.name + " | Acerto",
+                dice.sides,
+                [mod.value === 1 ? mod.value : Math.floor(mod.value / div)],
+                dice.rollTimes,
             );
+
+            toast.push(`${res?.name}<br>${res?.total}`);
         }
     }
 
@@ -51,13 +57,18 @@
             ? [mod.value === 1 ? mod.value : Math.floor(mod.value / 2)]
             : [];
 
-        console.log(
-            rollDice(data.name + " | Dano", dice.sides, bonus, dice.rollTimes),
+        const res = rollDice(
+            data.name + " | Dano",
+            dice.sides,
+            bonus,
+            dice.rollTimes,
         );
+
+        toast.push(`${res?.name}<br>${res?.total}`);
     }
 </script>
 
-<div class={`w-[45rem] flex flex-col ${bg} px-2 m-1 polygonL`}>
+<div class={`w-[45rem] flex flex-col ${bg} p-2 m-1 polygonL`}>
     <Accordion
         closeOnInteract={false}
         iconClass="w-10 h-9 object-scale-down"

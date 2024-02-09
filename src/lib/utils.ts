@@ -159,21 +159,17 @@ export class CharacterUtils {
         if (dbChar[0] == null) {
             tempArr.push(charToSave);
 
-            const res = await dbClient 
+            await dbClient 
                 .from("cloud_save")
                 .upsert([{ json: [JSON.stringify(tempArr)] }]);
-
-            console.log(res);
         } else {
             const charArr = JSON.parse(dbChar[0].json) as ICharacter[];
 
             charArr[Number.parseInt(index!)] = charToSave;
 
-            const res = await dbClient
+            await dbClient
                 .from("cloud_save")
                 .upsert([{ json: [JSON.stringify(charArr)] }]);
-
-            console.log(res);
         }
     }
 
