@@ -8,7 +8,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 export class MathUtils {
     static randomNumber(max: number) {
-        return Math.ceil(Math.random() * max) + 1
+        return Math.ceil(Math.random() * max)
     }
 
     static clamp(num: number, min: number, max: number) {

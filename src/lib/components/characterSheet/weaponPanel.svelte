@@ -6,6 +6,7 @@
     import { rollDice } from "$lib/diceRoller";
     import type { IAttribute } from "$lib/types/interface/IBaseAttribute";
     import { toast } from "@zerodevx/svelte-toast";
+    import { onMount } from "svelte";
 
     export let data: IWeapon;
     export let showDices: boolean = true;
@@ -13,48 +14,32 @@
 
     function rollHit() {
         let dice = StringUtils.parseDiceNotation(data.hit);
-        let att = data.modifier.toLocaleLowerCase().split("/");
-        let mod = CharacterUtils.getAttribute(
-            EAttributeUtils.stringToAttribute(att[0]),
-        ) as IAttribute;
-        let hasTalent = $CharacterSheet.talents.find(
-            (t) => t.name == "Campeão de tiro",
+
+        let attName = data.modifier.toLocaleLowerCase().split("/");
+        let att = EAttributeUtils.stringToAttribute(attName[0]);
+        let mod = (CharacterUtils.getAttribute(att) as IAttribute).value;
+
+        if (!checkForTalent("Campeão de tiro")) mod = Math.ceil(mod / 2);
+
+        const res = rollDice(
+            data.name + " | Acerto",
+            dice.sides,
+            [mod],
+            dice.rollTimes,
         );
 
-        if (hasTalent) {
-            const res = rollDice(
-                data.name,
-                dice.sides,
-                [mod.value],
-                dice.rollTimes,
-            );
-
-            toast.push(`${res?.name}<br>${res?.total}`);
-        } else {
-            let div = Number.parseInt(att[1]);
-
-            const res = rollDice(
-                data.name + " | Acerto",
-                dice.sides,
-                [mod.value === 1 ? mod.value : Math.floor(mod.value / div)],
-                dice.rollTimes,
-            );
-
-            toast.push(`${res?.name}<br>${res?.total}`);
-        }
+        toast.push(`${res?.name}<br>${res?.summary}`);
     }
 
     function rollDamage() {
         let dice = StringUtils.parseDiceNotation(data.damage);
-        let att = data.modifier.toLocaleLowerCase().split("/");
-        let mod = CharacterUtils.getAttribute(
-            EAttributeUtils.stringToAttribute(att[0]),
-        ) as IAttribute;
-        let hasTalent = $CharacterSheet.talents.find(
-            (t) => t.name == "Tiro fatal",
-        );
-        let bonus = hasTalent
-            ? [mod.value === 1 ? mod.value : Math.floor(mod.value / 2)]
+
+        let attName = data.modifier.toLocaleLowerCase().split("/");
+        let att = EAttributeUtils.stringToAttribute(attName[0]);
+        let mod = (CharacterUtils.getAttribute(att) as IAttribute).value;
+
+        let bonus = checkForTalent("Tiro fatal")
+            ? [mod === 1 ? mod : Math.floor(mod / 2)]
             : [];
 
         const res = rollDice(
@@ -63,8 +48,12 @@
             bonus,
             dice.rollTimes,
         );
+        
+        toast.push(`${res?.name}<br>${res?.summary}`);
+    }
 
-        toast.push(`${res?.name}<br>${res?.total}`);
+    function checkForTalent(talent: "Campeão de tiro" | "Tiro fatal") {
+        return $CharacterSheet.talents.find((t) => t.name == talent);
     }
 </script>
 
@@ -77,21 +66,32 @@
     >
         <div class="flex flex-col items-start">
             <div class="grid grid-flow-col gap-x-4 text-sm">
-                <p>Dano: {data.damage}</p>
-                <p>Acerto: {data.hit} + {data.modifier}</p>
+                <p>
+                    Dano: {data.damage}
+                    <span class="uppercase">
+                        {checkForTalent("Tiro fatal")
+                            ? ` + ${data.modifier}/2`
+                            : ""}</span
+                    >
+                </p>
+                <p>
+                    Acerto: {data.hit}
+                    <span class="uppercase"
+                        >+ {data.modifier +
+                            (checkForTalent("Campeão de tiro")
+                                ? ""
+                                : "/2")}</span
+                    >
+                </p>
                 <p>Critico: {data.critMult}</p>
                 <p>Alcance: {data.range}m</p>
             </div>
             {#if showDices}
                 <div class="mt-2 flex justify-between">
-                    <button
-                        on:click={rollHit}
-                        class="bg-orange-700 hover:bg-orange-900 transition-all w-fit h-full p-2 polygonL"
+                    <button on:click={rollHit} class="btn-primary"
                         >Rolar Acerto</button
                     >
-                    <button
-                        on:click={rollDamage}
-                        class="bg-orange-700 hover:bg-orange-900 transition-all w-fit h-full p-2 polygonL mx-3"
+                    <button on:click={rollDamage} class="btn-primary mx-4"
                         >Rolar dano</button
                     >
                     <button
@@ -99,8 +99,7 @@
                             rollHit();
                             rollDamage();
                         }}
-                        class="bg-orange-700 hover:bg-orange-900 transition-all w-fit h-full p-2 polygonL"
-                        >Rolar Acerto + Rolar dano</button
+                        class="btn-primary">Rolar Acerto + Rolar dano</button
                     >
                 </div>
             {/if}

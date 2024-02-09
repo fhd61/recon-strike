@@ -1,4 +1,4 @@
-import { StringUtils } from "./utils"
+import { MathUtils, StringUtils } from "./utils"
 
 export interface IRollResult {
 	name: string
@@ -7,7 +7,7 @@ export interface IRollResult {
 	rollsTotal: number
 	bonusTotal: number
 	total: number
-	summery: string
+	summary: string
 }
 
 export function rollFromString(rollText: string): IRollResult | void {
@@ -17,24 +17,14 @@ export function rollFromString(rollText: string): IRollResult | void {
 }
 
 export function rollDice(name: string, diceSides: number, bonus: number[] = [], rollTimes: number = 1,): IRollResult {
-	const rolls = new Array<number>
-	let bonusTotal = 0
-	let rollsTotal = 0
-	let total = 0
+	const rolls = Array.from({ length: rollTimes }, () => MathUtils.randomNumber(diceSides));
+	
+	const bonusTotal = bonus.reduce((acc, cur) => acc + cur, 0);
+	const rollsTotal = rolls.reduce((acc, cur) => acc + cur, 0);
 
-	if (bonus.length != 0)
-		bonusTotal = bonus.reduce((acc, cur) => acc + cur)
+	const total = rollsTotal + bonusTotal;
+	const bonusPart = bonus.length > 0 ? ` + [${bonus.toString()}]` : '';
 
-	for (let i = 0; i < rollTimes; i++) {
-		rolls.push(Math.ceil(Math.random() * diceSides) + 1)
-	}
-
-	if (rolls.length > 1)
-		rollsTotal = rolls.reduce((acc, cur) => acc + cur)
-	else
-		rollsTotal = rolls[0]
-
-	total = rollsTotal + bonusTotal
 
 	return {
 		name,
@@ -43,6 +33,6 @@ export function rollDice(name: string, diceSides: number, bonus: number[] = [], 
 		rollsTotal,
 		bonusTotal,
 		total,
-		summery: `[${rolls.toString()}] + [${bonus.toString()}] = ${total}`
-	}
+		summary: `[${rolls.toString()}]${bonusPart} = ${total}`
+	};
 }
