@@ -3,7 +3,7 @@
     import type { IWeapon } from "$lib/types/interface/IWeapon";
     import { CharacterUtils, EAttributeUtils, StringUtils } from "$lib/utils";
     import { CharacterSheet } from "$lib/store/character";
-    import { rollDice } from "$lib/diceRoller";
+    import { rollDice, rollForAttackAndDamage } from "$lib/diceRoller";
     import type { IAttribute } from "$lib/types/interface/IBaseAttribute";
     import { toast } from "@zerodevx/svelte-toast";
     import { onMount } from "svelte";
@@ -14,17 +14,15 @@
 
     function rollHit() {
         let dice = StringUtils.parseDiceNotation(data.hit);
+        let attModifier = getAttributeModifier();
 
-        let attName = data.modifier.toLocaleLowerCase().split("/");
-        let att = EAttributeUtils.stringToAttribute(attName[0]);
-        let mod = (CharacterUtils.getAttribute(att) as IAttribute).value;
-
-        if (!checkForTalent("Campeão de tiro")) mod = Math.ceil(mod / 2);
+        if (!checkForTalent("Campeão de tiro"))
+            attModifier = Math.ceil(attModifier / 2);
 
         const res = rollDice(
             data.name + " | Acerto",
             dice.sides,
-            [mod],
+            [attModifier],
             dice.rollTimes,
         );
 
@@ -33,14 +31,11 @@
 
     function rollDamage() {
         let dice = StringUtils.parseDiceNotation(data.damage);
+        let attModifier = getAttributeModifier();
+        let bonus: number[] = [];
 
-        let attName = data.modifier.toLocaleLowerCase().split("/");
-        let att = EAttributeUtils.stringToAttribute(attName[0]);
-        let mod = (CharacterUtils.getAttribute(att) as IAttribute).value;
-
-        let bonus = checkForTalent("Tiro fatal")
-            ? [mod === 1 ? mod : Math.floor(mod / 2)]
-            : [];
+        if (checkForTalent("Tiro fatal"))
+            bonus.push(Math.ceil(attModifier / 2));
 
         const res = rollDice(
             data.name + " | Dano",
@@ -48,8 +43,16 @@
             bonus,
             dice.rollTimes,
         );
-        
+
         toast.push(`${res?.name}<br>${res?.summary}`);
+    }
+
+    function getAttributeModifier() {
+        let attName = data.modifier.toLocaleLowerCase().split("/");
+        let att = EAttributeUtils.stringToAttribute(attName[0]);
+        let mod = (CharacterUtils.getAttribute(att) as IAttribute).value;
+
+        return mod;
     }
 
     function checkForTalent(talent: "Campeão de tiro" | "Tiro fatal") {
@@ -83,7 +86,7 @@
                                 : "/2")}</span
                     >
                 </p>
-                <p>Critico: {data.critMult}</p>
+                <p>Critico: {data.critMut}</p>
                 <p>Alcance: {data.range}m</p>
             </div>
             {#if showDices}
@@ -103,6 +106,30 @@
                     >
                 </div>
             {/if}
+            <div class="flex cursor-default">
+                {#if data.mods !== undefined}
+                    {#each data.mods as mod}
+                        {#if mod.icon}
+                            <div class="mx-4 my-2 group">
+                                <div class="">
+                                    <img
+                                        src={mod.icon}
+                                        alt=""
+                                        class="w-10 h-9 object-scale-down"
+                                    />
+                                </div>
+                                <div>
+                                    <p
+                                        class="absolute text-sm opacity-0 -translate-x-4 -translate-y-1 group-hover:opacity-100 transition-all"
+                                    >
+                                        {mod.name}
+                                    </p>
+                                </div>
+                            </div>
+                        {/if}
+                    {/each}
+                {/if}
+            </div>
             <div class="mt-2">
                 <slot />
             </div>

@@ -31,7 +31,7 @@
         damageType: undefined,
         range: 10,
         critValue: 20,
-        critMult: 1.3,
+        critMut: 1.3,
     };
 
     function addModToItem() {
@@ -257,7 +257,7 @@
                         <label class="flex flex-col w-20 mx-20">
                             Multiplicador
                             <input
-                                bind:value={tempWeapon.critMult}
+                                bind:value={tempWeapon.critMut}
                                 type="number"
                                 class="input-darker p-2"
                             />

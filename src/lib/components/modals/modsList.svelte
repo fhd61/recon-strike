@@ -58,7 +58,7 @@
             {#each data.muzzles as item, i}
                 <div>
                     <ItemPanel
-                        iconClass="w-9 h-19 object-scale-down"
+                        iconClass="w-9 h-9 object-scale-down"
                         data={item}
                     >
                         {#key reRender}
@@ -87,7 +87,7 @@
             {#each data.optics as item, i}
                 <div>
                     <ItemPanel
-                        iconClass="w-9 h-19 object-scale-down"
+                        iconClass="w-9 h-9 object-scale-down"
                         data={item}
                     >
                         {#key reRender}
@@ -116,7 +116,7 @@
             {#each data.underbarrel as item, i}
                 <div>
                     <ItemPanel
-                        iconClass="w-9 h-19 object-scale-down"
+                        iconClass="w-9 h-9 object-scale-down"
                         data={item}
                     >
                         {#key reRender}

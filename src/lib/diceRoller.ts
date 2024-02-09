@@ -10,6 +10,14 @@ export interface IRollResult {
 	summary: string
 }
 
+export interface IAttackResult {
+  isCriticalHit: boolean;
+  hitRoll: number;
+  damageRolls: number[];
+  totalDamage: number;
+  summary: string;
+}
+
 export function rollFromString(rollText: string): IRollResult | void {
 	const { sides, modifierSum, rollTimes } = StringUtils.parseDiceNotation(rollText)
 
@@ -35,4 +43,31 @@ export function rollDice(name: string, diceSides: number, bonus: number[] = [], 
 		total,
 		summary: `[${rolls.toString()}]${bonusPart} = ${total}`
 	};
+}
+
+export function rollForAttackAndDamage(
+  hitDiceSides: number,
+  damageDiceSides: number,
+  criticalHitValue: number,
+  criticalMultiplier: number = 2, // Default multiplier for critical hits
+  rollTimes: number = 1 // Number of times to roll damage dice
+): IAttackResult {
+  // Roll for hit
+  const hitRoll = Math.ceil(Math.random() * hitDiceSides);
+  const isCriticalHit = hitRoll === criticalHitValue;
+
+  // Roll for damage
+  const damageRolls = Array.from({ length: rollTimes }, () => Math.ceil(Math.random() * damageDiceSides));
+  const totalDamage = damageRolls.reduce((acc, roll) => acc + roll, 0) * (isCriticalHit ? criticalMultiplier : 1);
+
+  // Construct summary
+  const summary = `Hit Roll: ${hitRoll}${isCriticalHit ? ' (Critical!)' : ''}, Damage Rolls: [${damageRolls.toString()}], Total Damage: ${totalDamage}`;
+
+  return {
+    isCriticalHit,
+    hitRoll,
+    damageRolls,
+    totalDamage,
+    summary,
+  };
 }

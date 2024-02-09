@@ -13,7 +13,7 @@ const content: IWeapon[] = [
         damage: "1d8",
         range: 10,
         critValue: 20,
-        critMult: 1.5
+        critMut: 1.5
     },
     {
         icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/SMG_Icon.webp",
@@ -23,7 +23,7 @@ const content: IWeapon[] = [
         damage: "1d6",
         range: 7,
         critValue: 20,
-        critMult: 1.2
+        critMut: 1.2
     },
     {
         icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Shotgun_Icon.webp",
@@ -33,7 +33,7 @@ const content: IWeapon[] = [
         damage: "1d10",
         range: 5,
         critValue: 20,
-        critMult: 1.4
+        critMut: 1.4
     },
     {
         icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Pistol_Icon.webp",
@@ -43,7 +43,7 @@ const content: IWeapon[] = [
         damage: "1d4",
         range: 8,
         critValue: 20,
-        critMult: 1.5
+        critMut: 1.5
     },
     {
         icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Marskman_Icon.webp",
@@ -53,7 +53,7 @@ const content: IWeapon[] = [
         damage: "1d10",
         range: 20,
         critValue: 20,
-        critMult: 1.8
+        critMut: 1.8
     },
     {
         icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/LMG_Icon.webp",
@@ -63,6 +63,6 @@ const content: IWeapon[] = [
         damage: "1d6",
         range: 9,
         critValue: 20,
-        critMult: 1.5
+        critMut: 1.5
     },
 ]

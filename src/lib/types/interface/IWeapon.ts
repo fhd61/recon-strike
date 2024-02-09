@@ -1,7 +1,7 @@
 import type { IEquitable } from "./IEquitable"
 import type { IItem } from "./IItem"
 
-export interface IWeapon extends IEquitable{
+export interface IWeapon extends IEquitable {
     icon?: string
     description?: string
     name: string
@@ -11,7 +11,8 @@ export interface IWeapon extends IEquitable{
     damageType?: string
     range: number
     critValue: number
-    critMult: number
+    critMut: number
+    bonus: { [id: string]: number }
     mods?: IItem[]
     talents?: IItem[]
 }

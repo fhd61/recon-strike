@@ -34,9 +34,9 @@
     import Ca from "$lib/components/characterSheet/stats/ca.svelte";
     import Def from "$lib/components/characterSheet/stats/def.svelte";
     import { CharacterUtils } from "$lib/utils.js";
-    import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
     import ModsList from "$lib/components/modals/modsList.svelte";
     import type { IWeapon } from "$lib/types/interface/IWeapon.js";
+    import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
 
     export let data;
 
