@@ -29,6 +29,10 @@
         { title: "Seguraça", section: "security" },
         { title: "Medicina", section: "medical" },
     ];
+
+    function equipSkill(slot: number, skill: ISkill){
+        CharacterUtils.swapSkill(slot, skill)
+    }
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -51,14 +55,14 @@
                             <Tab id={0} title="Padrão">
                                 {#each data[section] as ability}
                                     <ItemPanel iconClass="w-10" data={ability}>
-                                        <button>Equipar</button>
+                                        <button on:click={() => equipSkill(i, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
                             </Tab>
                             <Tab id={1} title="Melhorias">
                                 {#each data.upgrades[section] as ability}
                                     <ItemPanel iconClass="w-10" data={ability}>
-                                        <button>Equipar</button>
+                                        <button on:click={() => equipSkill(i, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
                             </Tab>
@@ -81,14 +85,14 @@
                             <Tab id={0} title="Padrão">
                                 {#each data[section] as ability}
                                     <ItemPanel iconClass="w-10" data={ability}>
-                                        <button>Equipar</button>
+                                        <button on:click={() => equipSkill(i, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
                             </Tab>
                             <Tab id={1} title="Melhorias">
                                 {#each data.upgrades[section] as ability}
                                     <ItemPanel iconClass="w-10" data={ability}>
-                                        <button>Equipar</button>
+                                        <button on:click={() => equipSkill(i, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
                             </Tab>

@@ -18,7 +18,7 @@
 - [x] Sistema de cooldown 
 - [x] Menu para trocar as Habilidades 
 - [ ] Mostar barra de vida da skill 
-- [ ] Importar os upgrades
+- [x] Importar os upgrades
 
 ### Sistema de combate
 

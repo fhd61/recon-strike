@@ -56,7 +56,7 @@
         | "inv_equipment"
         | "inv_weapons"
         | "inv_ability"
-        | "inv_mods" 
+        | "inv_mods"
         | "inv_wTalents" = "dossier";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
@@ -80,6 +80,7 @@
         if (char) Character.set(char);
 
         saveInterval = setInterval(saveLocal, 10000);
+        console.log($Character.skills[1].hp);
     });
 
     onDestroy(() => {
@@ -186,6 +187,34 @@
                         {/if}
                         {#if $Character.skills[1]}
                             <Ability bind:data={$Character.skills[1]} />
+                        {/if}
+                    </div>
+                    <div>
+                        {#if $Character.skills[0]}
+                            {#if $Character.skills[0].hp !== undefined}
+                                <div class="my-2">
+                                    <p class="mb-1">
+                                        {$Character.skills[0].name}
+                                    </p>
+                                    <HpBar
+                                        isChar={false}
+                                        data={$Character.skills[0].hp}
+                                    />
+                                </div>
+                            {/if}
+                        {/if}
+                        {#if $Character.skills[1]}
+                            {#if $Character.skills[1].hp !== undefined}
+                                <div class="my-2">
+                                    <p class="mb-1">
+                                        {$Character.skills[1].name}
+                                    </p>
+                                    <HpBar
+                                        isChar={false}
+                                        data={$Character.skills[1].hp}
+                                    />
+                                </div>
+                            {/if}
                         {/if}
                     </div>
                     <button
@@ -355,7 +384,9 @@
                                         bg="bg-zinc-900"
                                         showDices={true}
                                     >
-                                        <div class="flex justify-between w-[44rem]">
+                                        <div
+                                            class="flex justify-between w-[44rem]"
+                                        >
                                             <div>
                                                 <button
                                                     on:click={() =>
