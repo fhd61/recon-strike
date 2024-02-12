@@ -1,11 +1,11 @@
 <script lang="ts">
+    import { CharacterSheet } from "$lib/store/character";
     import { onTurnEnd } from "$lib/store/events";
     import type { ISkill } from "$lib/types/interface/ISkill";
     import { MathUtils } from "$lib/utils";
     import { cubicIn } from "svelte/easing";
     import { tweened } from "svelte/motion";
     import { fade } from "svelte/transition";
-    import Tooltip from "../tooltip.svelte";
 
     export let data: ISkill;
     let isInCooldown = false;
@@ -19,10 +19,37 @@
 
         if (cooldonwPercentage == 100) isInCooldown = false;
     }
+    
     //@ts-expect-error
     onTurnEnd.on(() => {
-        data.currentCooldown ++
+        let cdr = 1;
+
+        cdr += $CharacterSheet.talents.reduce((_, talent) => {
+            if (
+                talent.attToModify === undefined ||
+                !("cdr" in talent.attToModify)
+            )
+                return 0;
+
+            return talent.attToModify["cdr"];
+        }, 0)!;
+
+        cdr += $CharacterSheet.inventory.equipments.reduce((_, equipment) => {
+            if (
+                equipment.attToModify === undefined ||
+                !("cdr" in equipment.attToModify)
+            )
+                return 0;
+
+            return equipment.attToModify["cdr"];
+        }, 0)!;
+        
+        data.currentCooldown += cdr;
     });
+
+    function checkForTalent(talent: "Especialista em Habilidades") {
+        return $CharacterSheet.talents.find((t) => t.name == talent);
+    }
 </script>
 
 <button

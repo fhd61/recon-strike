@@ -37,6 +37,7 @@
     import ModsList from "$lib/components/modals/modsList.svelte";
     import type { IWeapon } from "$lib/types/interface/IWeapon.js";
     import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
+    import WTalentsList from "$lib/components/modals/wTalentsList.svelte";
 
     export let data;
 
@@ -54,7 +55,8 @@
         | "inv_equipment"
         | "inv_weapons"
         | "inv_ability"
-        | "inv_mods" = "dossier";
+        | "inv_mods" 
+        | "inv_wTalents" = "dossier";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
     let saveInterval: string | number | NodeJS.Timeout | undefined;
@@ -391,7 +393,7 @@
                                                     class="btn-success"
                                                     on:click={() => {
                                                         modalToShow =
-                                                            "inv_mods";
+                                                            "inv_wTalents";
                                                         modalElement.showModal();
                                                         weaponToAddMod = weapon;
                                                     }}>Colocar Talento</button
@@ -529,6 +531,13 @@
             bind:weapon={weaponToAddMod}
             bind:mouseInside={mouseInsideModal}
             data={data.defaults.equipments.mods}
+        />
+    {/if}
+    {#if modalToShow === "inv_wTalents"}
+        <WTalentsList
+            bind:weapon={weaponToAddMod}
+            bind:mouseInside={mouseInsideModal}
+            data={data.defaults.equipments.w_talents}
         />
     {/if}
 </dialog>

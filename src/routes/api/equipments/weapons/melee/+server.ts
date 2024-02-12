@@ -14,6 +14,7 @@ const content: IWeapon[] = [
         range: 2,
         critValue: 20,
         critMut: 1.5,
+        isMelee: true,
         bonus: {}
     },
     {
@@ -25,6 +26,7 @@ const content: IWeapon[] = [
         range: 1,
         critValue: 20,
         critMut: 1.7,
+        isMelee: true,
         bonus: {}
     },
     {
@@ -36,6 +38,7 @@ const content: IWeapon[] = [
         range: 2,
         critValue: 20,
         critMut: 1.5,
+        isMelee: true,
         bonus: {}
     },
     {
@@ -47,6 +50,7 @@ const content: IWeapon[] = [
         range: 2,
         critValue: 20,
         critMut: 1.7,
+        isMelee: true,
         bonus: {}
     },
 ]

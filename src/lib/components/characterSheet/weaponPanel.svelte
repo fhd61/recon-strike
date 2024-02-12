@@ -12,27 +12,44 @@
     export let showDices: boolean = true;
     export let bg = "bg-zinc-950";
 
-    function rollHit() {
-        let dice = StringUtils.parseDiceNotation(data.hit);
-        let attModifier = getAttributeModifier();
+    function rollHit(showPopup = true) {
+        const dice = StringUtils.parseDiceNotation(data.hit);
+        const attModifier = getAttributeModifier();
+        const bonus: number[] = [];
+
+        data.mods?.map((mod) => {
+            if (mod.attToModify === undefined || !("hit" in mod.attToModify))
+                return;
+
+            bonus.push(mod.attToModify["hit"]);
+        });
 
         if (!checkForTalent("Campeão de tiro"))
-            attModifier = Math.ceil(attModifier / 2);
+            bonus.push(Math.ceil(attModifier / 2));
 
         const res = rollDice(
             data.name + " | Acerto",
             dice.sides,
-            [attModifier],
+            bonus,
             dice.rollTimes,
         );
 
-        toast.push(`${res?.name}<br>${res?.summary}`);
+        if (showPopup) toast.push(`${res?.name}<br>${res?.summary}`);
+
+        return res;
     }
 
-    function rollDamage() {
-        let dice = StringUtils.parseDiceNotation(data.damage);
-        let attModifier = getAttributeModifier();
-        let bonus: number[] = [];
+    function rollDamage(showPopup = true) {
+        const dice = StringUtils.parseDiceNotation(data.damage);
+        const attModifier = getAttributeModifier();
+        const bonus: number[] = [];
+
+        data.mods?.map((mod) => {
+            if (mod.attToModify === undefined || !("damage" in mod.attToModify))
+                return;
+
+            bonus.push(mod.attToModify["damage"]);
+        });
 
         if (checkForTalent("Tiro fatal"))
             bonus.push(Math.ceil(attModifier / 2));
@@ -44,13 +61,72 @@
             dice.rollTimes,
         );
 
-        toast.push(`${res?.name}<br>${res?.summary}`);
+        if (showPopup) toast.push(`${res?.name}<br>${res?.summary}`);
+
+        return res;
+    }
+
+    function rollBoth() {
+        const hit = rollHit(false);
+        const damage = rollDamage(false);
+
+        let critMutBonus = data.mods?.reduce((_, mod) => {
+            if (
+                mod.attToModify === undefined ||
+                !("critMut" in mod.attToModify)
+            )
+                return 0;
+
+            return mod.attToModify["critMut"];
+        }, 0)!;
+
+        let critValue = data.mods?.reduce((_, mod) => {
+            if (
+                mod.attToModify === undefined ||
+                !("critHit" in mod.attToModify)
+            )
+                return 0;
+
+            return mod.attToModify["critHit"];
+        }, 0)!;
+
+        critValue += data.talents?.reduce((_, talent) => {
+            if (
+                talent.attToModify === undefined ||
+                !("critHit" in talent.attToModify)
+            )
+                return 0;
+
+            return talent.attToModify["critHit"];
+        }, 0)!;
+
+        critMutBonus += data.talents?.reduce((_, talent) => {
+            if (
+                talent.attToModify === undefined ||
+                !("critMut" in talent.attToModify)
+            )
+                return 0;
+
+            return talent.attToModify["critMut"];
+        }, 0)!;
+
+        if (hit.rolls.includes(20 + critValue)) {
+            damage.total *= (data.critMut + critMutBonus);
+
+            toast.push(`${hit?.name}<br>${hit?.summary}`);
+            toast.push(
+                `${damage?.name}<br><span class="text-md text-orange-500 font-extrabold">${damage?.summary}</span>`,
+            );
+        } else {
+            toast.push(`${hit?.name}<br>${hit?.summary}`);
+            toast.push(`${damage?.name}<br>${damage?.summary}`);
+        }
     }
 
     function getAttributeModifier() {
-        let attName = data.modifier.toLocaleLowerCase().split("/");
-        let att = EAttributeUtils.stringToAttribute(attName[0]);
-        let mod = (CharacterUtils.getAttribute(att) as IAttribute).value;
+        const attName = data.modifier.toLocaleLowerCase().split("/");
+        const att = EAttributeUtils.stringToAttribute(attName[0]);
+        const mod = (CharacterUtils.getAttribute(att) as IAttribute).value;
 
         return mod;
     }
@@ -91,18 +167,15 @@
             </div>
             {#if showDices}
                 <div class="mt-2 flex justify-between">
-                    <button on:click={rollHit} class="btn-primary"
+                    <button on:click={() => rollHit()} class="btn-primary"
                         >Rolar Acerto</button
                     >
-                    <button on:click={rollDamage} class="btn-primary mx-4"
-                        >Rolar dano</button
-                    >
                     <button
-                        on:click={() => {
-                            rollHit();
-                            rollDamage();
-                        }}
-                        class="btn-primary">Rolar Acerto + Rolar dano</button
+                        on:click={() => rollDamage()}
+                        class="btn-primary mx-4">Rolar dano</button
+                    >
+                    <button on:click={rollBoth} class="btn-primary"
+                        >Rolar Acerto + Rolar dano</button
                     >
                 </div>
             {/if}
@@ -110,19 +183,48 @@
                 {#if data.mods !== undefined}
                     {#each data.mods as mod}
                         {#if mod.icon}
-                            <div title={mod.description} class="mx-4 my-2 group">
-                                <div class="">
-                                    <img
-                                        src={mod.icon}
-                                        alt=""
-                                        class="w-10 h-9 object-scale-down"
-                                    />
-                                </div>
+                            <div
+                                title={mod.description}
+                                class="mx-4 my-2 group flex flex-col items-center justify-center"
+                            >
+                                <img
+                                    src={mod.icon}
+                                    alt=""
+                                    class="w-10 h-9 object-scale-down"
+                                />
                                 <div>
                                     <p
-                                        class="absolute text-sm opacity-0 -translate-x-4 -translate-y-1 group-hover:opacity-100 transition-all"
+                                        class="text-sm text-center group-hover:opacity-100 transition-all"
                                     >
                                         {mod.name}
+                                    </p>
+                                </div>
+                            </div>
+                        {/if}
+                    {/each}
+                {/if}
+            </div>
+            <div class="flex cursor-default">
+                {#if data.talents !== undefined}
+                    <hr
+                        class="text-orange-600/40 w-full -translate-x-2 absolute"
+                    />
+                    {#each data.talents as talent}
+                        {#if talent.icon}
+                            <div
+                                title={talent.description}
+                                class="mx-4 my-2 group flex flex-col items-center justify-center"
+                            >
+                                <img
+                                    src={talent.icon}
+                                    alt=""
+                                    class="w-10 h-9 object-scale-down"
+                                />
+                                <div>
+                                    <p
+                                        class="text-sm text-center group-hover:opacity-100 transition-all"
+                                    >
+                                        {talent.name}
                                     </p>
                                 </div>
                             </div>

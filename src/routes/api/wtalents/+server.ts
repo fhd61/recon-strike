@@ -24,15 +24,15 @@ const content: IItem[] = [
         attToModify: { damage: 1 }
     },
     {
-        icon: "https://i.imgur.com/uaZre4u.png",
+        icon: "https://i.imgur.com/dSNgPR1.png",
         name: "Competente",
         description: "Após usar uma habilidade ganha +1 acerto",
         attToModify: { hit: 1 }
     },
     {
-        icon: "https://i.imgur.com/dSNgPR1.png",
+        icon: "https://i.imgur.com/TJARMeI.png",
         name: "Destrutivo",
-        description: "Após usar uma habilidade ganha +1 acerto",
+        description: "Quanto atacar um alvo o seu dano ignora 1 de defesa dele",
     },
     {
         icon: "https://i.imgur.com/g10Xinf.png",

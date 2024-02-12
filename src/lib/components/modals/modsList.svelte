@@ -24,7 +24,7 @@
         reRender = true;
 
         weapon.mods.push(mod);
-
+        
         setTimeout(() => (reRender = false), 100);
     }
 
