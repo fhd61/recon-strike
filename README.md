@@ -5,10 +5,11 @@
 - [x] Importa a lista deles do banco de dados 
 - [x] Implementar os modificadores
 - [X] Equipar mods nas armas
-- [ ] Equipar taletos nas armas
+- [x] Equipar taletos nas armas
 - [X] Menu para criar items e armas 
+- [ ] Importa a armas corpo a corpo 
 - [ ] Menu para editar os items **(Seria legal)**
-- [ ] Fazer as rolagens de arma usarem os mods e os talentos
+- [x] Fazer as rolagens de arma usarem os mods e os talentos
 
 ### Habilidades
 
