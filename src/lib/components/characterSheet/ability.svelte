@@ -5,6 +5,7 @@
     import { cubicIn } from "svelte/easing";
     import { tweened } from "svelte/motion";
     import { fade } from "svelte/transition";
+    import Tooltip from "../tooltip.svelte";
 
     export let data: ISkill;
     let isInCooldown = false;
@@ -25,6 +26,7 @@
 </script>
 
 <button
+    title={data.description}
     class="w-32 h-12"
     on:click={() => {
         if (isInCooldown) return;

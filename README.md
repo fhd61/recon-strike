@@ -17,7 +17,6 @@
 - [x] Sistema de cooldown 
 - [x] Menu para trocar as Habilidades 
 - [ ] Mostar barra de vida da skill 
-- [ ] Implementar os modificadores
 - [ ] Importar os upgrades
 
 ### Sistema de combate
@@ -25,7 +24,7 @@
 - [x] Entrar e sair do modo de combate 
 - [x] Passar turnos
 - [x] Sistema de cover
-- [ ] Buffs e debuffs
+- [ ] Buffs e debuffs **(Talvez vai de base)**
 
 ### Save na nuvem
 

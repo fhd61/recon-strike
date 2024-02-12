@@ -44,8 +44,8 @@ const content: IItem[] = [
     {
         icon: "https://i.imgur.com/vo2glQp.png",
         name: "Especialista em Habilidades",
-        description:
-            "Diminui o tempo de recarga de todas as Habilidades em 1 turno",
+        description: "Diminui o tempo de recarga de todas as Habilidades em 1 turno",
+        attToModify: { cdr: 1 }
     },
     {
         icon: "https://i.imgur.com/eTt7X7A.png",

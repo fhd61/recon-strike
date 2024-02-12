@@ -110,7 +110,7 @@
                 {#if data.mods !== undefined}
                     {#each data.mods as mod}
                         {#if mod.icon}
-                            <div class="mx-4 my-2 group">
+                            <div title={mod.description} class="mx-4 my-2 group">
                                 <div class="">
                                     <img
                                         src={mod.icon}

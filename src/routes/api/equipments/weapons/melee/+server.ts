@@ -13,7 +13,8 @@ const content: IWeapon[] = [
         damageType: "Corte",
         range: 2,
         critValue: 20,
-        critMut: 1.5
+        critMut: 1.5,
+        bonus: {}
     },
     {
         name: "Faca",
@@ -23,7 +24,8 @@ const content: IWeapon[] = [
         damageType: "Corte",
         range: 1,
         critValue: 20,
-        critMut: 1.7
+        critMut: 1.7,
+        bonus: {}
     },
     {
         name: "Bastão Retrátil",
@@ -33,7 +35,8 @@ const content: IWeapon[] = [
         damageType: "Contusão",
         range: 2,
         critValue: 20,
-        critMut: 1.5
+        critMut: 1.5,
+        bonus: {}
     },
     {
         name: "Soco",
@@ -43,6 +46,7 @@ const content: IWeapon[] = [
         damageType: "Contusão",
         range: 2,
         critValue: 20,
-        critMut: 1.7
+        critMut: 1.7,
+        bonus: {}
     },
 ]
