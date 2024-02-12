@@ -31,9 +31,9 @@ export async function load({ fetch }) {
         security: await getData("api/skills/security") as ISkill[],
         medical: await getData("api/skills/medical") as ISkill[],
         upgrades: {
-            techUpgrades: await getData("api/skills/tech/upgrade") as ISkill[],
-            securityUpgrades: await getData("api/skills/security/upgrade") as ISkill[],
-            medicalUpgrades: await getData("api/skills/medical/upgrade") as ISkill[]
+            tech: await getData("api/skills/tech/upgrade") as ISkill[],
+            security: await getData("api/skills/security/upgrade") as ISkill[],
+            medical: await getData("api/skills/medical/upgrade") as ISkill[]
         }
     }
 

@@ -27,10 +27,10 @@
 <div class="flex flex-col text-white">
     <div class="flex justify-end mt-2">
         <form action="/logout" method="post">
-        <button class="btn-error">logout</button>
+        <button class="btn-error">Logout</button>
         </form>
         <button
-            class="btn-success"
+            class="btn-success mx-2"
             on:click={() => modalElement.showModal()}>Criar Personagem</button
         >
     </div>

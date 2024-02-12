@@ -38,6 +38,7 @@
     import type { IWeapon } from "$lib/types/interface/IWeapon.js";
     import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
     import WTalentsList from "$lib/components/modals/wTalentsList.svelte";
+    import { goto } from "$app/navigation";
 
     export let data;
 
