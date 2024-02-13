@@ -148,7 +148,7 @@
                                         <option value="for">FOR</option>
                                         <option value="vig">VIG</option>
                                         <option value="def">Defesa</option>
-                                        <option value="ca">GA</option>
+                                        <option value="ga">GA</option>
                                         <option value="speed"
                                             >Deslocamento</option
                                         >
@@ -227,7 +227,7 @@
                             <option value="for">FOR</option>
                             <option value="vig">VIG</option>
                             <option value="def">Defesa</option>
-                            <option value="ca">GA</option>
+                            <option value="ga">GA</option>
                             <option value="speed">Deslocamento</option>
                             <option value="hp">Vida</option>
                         </select>

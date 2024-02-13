@@ -51,6 +51,14 @@
         if (data.duration === undefined) return;
         duration--;
         duration = MathUtils.clamp(duration, 0, data.duration);
+
+        if (data.hp === undefined && !isInCooldown) {
+            for (const key in data.attToModify) {
+                const attName = EAttributeUtils.stringToAttribute(key);
+
+                CharacterUtils.removeBonusOfAttribute(attName, data.name);
+            }
+        }
     });
 
     function useSkill() {
@@ -66,38 +74,23 @@
         for (const key in data.attToModify) {
             const attName = EAttributeUtils.stringToAttribute(key);
 
+            console.log(attName);
+            console.log(CharacterUtils.getAttribute(attName));
             CharacterUtils.addBonusToAttribute(
                 attName,
                 data.name,
                 data.attToModify[key],
             );
         }
-    }
 
-    afterUpdate(() => {
-        if (data.attToModify === undefined) return;
-
-        if (data.hp === undefined && !isInCooldown) {
-            for (const key in data.attToModify) {
-                const attName = EAttributeUtils.stringToAttribute(key);
-
-                CharacterUtils.removeBonusOfAttribute(attName, data.name);
-            }
-        }
         if (data.hp === undefined) return;
 
-        if (data.hp.currentValue === 0) {
-            for (const key in data.attToModify) {
-                const attName = EAttributeUtils.stringToAttribute(key);
-
-                CharacterUtils.removeBonusOfAttribute(attName, data.name);
-            }
-        }
-    });
+        data.hp.currentValue = data.hp.maxValue;
+    }
 </script>
 
 <div class="flex flex-col items-center">
-    <button title={data.description} class="w-32 h-12" on:click={useSkill}>
+    <button disabled={isInCooldown} title={data.description} class="w-32 h-12" on:click={useSkill}>
         <div class="w-full h-full bg-orange-900 polygonL relative">
             <div class="relative">
                 <img

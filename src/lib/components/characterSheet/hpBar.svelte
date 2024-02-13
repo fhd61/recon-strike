@@ -3,23 +3,33 @@
     import Icon from "@iconify/svelte";
     import { taphold } from "$lib/actions/taphold";
     import { tweened } from "svelte/motion";
-    import { onMount } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import type { IHp } from "$lib/types/interface/IHp";
     import { CharacterSheet } from "$lib/store/character";
 
     export let data: IHp;
     export let isChar = true;
+    let hpInputField: HTMLInputElement;
     let larpValue = tweened(0);
     let larpValue2 = tweened(0, { delay: 800 });
-
-    let hpInputField: HTMLInputElement;
+    const dispatcher = createEventDispatcher();
 
     function incresse() {
-        data.currentValue = MathUtils.clamp(data.currentValue + 1, 0, data.maxValue);
+        data.currentValue = MathUtils.clamp(
+            data.currentValue + 1,
+            0,
+            data.maxValue,
+        );
     }
 
     function decrease() {
-        data.currentValue = MathUtils.clamp(data.currentValue - 1, 0, data.maxValue);
+        data.currentValue = MathUtils.clamp(
+            data.currentValue - 1,
+            0,
+            data.maxValue,
+        );
+
+        if (data.currentValue <= 0) dispatcher("hpInZero");
     }
 
     function calc() {
@@ -44,7 +54,9 @@
 
         const result = operators[operator](num1, num2);
 
-        data.currentValue = Math.floor(MathUtils.clamp(result, 0, data.maxValue));
+        data.currentValue = Math.floor(
+            MathUtils.clamp(result, 0, data.maxValue),
+        );
     }
 
     function deSelectElement(event: KeyboardEvent) {
@@ -62,12 +74,12 @@
         }, 100);
     });
 
-    $:{
-        const vig = $CharacterSheet.attributes["vig"].value
-        const def = $CharacterSheet.attributes["def"].value
+    $: {
+        const vig = $CharacterSheet.attributes["vig"].value;
+        const def = $CharacterSheet.attributes["def"].value;
 
-        if(isChar)
-            data.maxValue = vig * 6 + def 
+        if (isChar) data.maxValue = vig * 6 + def;
+
     }
 </script>
 

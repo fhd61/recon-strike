@@ -102,7 +102,7 @@
         coverHp.maxValue = coverBonuses[coverSelected] * 10;
         coverHp.currentValue = coverBonuses[coverSelected] * 10;
 
-        $Character.attributes.ac.bonus["cover"] = coverBonuses[coverSelected];
+        $Character.attributes.ga.bonus["cover"] = coverBonuses[coverSelected];
         console.log($Character);
     }
 </script>
@@ -162,10 +162,10 @@
                     <div in:slide out:slide>
                         <Accordion>
                             <label>
-                                Atributo para o CA:
+                                Atributo para o GA:
                                 <select
                                     class="uppercase bg-zinc-800 p-1"
-                                    bind:value={$Character.attributes["ac"].use}
+                                    bind:value={$Character.attributes["ga"].use}
                                 >
                                     <option value="agi">AGI</option>
                                     <option value="int">INT</option>
@@ -188,7 +188,7 @@
                             <Ability bind:data={$Character.skills[1]} />
                         {/if}
                     </div>
-                    <!-- <div>
+                    <div>
                         {#if $Character.skills[0]}
                             {#if $Character.skills[0].hp !== undefined}
                                 <div class="my-2">
@@ -197,7 +197,13 @@
                                     </p>
                                     <HpBar
                                         isChar={false}
-                                        data={$Character.skills[0].hp}
+                                        bind:data={$Character.skills[0].hp}
+                                        on:hpInZero={() => {
+                                            for (const key1 in $Character.attributes) {
+                                                if($Character.skills[0].name in $Character.attributes[key1].bonus)
+                                                    delete $Character.attributes[key1].bonus[$Character.skills[0].name]
+                                            }
+                                        }}
                                     />
                                 </div>
                             {/if}
@@ -210,12 +216,12 @@
                                     </p>
                                     <HpBar
                                         isChar={false}
-                                        data={$Character.skills[1].hp}
+                                        bind:data={$Character.skills[1].hp}
                                     />
                                 </div>
                             {/if}
                         {/if}
-                    </div> -->
+                    </div>
                     <button
                         on:click={() => {
                             modalElement.showModal();
@@ -547,7 +553,6 @@
         />
     {:else if modalToShow === "inv_ability"}
         <SkillList
-            skillSlot={0}
             bind:mouseInside={mouseInsideModal}
             data={data.defaults.skills}
         />

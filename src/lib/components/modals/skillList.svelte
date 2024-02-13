@@ -20,7 +20,6 @@
     };
 
     export let mouseInside: boolean = false;
-    export let skillSlot = 0;
 
     let index = 0;
     const tabs: tab[] = [

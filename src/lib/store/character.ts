@@ -15,7 +15,7 @@ export interface ICharacter {
     "vig": IAttribute,
     "def": IAttribute,
     "speed": IAttribute,
-    "ac": IAttribute,
+    "ga": IAttribute,
     "hp": IHp,
   },
   skills: ISkill[],
@@ -30,8 +30,9 @@ export enum EAttribute {
     vig = "vig",
     def = "def",
     speed = "speed",
-    ac = "ac",
+    ga = "ga",
     hp = "hp",
+    cdr = "cdr"
 }
 
 export const initialCharacterData: ICharacter = {
@@ -51,7 +52,7 @@ export const initialCharacterData: ICharacter = {
     vig: { id: 'agi', name: 'Vigor', shortName: 'vig', value: 1, bonus: {} },
     def: { id: 'def', name: 'Defense', shortName: 'def', value: 0, bonus: {} },
     speed: { id: 'speed', name: 'Speed', shortName: 'speed', value: 9, bonus: {} },
-    ac: { id: 'ac', name: 'ac', shortName: 'ac', value: 0, bonus: {}, use:"agi" }
+    ga: { id: 'ac', name: 'ac', shortName: 'ac', value: 0, bonus: {}, use:"agi" }
   },
   skills: [],
   inventory: { equipments: [], weapons: [] },
