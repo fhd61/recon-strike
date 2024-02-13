@@ -80,7 +80,6 @@
         if (char) Character.set(char);
 
         saveInterval = setInterval(saveLocal, 10000);
-        console.log($Character.skills[1].hp);
     });
 
     onDestroy(() => {
@@ -189,7 +188,7 @@
                             <Ability bind:data={$Character.skills[1]} />
                         {/if}
                     </div>
-                    <div>
+                    <!-- <div>
                         {#if $Character.skills[0]}
                             {#if $Character.skills[0].hp !== undefined}
                                 <div class="my-2">
@@ -216,7 +215,7 @@
                                 </div>
                             {/if}
                         {/if}
-                    </div>
+                    </div> -->
                     <button
                         on:click={() => {
                             modalElement.showModal();
@@ -528,44 +527,37 @@
             bind:mouseInside={mouseInsideModal}
             bind:dossier={$Character.dossier}
         />
-    {/if}
-    {#if modalToShow === "settings"}
+    {:else if modalToShow === "settings"}
         <Settings />
-    {/if}
-    {#if modalToShow === "inv_talents"}
+    {:else if modalToShow === "inv_talents"}
         <TalentsList
             bind:mouseInside={mouseInsideModal}
             data={data.defaults.charTalents}
         />
-    {/if}
-    {#if modalToShow === "inv_equipment"}
+    {:else if modalToShow === "inv_equipment"}
         <EquipmentsList
             bind:mouseInside={mouseInsideModal}
             data={{ ...data.defaults.equipments }}
         />
-    {/if}
-    {#if modalToShow === "inv_weapons"}
+    {:else if modalToShow === "inv_weapons"}
         <EquipmentsList
             index={1}
             bind:mouseInside={mouseInsideModal}
             data={{ ...data.defaults.equipments }}
         />
-    {/if}
-    {#if modalToShow === "inv_ability"}
+    {:else if modalToShow === "inv_ability"}
         <SkillList
             skillSlot={0}
             bind:mouseInside={mouseInsideModal}
             data={data.defaults.skills}
         />
-    {/if}
-    {#if modalToShow === "inv_mods"}
+    {:else if modalToShow === "inv_mods"}
         <ModsList
             bind:weapon={weaponToAddMod}
             bind:mouseInside={mouseInsideModal}
             data={data.defaults.equipments.mods}
         />
-    {/if}
-    {#if modalToShow === "inv_wTalents"}
+    {:else if modalToShow === "inv_wTalents"}
         <WTalentsList
             bind:weapon={weaponToAddMod}
             bind:mouseInside={mouseInsideModal}

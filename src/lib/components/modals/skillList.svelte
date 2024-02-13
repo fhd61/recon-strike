@@ -5,7 +5,6 @@
     import TabGroup from "../tabs/tabGroup.svelte";
     import Tab from "../tabs/tab.svelte";
     import type { ISkill } from "$lib/types/interface/ISkill";
-    import Accordion from "../characterSheet/accordion.svelte";
 
     type tab = { title: string; section: "tech" | "security" | "medical" };
 
@@ -31,7 +30,9 @@
     ];
 
     function equipSkill(slot: number, skill: ISkill){
+        console.log({slot, skill})
         CharacterUtils.swapSkill(slot, skill)
+        console.log($CharacterSheet.skills)
     }
 </script>
 
@@ -55,14 +56,14 @@
                             <Tab id={0} title="Padrão">
                                 {#each data[section] as ability}
                                     <ItemPanel iconClass="w-10" data={ability}>
-                                        <button on:click={() => equipSkill(i, ability)}>Equipar</button>
+                                        <button class="btn-success" on:click={() => equipSkill(0, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
                             </Tab>
                             <Tab id={1} title="Melhorias">
                                 {#each data.upgrades[section] as ability}
                                     <ItemPanel iconClass="w-10" data={ability}>
-                                        <button on:click={() => equipSkill(i, ability)}>Equipar</button>
+                                        <button class="btn-success" on:click={() => equipSkill(0, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
                             </Tab>
@@ -85,14 +86,14 @@
                             <Tab id={0} title="Padrão">
                                 {#each data[section] as ability}
                                     <ItemPanel iconClass="w-10" data={ability}>
-                                        <button on:click={() => equipSkill(i, ability)}>Equipar</button>
+                                        <button class="btn-success" on:click={() => equipSkill(1, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
                             </Tab>
                             <Tab id={1} title="Melhorias">
                                 {#each data.upgrades[section] as ability}
                                     <ItemPanel iconClass="w-10" data={ability}>
-                                        <button on:click={() => equipSkill(i, ability)}>Equipar</button>
+                                        <button class="btn-success" on:click={() => equipSkill(1, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
                             </Tab>
