@@ -8,7 +8,7 @@ const content: IWeapon[] = [
     {
         name: "Machado",
         hit: "1d20",
-        modifier: "FOR/2",
+        modifier: "FOR",
         damage: "1d6",
         damageType: "Corte",
         range: 2,
@@ -20,7 +20,7 @@ const content: IWeapon[] = [
     {
         name: "Faca",
         hit: "1d20",
-        modifier: "FOR/2",
+        modifier: "FOR",
         damage: "1d4",
         damageType: "Corte",
         range: 1,
@@ -32,7 +32,7 @@ const content: IWeapon[] = [
     {
         name: "Bastão Retrátil",
         hit: "1d20",
-        modifier: "FOR/2",
+        modifier: "FOR",
         damage: "1d6",
         damageType: "Contusão",
         range: 2,
@@ -44,7 +44,7 @@ const content: IWeapon[] = [
     {
         name: "Soco",
         hit: "1d20",
-        modifier: "FOR/2",
+        modifier: "FOR",
         damage: "1d4",
         damageType: "Contusão",
         range: 2,

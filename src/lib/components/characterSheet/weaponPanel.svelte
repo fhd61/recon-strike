@@ -111,7 +111,7 @@
         }, 0)!;
 
         if (hit.rolls.includes(20 + critValue)) {
-            damage.total *= (data.critMut + critMutBonus);
+            damage.total *= data.critMut + critMutBonus;
 
             toast.push(`${hit?.name}<br>${hit?.summary}`);
             toast.push(
@@ -144,7 +144,7 @@
         label={data.name}
     >
         <div class="flex flex-col items-start">
-            <div class="grid grid-flow-col gap-x-4 text-sm">
+            <div class="grid grid-flow-col gap-x-5 text-sm">
                 <p>
                     Dano: {data.damage}
                     <span class="uppercase">
@@ -164,6 +164,9 @@
                 </p>
                 <p>Critico: {data.critMut}</p>
                 <p>Alcance: {data.range}m</p>
+                {#if data.damageType !== undefined}
+                    <p>Tipo de dano: {data.damageType}m</p>
+                {/if}
             </div>
             {#if showDices}
                 <div class="mt-2 flex justify-between">
@@ -204,11 +207,8 @@
                     {/each}
                 {/if}
             </div>
-            <div class="flex cursor-default">
+            <div class="flex cursor-default divide-white">
                 {#if data.talents !== undefined}
-                    <hr
-                        class="text-orange-600/40 w-full -translate-x-2 absolute"
-                    />
                     {#each data.talents as talent}
                         {#if talent.icon}
                             <div

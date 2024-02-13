@@ -122,7 +122,7 @@
     </button>
     {#if data.duration !== undefined && duration != 0}
         <div in:slide out:slide class="flex items-center">
-            <p>Duração: {duration}</p>
+            <p class="text-sm">Duração: {duration}</p>
         </div>
     {/if}
 </div>

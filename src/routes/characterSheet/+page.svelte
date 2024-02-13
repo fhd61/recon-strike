@@ -38,7 +38,7 @@
     import type { IWeapon } from "$lib/types/interface/IWeapon.js";
     import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
     import WTalentsList from "$lib/components/modals/wTalentsList.svelte";
-    import { goto } from "$app/navigation";
+    import { playerSettings } from "$lib/store/settings.js";
 
     export let data;
 
@@ -78,8 +78,7 @@
         );
 
         if (char) Character.set(char);
-
-        saveInterval = setInterval(saveLocal, 10000);
+        saveInterval = setInterval(saveLocal, $playerSettings.timeToAutoSave);
     });
 
     onDestroy(() => {
@@ -200,8 +199,16 @@
                                         bind:data={$Character.skills[0].hp}
                                         on:hpInZero={() => {
                                             for (const key1 in $Character.attributes) {
-                                                if($Character.skills[0].name in $Character.attributes[key1].bonus)
-                                                    delete $Character.attributes[key1].bonus[$Character.skills[0].name]
+                                                if (
+                                                    $Character.skills[0].name in
+                                                    $Character.attributes[key1]
+                                                        .bonus
+                                                )
+                                                    delete $Character
+                                                        .attributes[key1].bonus[
+                                                        $Character.skills[0]
+                                                            .name
+                                                    ];
                                             }
                                         }}
                                     />
@@ -511,7 +518,7 @@
             modalToShow = "settings";
         }}
     >
-        <Icon class="m-auto" icon="material-symbols:settings" width={24} />
+        <Icon icon="codicon:debug-console" class="translate-x-1" width={23} />
     </button>
 </div>
 
@@ -534,7 +541,7 @@
             bind:dossier={$Character.dossier}
         />
     {:else if modalToShow === "settings"}
-        <Settings />
+        <Settings bind:mouseInside={mouseInsideModal} />
     {:else if modalToShow === "inv_talents"}
         <TalentsList
             bind:mouseInside={mouseInsideModal}

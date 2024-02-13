@@ -38,6 +38,7 @@
     "@types/uuid": "^9.0.7",
     "bits-ui": "^0.9.8",
     "clsx": "^2.0.0",
+    "highlight.js": "^11.9.0",
     "lucide-svelte": "^0.292.0",
     "marked": "^11.0.1",
     "tailwind-merge": "^2.0.0",

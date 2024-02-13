@@ -98,15 +98,35 @@
             {/each}
         </Tab>
         <Tab id={1} title="Armas">
-            {#each data.fireArms as item}
-                <WeaponPanel showDices={false} data={item}>
-                    <button
-                        class="btn-success ml-1 mb-2"
-                        on:click={() => CharacterUtils.addItemToInventory(item)}
-                        >Adicionar</button
-                    >
-                </WeaponPanel>
-            {/each}
+            <TabGroup
+                selectedTab={0}
+                class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
+            >
+                <Tab id={0} title="Armas de Fogo">
+                    {#each data.fireArms as item}
+                        <WeaponPanel showDices={false} data={item}>
+                            <button
+                                class="btn-success ml-1 mb-2"
+                                on:click={() =>
+                                    CharacterUtils.addItemToInventory(item)}
+                                >Adicionar</button
+                            >
+                        </WeaponPanel>
+                    {/each}
+                </Tab>
+                <Tab id={1} title="Armas corpo a corpo">
+                    {#each data.melee as item}
+                        <WeaponPanel showDices={false} data={item}>
+                            <button
+                                class="btn-success ml-1 mb-2"
+                                on:click={() =>
+                                    CharacterUtils.addItemToInventory(item)}
+                                >Adicionar</button
+                            >
+                        </WeaponPanel>
+                    {/each}
+                </Tab>
+            </TabGroup>
         </Tab>
         <Tab id={2} title="Criar Item">
             <div>
@@ -273,12 +293,12 @@
                     </div>
                 </div>
                 <div class="flex justify-end mt-4">
-                <button
-                    disabled={!validHitDice || !validDamageDice}
-                    on:click={createWeapon}
-                    class="btn-success disabled:bg-green-900 disabled:opacity-30 transition-all"
-                    >Criar Arma</button
-                >
+                    <button
+                        disabled={!validHitDice || !validDamageDice}
+                        on:click={createWeapon}
+                        class="btn-success disabled:bg-green-900 disabled:opacity-30 transition-all"
+                        >Criar Arma</button
+                    >
                 </div>
             </div>
         </Tab>
