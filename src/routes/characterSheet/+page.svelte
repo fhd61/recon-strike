@@ -38,7 +38,6 @@
     import type { IWeapon } from "$lib/types/interface/IWeapon.js";
     import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
     import WTalentsList from "$lib/components/modals/wTalentsList.svelte";
-    import { playerSettings } from "$lib/store/settings.js";
 
     export let data;
 
@@ -78,7 +77,7 @@
         );
 
         if (char) Character.set(char);
-        saveInterval = setInterval(saveLocal, $playerSettings.timeToAutoSave);
+        saveInterval = setInterval(saveLocal, 10000);
     });
 
     onDestroy(() => {

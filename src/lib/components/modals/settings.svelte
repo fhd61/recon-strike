@@ -1,7 +1,6 @@
 <script lang="ts">
     import { highlightJSON } from "$lib/highlight";
     import { CharacterSheet } from "$lib/store/character";
-    import { playerSettings } from "$lib/store/settings";
 
     export let mouseInside: boolean = false;
 

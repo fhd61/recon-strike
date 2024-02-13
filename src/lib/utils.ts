@@ -162,6 +162,7 @@ export class CharacterUtils {
             await dbClient 
                 .from("cloud_save")
                 .upsert([{ json: [JSON.stringify(tempArr)] }]);
+            console.log(tempArr)
         } else {
             const charArr = JSON.parse(dbChar[0].json) as ICharacter[];
 
@@ -170,6 +171,8 @@ export class CharacterUtils {
             await dbClient
                 .from("cloud_save")
                 .upsert([{ json: [JSON.stringify(charArr)] }]);
+
+            console.log(charArr)
         }
     }
 

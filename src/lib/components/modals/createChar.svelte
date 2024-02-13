@@ -5,8 +5,8 @@
     import Icon from "@iconify/svelte";
     import callSingGenerator from "$lib/callSingGenerator";
     import nameGenerator from "$lib/nameGenerator";
-    import { CharacterSheet } from "$lib/store/character";
-    import { createEventDispatcher } from "svelte";
+    import { CharacterSheet, type ICharacter } from "$lib/store/character";
+    import { createEventDispatcher, getContext } from "svelte";
 
     let dossier: IDossier = {
         name: "",
@@ -17,6 +17,7 @@
         notes: "",
     };
 
+    export let arrLength = 0
     export const dispatcher = createEventDispatcher();
     export let mouseInside: boolean = false;
     export let dbClient: {
@@ -53,7 +54,10 @@
         $CharacterSheet.dossier = dossier;
 
         localStorage.setItem("character", JSON.stringify($CharacterSheet));
+        localStorage.setItem("index", JSON.stringify(arrLength));
+        
         dispatcher("createClicked");
+        console.log(dossier)
     }
 
     function genName() {
