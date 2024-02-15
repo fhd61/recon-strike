@@ -11,7 +11,7 @@
         for (let key in data.bonus) bonus.push(data.bonus[key]);
 
         let res = rollDice(data.name, 20, bonus);
-        toast.push(`${res.name}<br>${res.summery}`);
+        toast.push(`${res.name}<br>${res.summary}`);
     }
 </script>
 
