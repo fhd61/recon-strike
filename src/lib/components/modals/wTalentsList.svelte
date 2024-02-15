@@ -48,7 +48,7 @@
 >
     {#each data as item, i}
         <div>
-            <ItemPanel iconClass="w-9 h-9 object-scale-down" data={item}>
+            <ItemPanel iconClass="w-9 h-9 object-scale-down" data={item} useBtn={false}>
                 {#key unique}
                     <button
                         on:click={() => {
