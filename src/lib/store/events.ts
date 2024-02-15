@@ -98,3 +98,6 @@ export const onTurnStart = createEventStore<void>();
 export const onTurnEnd = createEventStore<void>();
 export const onCombatStart = createEventStore<void>();
 export const onCombatEnd = createEventStore<void>();
+
+export const onWTalentsUpdate = createEventStore<void>();
+export const onWModsUpdate = createEventStore<void>();

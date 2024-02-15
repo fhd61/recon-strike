@@ -8,7 +8,6 @@
     import Accordion from "$lib/components/characterSheet/accordion.svelte";
     import Dossier from "$lib/components/modals/dossier.svelte";
     import Settings from "$lib/components/modals/settings.svelte";
-    import ModList from "$lib/components/modals/modsList.svelte";
     import Ability from "$lib/components/characterSheet/ability.svelte";
     import {
         CharacterSheet as Character,
@@ -468,19 +467,6 @@
                                         data={item}
                                         iconClass="w-8"
                                     >
-                                        <button
-                                            on:click={() =>
-                                                (item.isEquipped =
-                                                    !item.isEquipped)}
-                                            class={`${
-                                                item.isEquipped
-                                                    ? "btn-error"
-                                                    : "btn-success"
-                                            } transition-all`}
-                                            >{item.isEquipped
-                                                ? "Desequipar"
-                                                : "Equipar"}</button
-                                        >
                                         <button
                                             on:click={() => {
                                                 CharacterUtils.removeItemToInventory(

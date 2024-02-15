@@ -4,7 +4,30 @@
     import { CharacterUtils, EAttributeUtils } from "$lib/utils";
 
     export let item: IItem;
+
+    function equipItem() {
+        for (const key in item.attToModify) {
+            const value = item.attToModify[key];
+            const att = EAttributeUtils.stringToAttribute(key);
+
+            console.log({key, value, att})
+            CharacterUtils.addBonusToAttribute(att, item.name, value);
+        }
+
+        item.isEquipped = true;
+    }
+
+    function unEquipItem() {
+        for (const key in item.attToModify) {
+            const att = EAttributeUtils.stringToAttribute(key);
+
+            console.log({key, att})
+            CharacterUtils.removeBonusOfAttribute(att, item.name);
+        }
+        item.isEquipped = false;
+    }
 </script>
+
 <ItemPanel
     bind:data={item}
     bg="bg-zinc-900"
@@ -29,20 +52,10 @@
         on:click={() => {
             item.isEquipped = !item.isEquipped;
 
-            if (item.isEquipped) {
-                for (const key in item.attToModify) {
-                    const value = item.attToModify[key];
-                    const att = EAttributeUtils.stringToAttribute(key);
-
-                    CharacterUtils.addBonusToAttribute(att, item.name, value);
-                }
-            } else {
-                for (const key in item.attToModify) {
-                    const att = EAttributeUtils.stringToAttribute(key);
-
-                    CharacterUtils.removeBonusOfAttribute(att, item.name);
-                }
-            }
+            if (item.isEquipped) 
+                unEquipItem();
+            else 
+                equipItem();
         }}>{!item.isEquipped ? "Equipar" : "Desequipar"}</button
     >
 </ItemPanel>

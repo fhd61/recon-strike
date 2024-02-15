@@ -1,16 +1,11 @@
 <script lang="ts">
     import Accordion from "./accordion.svelte";
     import type { IWeapon } from "$lib/types/interface/IWeapon";
-    import {
-        CharacterUtils,
-        EAttributeUtils,
-        StringUtils,
-        WeaponsUtils,
-    } from "$lib/utils";
+    import { StringUtils, WeaponsUtils } from "$lib/utils";
     import { CharacterSheet } from "$lib/store/character";
     import { rollDice } from "$lib/diceRoller";
-    import type { IAttribute } from "$lib/types/interface/IBaseAttribute";
     import { toast } from "@zerodevx/svelte-toast";
+    import { onWModsUpdate, onWTalentsUpdate } from "$lib/store/events";
 
     export let data: IWeapon;
     export let showDices: boolean = true;
@@ -86,6 +81,16 @@
             toast.push(`${damage?.name}<br>${damage?.summary}`);
         }
     }
+
+    let unique = {};
+    const restart = () => (unique = {});
+
+    onWTalentsUpdate.on(() => {
+        restart()
+    })
+    onWModsUpdate.on(() => {
+        restart()
+    })
 </script>
 
 <div class={`w-[45rem] flex flex-col ${bg} p-2 m-1 polygonL`}>
@@ -134,56 +139,58 @@
                     >
                 </div>
             {/if}
-            <div class="flex cursor-default">
-                {#if data.mods !== undefined}
-                    {#each data.mods as mod}
-                        {#if mod.icon}
-                            <div
-                                title={mod.description}
-                                class="mx-4 my-2 group flex flex-col items-center justify-center"
-                            >
-                                <img
-                                    src={mod.icon}
-                                    alt=""
-                                    class="w-10 h-9 object-scale-down"
-                                />
-                                <div>
-                                    <p
-                                        class="text-sm text-center group-hover:opacity-100 transition-all"
-                                    >
-                                        {mod.name}
-                                    </p>
+            {#key unique}
+                <div class="flex cursor-default">
+                    {#if data.mods !== undefined}
+                        {#each data.mods as mod}
+                            {#if mod.icon}
+                                <div
+                                    title={mod.description}
+                                    class="mx-4 my-2 group flex flex-col items-center justify-center"
+                                >
+                                    <img
+                                        src={mod.icon}
+                                        alt=""
+                                        class="w-10 h-9 object-scale-down"
+                                    />
+                                    <div>
+                                        <p
+                                            class="text-sm text-center group-hover:opacity-100 transition-all"
+                                        >
+                                            {mod.name}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        {/if}
-                    {/each}
-                {/if}
-            </div>
-            <div class="flex cursor-default divide-white">
-                {#if data.talents !== undefined}
-                    {#each data.talents as talent}
-                        {#if talent.icon}
-                            <div
-                                title={talent.description}
-                                class="mx-4 my-2 group flex flex-col items-center justify-center"
-                            >
-                                <img
-                                    src={talent.icon}
-                                    alt=""
-                                    class="w-10 h-9 object-scale-down"
-                                />
-                                <div>
-                                    <p
-                                        class="text-sm text-center group-hover:opacity-100 transition-all"
-                                    >
-                                        {talent.name}
-                                    </p>
+                            {/if}
+                        {/each}
+                    {/if}
+                </div>
+                <div class="flex cursor-default divide-white">
+                    {#if data.talents !== undefined}
+                        {#each data.talents as talent}
+                            {#if talent.icon}
+                                <div
+                                    title={talent.description}
+                                    class="mx-4 my-2 group flex flex-col items-center justify-center"
+                                >
+                                    <img
+                                        src={talent.icon}
+                                        alt=""
+                                        class="w-10 h-9 object-scale-down"
+                                    />
+                                    <div>
+                                        <p
+                                            class="text-sm text-center group-hover:opacity-100 transition-all"
+                                        >
+                                            {talent.name}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        {/if}
-                    {/each}
-                {/if}
-            </div>
+                            {/if}
+                        {/each}
+                    {/if}
+                </div>
+            {/key}
             <div class="mt-2">
                 <slot />
             </div>
