@@ -12,7 +12,7 @@ export interface IWeapon extends IEquitable {
     range: number
     critValue: number
     critMut: number
-    bonus: { [id: string]: number }
+    bonus: { [id: string]: {[attToModify:string]: number} }
     isMelee?: boolean
     mods?: IItem[]
     talents?: IItem[]

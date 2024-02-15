@@ -1,11 +1,10 @@
 <script lang="ts">
     import type { IItem } from "$lib/types/interface/IItem";
     import ItemPanel from "../characterSheet/itemPanel.svelte";
-    import { CharacterSheet } from "$lib/store/character";
     import TabGroup from "../tabs/tabGroup.svelte";
     import Tab from "../tabs/tab.svelte";
     import type { IWeapon } from "$lib/types/interface/IWeapon";
-    import { Check } from "lucide-svelte";
+    import { onWModsUpdate } from "$lib/store/events";
 
     export let mouseInside: boolean = false;
     export let index = 0;
@@ -16,32 +15,39 @@
         underbarrel: IItem[];
     };
 
-    let reRender = false;
+    let unique = {};
+    const restart = () => (unique = {});
 
     function addModToWeapon(mod: IItem) {
         if (weapon.mods == undefined) weapon.mods = [];
 
-        reRender = true;
-
         weapon.mods.push(mod);
-        
-        setTimeout(() => (reRender = false), 100);
+
+        if (mod.attToModify !== undefined)
+            weapon.bonus[mod.name] = { ...mod.attToModify };
+
+        onWModsUpdate.trigger()
+        restart();
     }
 
-    function removeModeOfWeapon(index: number){
+    function removeModeOfWeapon(mod: IItem) {
         if (weapon.mods == undefined) weapon.mods = [];
-    
-        reRender = true;
 
-        weapon.mods.splice(index, 1)
+        const index = weapon.mods.indexOf(mod);
+        weapon.mods.splice(index, 1);
+        if (mod.attToModify !== undefined) delete weapon.bonus[mod.name];
 
-        setTimeout(() => (reRender = false), 100);
+        onWModsUpdate.trigger()
+        restart();
     }
 
     function checkIsEquipped(mod: IItem) {
-        return weapon.mods?.includes(mod);
-    }
+        if (!weapon.mods) return;
 
+        if (weapon.mods.includes(mod)) return true;
+
+        return false;
+    }
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -55,26 +61,22 @@
         class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
     >
         <Tab id={0} title="Pontas">
-            {#each data.muzzles as item, i}
+            {#each data.muzzles as mod, i}
                 <div>
-                    <ItemPanel
-                        iconClass="w-9 h-9 object-scale-down"
-                        data={item}
-                    >
-                        {#key reRender}
+                    <ItemPanel iconClass="w-9 h-9 object-scale-down" data={mod}>
+                        {#key unique}
                             <button
                                 on:click={() => {
-                                    if(checkIsEquipped(item))
-                                        removeModeOfWeapon(i)
-                                    else
-                                        addModToWeapon(item)
+                                    if (checkIsEquipped(mod))
+                                        removeModeOfWeapon(mod);
+                                    else addModToWeapon(mod);
 
-                                    console.log(weapon)
+                                    console.log(weapon);
                                 }}
-                                class={checkIsEquipped(item)
+                                class={checkIsEquipped(mod)
                                     ? "btn-error"
                                     : "btn-success"}
-                                >{checkIsEquipped(item)
+                                >{checkIsEquipped(mod)
                                     ? "Desequipar"
                                     : "Equipar"}</button
                             >
@@ -84,26 +86,22 @@
             {/each}
         </Tab>
         <Tab id={1} title="optics">
-            {#each data.optics as item, i}
+            {#each data.optics as mod, i}
                 <div>
-                    <ItemPanel
-                        iconClass="w-9 h-9 object-scale-down"
-                        data={item}
-                    >
-                        {#key reRender}
+                    <ItemPanel iconClass="w-9 h-9 object-scale-down" data={mod}>
+                        {#key unique}
                             <button
                                 on:click={() => {
-                                    if(checkIsEquipped(item))
-                                        removeModeOfWeapon(i)
-                                    else
-                                        addModToWeapon(item)
+                                    if (checkIsEquipped(mod))
+                                        removeModeOfWeapon(mod);
+                                    else addModToWeapon(mod);
 
-                                    console.log(weapon)
+                                    console.log(weapon);
                                 }}
-                                class={checkIsEquipped(item)
+                                class={checkIsEquipped(mod)
                                     ? "btn-error"
                                     : "btn-success"}
-                                >{checkIsEquipped(item)
+                                >{checkIsEquipped(mod)
                                     ? "Desequipar"
                                     : "Equipar"}</button
                             >
@@ -113,26 +111,22 @@
             {/each}
         </Tab>
         <Tab id={2} title="Suportes">
-            {#each data.underbarrel as item, i}
+            {#each data.underbarrel as mod, i}
                 <div>
-                    <ItemPanel
-                        iconClass="w-9 h-9 object-scale-down"
-                        data={item}
-                    >
-                        {#key reRender}
+                    <ItemPanel iconClass="w-9 h-9 object-scale-down" data={mod}>
+                        {#key unique}
                             <button
                                 on:click={() => {
-                                    if(checkIsEquipped(item))
-                                        removeModeOfWeapon(i)
-                                    else
-                                        addModToWeapon(item)
+                                    if (checkIsEquipped(mod))
+                                        removeModeOfWeapon(mod);
+                                    else addModToWeapon(mod);
 
-                                    console.log(weapon)
+                                    console.log(weapon);
                                 }}
-                                class={checkIsEquipped(item)
+                                class={checkIsEquipped(mod)
                                     ? "btn-error"
                                     : "btn-success"}
-                                >{checkIsEquipped(item)
+                                >{checkIsEquipped(mod)
                                     ? "Desequipar"
                                     : "Equipar"}</button
                             >

@@ -2,35 +2,41 @@
     import type { IItem } from "$lib/types/interface/IItem";
     import ItemPanel from "../characterSheet/itemPanel.svelte";
     import type { IWeapon } from "$lib/types/interface/IWeapon";
-
+    import { onWTalentsUpdate } from "$lib/store/events";
     export let mouseInside: boolean = false;
     export let weapon: IWeapon;
     export let data: IItem[];
 
-    let reRender = false;
+    let unique = {};
+    const restart = () => (unique = {});
 
-    function addModToWeapon(mod: IItem) {
+    function addTalentToWeapon(talent: IItem) {
         if (weapon.talents == undefined) weapon.talents = [];
 
-        reRender = true;
+        weapon.talents.push(talent);
 
-        weapon.talents.push(mod);
+        if (talent.attToModify !== undefined)
+            weapon.bonus[talent.name] = { ...talent.attToModify };
 
-        setTimeout(() => (reRender = false), 100);
+        onWTalentsUpdate.trigger()
+        restart();
     }
 
-    function removeModeOfWeapon(index: number) {
+    function removeTalentOfWeapon(talent: IItem) {
         if (weapon.talents == undefined) weapon.talents = [];
 
-        reRender = true;
-
+        const index = weapon.talents.indexOf(talent);
         weapon.talents.splice(index, 1);
 
-        setTimeout(() => (reRender = false), 100);
+        if (talent.attToModify !== undefined) delete weapon.bonus[talent.name];
+
+        restart();
     }
 
     function checkIsEquipped(mod: IItem) {
-        return weapon.talents?.includes(mod);
+        if (!weapon.talents) return false;
+
+        return weapon.talents.includes(mod);
     }
 </script>
 
@@ -43,11 +49,12 @@
     {#each data as item, i}
         <div>
             <ItemPanel iconClass="w-9 h-9 object-scale-down" data={item}>
-                {#key reRender}
+                {#key unique}
                     <button
                         on:click={() => {
-                            if (checkIsEquipped(item)) removeModeOfWeapon(i);
-                            else addModToWeapon(item);
+                            if (checkIsEquipped(item))
+                                removeTalentOfWeapon(item);
+                            else addTalentToWeapon(item);
 
                             console.log(weapon);
                         }}
