@@ -63,15 +63,13 @@
         <Tab id={0} title="Pontas">
             {#each data.muzzles as mod, i}
                 <div>
-                    <ItemPanel iconClass="w-9 h-9 object-scale-down" data={mod}>
+                    <ItemPanel iconClass="w-9 h-9 object-scale-down" data={mod} useBtn={false}>
                         {#key unique}
                             <button
                                 on:click={() => {
                                     if (checkIsEquipped(mod))
                                         removeModeOfWeapon(mod);
                                     else addModToWeapon(mod);
-
-                                    console.log(weapon);
                                 }}
                                 class={checkIsEquipped(mod)
                                     ? "btn-error"
@@ -88,15 +86,13 @@
         <Tab id={1} title="optics">
             {#each data.optics as mod, i}
                 <div>
-                    <ItemPanel iconClass="w-9 h-9 object-scale-down" data={mod}>
+                    <ItemPanel iconClass="w-9 h-9 object-scale-down" data={mod} useBtn={false}>
                         {#key unique}
                             <button
                                 on:click={() => {
                                     if (checkIsEquipped(mod))
                                         removeModeOfWeapon(mod);
                                     else addModToWeapon(mod);
-
-                                    console.log(weapon);
                                 }}
                                 class={checkIsEquipped(mod)
                                     ? "btn-error"
@@ -113,15 +109,13 @@
         <Tab id={2} title="Suportes">
             {#each data.underbarrel as mod, i}
                 <div>
-                    <ItemPanel iconClass="w-9 h-9 object-scale-down" data={mod}>
+                    <ItemPanel iconClass="w-9 h-9 object-scale-down" data={mod} useBtn={false}>
                         {#key unique}
                             <button
                                 on:click={() => {
                                     if (checkIsEquipped(mod))
                                         removeModeOfWeapon(mod);
                                     else addModToWeapon(mod);
-
-                                    console.log(weapon);
                                 }}
                                 class={checkIsEquipped(mod)
                                     ? "btn-error"

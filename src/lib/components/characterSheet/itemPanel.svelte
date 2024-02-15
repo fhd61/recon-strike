@@ -5,6 +5,7 @@
     import { marked } from "marked";
 
     export let data: IItem;
+    export let useBtn = true;
     export let bg = "bg-zinc-950";
     export let iconClass = "";
 
@@ -43,16 +44,18 @@
         <div class="flex flex-col items-start">
             {@html htmlDescription}
             <div class="mt-2">
-                <button
-                    on:click={() => {
-                        if (data.isEquipped) unEquipItem();
-                        else equipItem();
-                    }}
-                    class={`${
-                        data.isEquipped ? "btn-error" : "btn-success"
-                    } transition-all`}
-                    >{data.isEquipped ? "Desequipar" : "Equipar"}</button
-                >
+                {#if useBtn}
+                    <button
+                        on:click={() => {
+                            if (data.isEquipped) unEquipItem();
+                            else equipItem();
+                        }}
+                        class={`${
+                            data.isEquipped ? "btn-error" : "btn-success"
+                        } transition-all`}
+                        >{data.isEquipped ? "Desequipar" : "Equipar"}</button
+                    >
+                {/if}
                 <slot />
             </div>
         </div>
