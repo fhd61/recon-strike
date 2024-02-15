@@ -5,6 +5,7 @@ import type { IWeapon } from "./types/interface/IWeapon";
 import type { IBonus } from "./types/interface/IBonus";
 import type { ISkill } from "./types/interface/ISkill";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { IAttribute } from "./types/interface/IBaseAttribute";
 
 export class MathUtils {
     static randomNumber(max: number) {
@@ -13,6 +14,56 @@ export class MathUtils {
 
     static clamp(num: number, min: number, max: number) {
         return Math.min(Math.max(num, min), max)
+    }
+}
+
+export class WeaponsUtils {
+    static totalBonusOf(name: string, weapon: IWeapon) {
+        let bonus = 0
+
+        for (const key in weapon.bonus) {
+            if (!(name in weapon.bonus[key]))
+                continue;
+
+            bonus += weapon.bonus[key][name]
+        }
+
+        const talents = weapon.talents
+        if (talents === undefined)
+            return bonus
+            console.log(talents)
+
+        for (let i = 0; i < talents.length; i++) {
+            if (talents[i].attToModify === undefined)
+                continue;
+            if (!(name in talents[i].attToModify!))
+                continue;
+
+            bonus += talents[i].attToModify[name]
+        }
+
+        return bonus
+    }
+
+    static getAttributeModifier(weapon: IWeapon) {
+        const attName = weapon.modifier.toLocaleLowerCase().split("/");
+        const att = EAttributeUtils.stringToAttribute(attName[0]);
+        const mod = (CharacterUtils.getAttribute(att) as IAttribute).value;
+
+        return mod;
+    }
+
+    static bonusBaseOnTalent(talent: "Campeão de tiro" | "Tiro fatal", weapon: IWeapon) {
+        const hasTalent = get(CharacterSheet).talents.find((t) => t.name == talent) !== undefined
+        
+        if (hasTalent)
+            return this.getAttributeModifier(weapon)
+
+        return 0
+    }
+
+    static checkForTalent(talent: "Campeão de tiro" | "Tiro fatal") {
+        return get(CharacterSheet).talents.find((t) => t.name == talent) !== undefined
     }
 }
 
@@ -50,7 +101,7 @@ export class EAttributeUtils {
         if (attribute !== undefined) {
             return attribute
         } else {
-            throw new Error("Invalid attribute")
+            throw new Error(`Invalid attribute = ${value}`)
         }
     }
 }
@@ -159,7 +210,7 @@ export class CharacterUtils {
         if (dbChar[0] == null) {
             tempArr.push(charToSave);
 
-            await dbClient 
+            await dbClient
                 .from("cloud_save")
                 .upsert([{ json: [JSON.stringify(tempArr)] }]);
             console.log(tempArr)
@@ -188,21 +239,21 @@ export class CharacterUtils {
             throw new Error("Character not found, or invalid")
     }
 
-    static equipadedWeapons(){
-       const arr = get(CharacterSheet)
-       .inventory
-       .weapons
-       .filter(item => item.isEquipped === true)
+    static equipadedWeapons() {
+        const arr = get(CharacterSheet)
+            .inventory
+            .weapons
+            .filter(item => item.isEquipped === true)
 
-       return arr
+        return arr
     }
 
-    static equipadedItems(){
-       const arr = get(CharacterSheet)
-       .inventory
-       .equipments
-       .filter(item => item.isEquipped === true)
+    static equipadedItems() {
+        const arr = get(CharacterSheet)
+            .inventory
+            .equipments
+            .filter(item => item.isEquipped === true)
 
-       return arr
+        return arr
     }
 }

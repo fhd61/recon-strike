@@ -24,24 +24,26 @@
         reRender = true;
 
         weapon.mods.push(mod);
-        
+
+        if (mod.attToModify !== undefined)
+            weapon.bonus[mod.name] = { ...mod.attToModify };
+
         setTimeout(() => (reRender = false), 100);
     }
 
-    function removeModeOfWeapon(index: number){
+    function removeModeOfWeapon(index: number) {
         if (weapon.mods == undefined) weapon.mods = [];
-    
+
         reRender = true;
 
-        weapon.mods.splice(index, 1)
+        weapon.mods.splice(index, 1);
 
         setTimeout(() => (reRender = false), 100);
     }
 
     function checkIsEquipped(mod: IItem) {
-        return weapon.mods?.includes(mod);
+        return weapon.mods?.includes(mod) !== undefined;
     }
-
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -64,12 +66,11 @@
                         {#key reRender}
                             <button
                                 on:click={() => {
-                                    if(checkIsEquipped(item))
-                                        removeModeOfWeapon(i)
-                                    else
-                                        addModToWeapon(item)
+                                    if (checkIsEquipped(item))
+                                        removeModeOfWeapon(i);
+                                    else addModToWeapon(item);
 
-                                    console.log(weapon)
+                                    console.log(weapon);
                                 }}
                                 class={checkIsEquipped(item)
                                     ? "btn-error"
@@ -93,12 +94,11 @@
                         {#key reRender}
                             <button
                                 on:click={() => {
-                                    if(checkIsEquipped(item))
-                                        removeModeOfWeapon(i)
-                                    else
-                                        addModToWeapon(item)
+                                    if (checkIsEquipped(item))
+                                        removeModeOfWeapon(i);
+                                    else addModToWeapon(item);
 
-                                    console.log(weapon)
+                                    console.log(weapon);
                                 }}
                                 class={checkIsEquipped(item)
                                     ? "btn-error"
@@ -122,12 +122,11 @@
                         {#key reRender}
                             <button
                                 on:click={() => {
-                                    if(checkIsEquipped(item))
-                                        removeModeOfWeapon(i)
-                                    else
-                                        addModToWeapon(item)
+                                    if (checkIsEquipped(item))
+                                        removeModeOfWeapon(i);
+                                    else addModToWeapon(item);
 
-                                    console.log(weapon)
+                                    console.log(weapon);
                                 }}
                                 class={checkIsEquipped(item)
                                     ? "btn-error"

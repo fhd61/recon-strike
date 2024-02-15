@@ -1,12 +1,16 @@
 <script lang="ts">
     import Accordion from "./accordion.svelte";
     import type { IWeapon } from "$lib/types/interface/IWeapon";
-    import { CharacterUtils, EAttributeUtils, StringUtils } from "$lib/utils";
+    import {
+        CharacterUtils,
+        EAttributeUtils,
+        StringUtils,
+        WeaponsUtils,
+    } from "$lib/utils";
     import { CharacterSheet } from "$lib/store/character";
-    import { rollDice, rollForAttackAndDamage } from "$lib/diceRoller";
+    import { rollDice } from "$lib/diceRoller";
     import type { IAttribute } from "$lib/types/interface/IBaseAttribute";
     import { toast } from "@zerodevx/svelte-toast";
-    import { onMount } from "svelte";
 
     export let data: IWeapon;
     export let showDices: boolean = true;
@@ -14,18 +18,22 @@
 
     function rollHit(showPopup = true) {
         const dice = StringUtils.parseDiceNotation(data.hit);
-        const attModifier = getAttributeModifier();
+        const talentBonus = WeaponsUtils.bonusBaseOnTalent(
+            "Campeão de tiro",
+            data,
+        );
+
         const bonus: number[] = [];
 
-        data.mods?.map((mod) => {
-            if (mod.attToModify === undefined || !("hit" in mod.attToModify))
-                return;
+        bonus.push(WeaponsUtils.totalBonusOf("hit", data));
 
-            bonus.push(mod.attToModify["hit"]);
-        });
-
-        if (!checkForTalent("Campeão de tiro"))
-            bonus.push(Math.ceil(attModifier / 2));
+        if (talentBonus >= 0) bonus.push(talentBonus);
+        else
+            bonus.push(
+                Math.ceil(
+                    Math.ceil(WeaponsUtils.getAttributeModifier(data) / 2),
+                ),
+            );
 
         const res = rollDice(
             data.name + " | Acerto",
@@ -41,18 +49,11 @@
 
     function rollDamage(showPopup = true) {
         const dice = StringUtils.parseDiceNotation(data.damage);
-        const attModifier = getAttributeModifier();
+        const talentBonus = WeaponsUtils.bonusBaseOnTalent("Tiro fatal", data);
         const bonus: number[] = [];
 
-        data.mods?.map((mod) => {
-            if (mod.attToModify === undefined || !("damage" in mod.attToModify))
-                return;
-
-            bonus.push(mod.attToModify["damage"]);
-        });
-
-        if (checkForTalent("Tiro fatal"))
-            bonus.push(Math.ceil(attModifier / 2));
+        bonus.push(WeaponsUtils.totalBonusOf("damage", data));
+        if (talentBonus >= 0) bonus.push(Math.ceil(talentBonus / 2));
 
         const res = rollDice(
             data.name + " | Dano",
@@ -70,47 +71,10 @@
         const hit = rollHit(false);
         const damage = rollDamage(false);
 
-        let critMutBonus = data.mods?.reduce((_, mod) => {
-            if (
-                mod.attToModify === undefined ||
-                !("critMut" in mod.attToModify)
-            )
-                return 0;
+        let critMutBonus = WeaponsUtils.totalBonusOf("critMut", data);
+        let critHitValue = WeaponsUtils.totalBonusOf("critHit", data);
 
-            return mod.attToModify["critMut"];
-        }, 0)!;
-
-        let critValue = data.mods?.reduce((_, mod) => {
-            if (
-                mod.attToModify === undefined ||
-                !("critHit" in mod.attToModify)
-            )
-                return 0;
-
-            return mod.attToModify["critHit"];
-        }, 0)!;
-
-        critValue += data.talents?.reduce((_, talent) => {
-            if (
-                talent.attToModify === undefined ||
-                !("critHit" in talent.attToModify)
-            )
-                return 0;
-
-            return talent.attToModify["critHit"];
-        }, 0)!;
-
-        critMutBonus += data.talents?.reduce((_, talent) => {
-            if (
-                talent.attToModify === undefined ||
-                !("critMut" in talent.attToModify)
-            )
-                return 0;
-
-            return talent.attToModify["critMut"];
-        }, 0)!;
-
-        if (hit.rolls.includes(20 + critValue)) {
+        if (hit.rolls.includes(20 + critHitValue)) {
             damage.total *= data.critMut + critMutBonus;
 
             toast.push(`${hit?.name}<br>${hit?.summary}`);
@@ -121,18 +85,6 @@
             toast.push(`${hit?.name}<br>${hit?.summary}`);
             toast.push(`${damage?.name}<br>${damage?.summary}`);
         }
-    }
-
-    function getAttributeModifier() {
-        const attName = data.modifier.toLocaleLowerCase().split("/");
-        const att = EAttributeUtils.stringToAttribute(attName[0]);
-        const mod = (CharacterUtils.getAttribute(att) as IAttribute).value;
-
-        return mod;
-    }
-
-    function checkForTalent(talent: "Campeão de tiro" | "Tiro fatal") {
-        return $CharacterSheet.talents.find((t) => t.name == talent);
     }
 </script>
 
@@ -148,7 +100,7 @@
                 <p>
                     Dano: {data.damage}
                     <span class="uppercase">
-                        {checkForTalent("Tiro fatal")
+                        {WeaponsUtils.checkForTalent("Tiro fatal")
                             ? ` + ${data.modifier}/2`
                             : ""}</span
                     >
@@ -157,7 +109,7 @@
                     Acerto: {data.hit}
                     <span class="uppercase"
                         >+ {data.modifier +
-                            (checkForTalent("Campeão de tiro")
+                            (WeaponsUtils.checkForTalent("Campeão de tiro")
                                 ? ""
                                 : "/2")}</span
                     >

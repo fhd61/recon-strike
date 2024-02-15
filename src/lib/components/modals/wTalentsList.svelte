@@ -9,17 +9,20 @@
 
     let reRender = false;
 
-    function addModToWeapon(mod: IItem) {
+    function addTalentToWeapon(talent: IItem) {
         if (weapon.talents == undefined) weapon.talents = [];
 
         reRender = true;
 
-        weapon.talents.push(mod);
+        weapon.talents.push(talent);
+        
+        if (talent.attToModify !== undefined)
+            weapon.bonus[talent.name] = { ...talent.attToModify };
 
         setTimeout(() => (reRender = false), 100);
     }
 
-    function removeModeOfWeapon(index: number) {
+    function removeTalentOfWeapon(index: number) {
         if (weapon.talents == undefined) weapon.talents = [];
 
         reRender = true;
@@ -46,8 +49,8 @@
                 {#key reRender}
                     <button
                         on:click={() => {
-                            if (checkIsEquipped(item)) removeModeOfWeapon(i);
-                            else addModToWeapon(item);
+                            if (checkIsEquipped(item)) removeTalentOfWeapon(i);
+                            else addTalentToWeapon(item);
 
                             console.log(weapon);
                         }}
