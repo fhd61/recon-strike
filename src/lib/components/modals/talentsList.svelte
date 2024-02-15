@@ -15,7 +15,7 @@
 >
     {#each data as talent}
         <div>
-            <ItemPanel iconClass="w-12" data={talent}>
+            <ItemPanel iconClass="w-12" data={talent} useBtn={false}>
                 <button
                     class="btn-success mb-2 ml-1"
                     on:click={() => {
