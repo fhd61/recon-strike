@@ -31,12 +31,15 @@
         setTimeout(() => (reRender = false), 100);
     }
 
-    function removeModeOfWeapon(index: number) {
+    function removeModeOfWeapon(mod: IItem, index: number) {
         if (weapon.mods == undefined) weapon.mods = [];
 
         reRender = true;
 
         weapon.mods.splice(index, 1);
+        if (mod.attToModify !== undefined)
+            delete weapon.bonus[mod.name]
+
 
         setTimeout(() => (reRender = false), 100);
     }

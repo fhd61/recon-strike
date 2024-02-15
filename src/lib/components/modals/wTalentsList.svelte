@@ -22,12 +22,14 @@
         setTimeout(() => (reRender = false), 100);
     }
 
-    function removeTalentOfWeapon(index: number) {
+    function removeTalentOfWeapon(talent: IItem, index:number) {
         if (weapon.talents == undefined) weapon.talents = [];
 
         reRender = true;
 
         weapon.talents.splice(index, 1);
+        if (talent.attToModify !== undefined)
+            delete weapon.bonus[talent.name];
 
         setTimeout(() => (reRender = false), 100);
     }
