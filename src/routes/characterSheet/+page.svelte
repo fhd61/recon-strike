@@ -337,6 +337,7 @@
                                     bind:data={talent}
                                     iconClass="w-10"
                                     bg="bg-zinc-900"
+                                    useBtn={false}
                                 >
                                     <button
                                         class="btn-error mb-2 ml-1"
