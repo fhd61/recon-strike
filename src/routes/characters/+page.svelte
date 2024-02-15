@@ -19,7 +19,7 @@
     });
 
     async function getRows() {
-        let res = await supabase.from("cloud_save").select();
+        let res = await supabase.from("cloud_save").select().eq("user_id", data.session?.user.id);
 
         characters = JSON.parse(res.data[0].json) as ICharacter[];
         console.log(characters);

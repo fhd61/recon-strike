@@ -196,9 +196,10 @@ export class CharacterUtils {
     }
 
     static async saveOnDb(dbClient: SupabaseClient) {
-        const { data: dbChar, error: err } = await dbClient
+        const { data: cloud_save, error: err } = await dbClient
             .from("cloud_save")
-            .select("json");
+            .select("json")
+            .eq("user_id", (await dbClient.auth.getUser()).data.user?.id);
         const index = localStorage.getItem("index")
         const tempArr: ICharacter[] = [];
         const charToSave = get(CharacterSheet)
@@ -207,21 +208,23 @@ export class CharacterUtils {
             console.log(err);
             return;
         }
-        if (dbChar[0] == null) {
+        if (cloud_save[0] == null) {
             tempArr.push(charToSave);
 
             await dbClient
                 .from("cloud_save")
-                .upsert([{ json: [JSON.stringify(tempArr)] }]);
+                .upsert([{ json: [JSON.stringify(tempArr)] }])
+                .select();
             console.log(tempArr)
         } else {
-            const charArr = JSON.parse(dbChar[0].json) as ICharacter[];
+            const charArr = JSON.parse(cloud_save[0].json) as ICharacter[];
 
             charArr[Number.parseInt(index!)] = charToSave;
 
             await dbClient
                 .from("cloud_save")
-                .upsert([{ json: [JSON.stringify(charArr)] }]);
+                .upsert([{ json: [JSON.stringify(charArr)] }])
+                .select();
 
             console.log(charArr)
         }
