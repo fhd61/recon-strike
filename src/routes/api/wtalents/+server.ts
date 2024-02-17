@@ -64,7 +64,7 @@ const content: IItem[] = [
         icon: "https://i.imgur.com/USqGVQ3.png",
         name: "Preciso",
         description: "Ganha +1 na rolagem de acerto",
-        attToModify: { hit: -1 }
+        attToModify: { hit: 1 }
     },
     {
         icon: "https://i.imgur.com/NFWU1IL.png",
