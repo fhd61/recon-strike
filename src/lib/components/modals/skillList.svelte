@@ -54,14 +54,14 @@
                         >
                             <Tab id={0} title="Padrão">
                                 {#each data[section] as ability}
-                                    <ItemPanel iconClass="w-10" data={ability}>
+                                    <ItemPanel iconClass="w-10" data={ability} useBtn={false}>
                                         <button class="btn-success" on:click={() => equipSkill(0, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
                             </Tab>
                             <Tab id={1} title="Melhorias">
                                 {#each data.upgrades[section] as ability}
-                                    <ItemPanel iconClass="w-10" data={ability}>
+                                    <ItemPanel iconClass="w-10" data={ability} useBtn={false}>
                                         <button class="btn-success" on:click={() => equipSkill(0, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
@@ -84,14 +84,14 @@
                         >
                             <Tab id={0} title="Padrão">
                                 {#each data[section] as ability}
-                                    <ItemPanel iconClass="w-10" data={ability}>
+                                    <ItemPanel iconClass="w-10" data={ability} useBtn={false}>
                                         <button class="btn-success" on:click={() => equipSkill(1, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
                             </Tab>
                             <Tab id={1} title="Melhorias">
                                 {#each data.upgrades[section] as ability}
-                                    <ItemPanel iconClass="w-10" data={ability}>
+                                    <ItemPanel iconClass="w-10" data={ability} useBtn={false}>
                                         <button class="btn-success" on:click={() => equipSkill(1, ability)}>Equipar</button>
                                     </ItemPanel>
                                 {/each}
