@@ -5,7 +5,7 @@
 
     let valueWithBonus: number;
 
-    function calcGA() {
+    afterUpdate(() => {
         if ($CharacterSheet.attributes["ga"].use === undefined)
             $CharacterSheet.attributes["ga"].use = "agi";
 
@@ -14,15 +14,15 @@
 
         const vigValue = $CharacterSheet.attributes["vig"].value;
         const otherValue = $CharacterSheet.attributes[userStat].value;
-        const defValue = $CharacterSheet.attributes["def"].value;
+        let defValue = $CharacterSheet.attributes["def"].value ;
+
+        for (let key in $CharacterSheet.attributes["def"].bonus)
+            defValue += $CharacterSheet.attributes["def"].bonus[key];
+
 
         const finalAc = vigValue + otherValue + defValue * 2;
 
         $CharacterSheet.attributes["ga"].value = finalAc;
-    }
-
-    afterUpdate(() => {
-        calcGA();
 
         let bonusTotal = 0;
 
