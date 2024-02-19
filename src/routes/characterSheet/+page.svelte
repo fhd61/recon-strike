@@ -130,7 +130,7 @@
                     bind:this={diceRollInput}
                     type="text"
                     placeholder="1d20 + 2"
-                    class="w-full input-default"
+                    class="w-full input-default placeholder:opacity-20"
                 />
             </div>
         </Panel>
