@@ -47,8 +47,8 @@ const content: ISkill[] = [
     },
     {
         icon: "https://i.imgur.com/xCReqT0.png",
-        name: "Conver Explosivo",
-        description: "Versão melhorada do escudo balístico básico, em quanto estiver usando conta como cover pesado mas perde -5 de deslocamento devido ao peso",
+        name: "Cover Explosivo",
+        description: "Quando usar essa cover e for afetado por uma explosão você roda o mesmo dado de dano da explosão, o valor vai ser quanto de dano vai ser negado, mas apoios isso o cover e destruído",
         cooldown: 5,
         hp: { currentValue: 30, maxValue: 30, bonus: {} },
         currentCooldown: 0,
