@@ -467,6 +467,10 @@
                                         bg="bg-zinc-900"
                                         data={item}
                                         iconClass="w-8"
+                                        bind:condition={item.isEquipped}
+                                        on:EquipItem={() => CharacterUtils.equipItem(item)}
+                                        on:UnEquipItem={() => CharacterUtils.unEquipItem(item)}
+
                                     >
                                         <button
                                             on:click={() => {

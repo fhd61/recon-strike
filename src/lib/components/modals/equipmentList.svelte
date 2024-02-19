@@ -86,14 +86,10 @@
                     <ItemPanel
                         iconClass="w-9 h-19 object-scale-down"
                         data={item}
-                        useBtn={false}
+                        bind:condition={item.isEquipped}
+                        on:EquipItem={() => CharacterUtils.addItemToInventory(item)}
+                        on:UnEquipItem={() => CharacterUtils.removeItemToInventory(item)}
                     >
-                        <button
-                            class="btn-success ml-1 mb-2"
-                            on:click={() =>
-                                CharacterUtils.addItemToInventory(item)}
-                            >Adicionar</button
-                        >
                     </ItemPanel>
                 </div>
             {/each}

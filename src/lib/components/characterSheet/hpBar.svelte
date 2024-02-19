@@ -6,6 +6,7 @@
     import { createEventDispatcher, onMount } from "svelte";
     import type { IHp } from "$lib/types/interface/IHp";
     import { CharacterSheet } from "$lib/store/character";
+    import { derived } from "svelte/store";
 
     export let data: IHp;
     export let isChar = true;
@@ -78,8 +79,15 @@
         const vig = $CharacterSheet.attributes["vig"].value;
         const def = $CharacterSheet.attributes["def"].value;
 
-        if (isChar) data.maxValue = vig * 6 + def;
+        if (isChar) {
+            let bonus = 0;
 
+            for (const key in $CharacterSheet.attributes["hp"].bonus) {
+                bonus += $CharacterSheet.attributes["hp"].bonus[key];
+            }
+
+            data.maxValue = vig * 6 + def + bonus;
+        }
     }
 </script>
 

@@ -18,7 +18,7 @@
         if (talent.attToModify !== undefined)
             weapon.bonus[talent.name] = { ...talent.attToModify };
 
-        onWTalentsUpdate.trigger()
+        onWTalentsUpdate.trigger();
         restart();
     }
 
@@ -48,25 +48,15 @@
 >
     {#each data as item, i}
         <div>
-            <ItemPanel iconClass="w-9 h-9 object-scale-down" data={item} useBtn={false}>
-                {#key unique}
-                    <button
-                        on:click={() => {
-                            if (checkIsEquipped(item))
-                                removeTalentOfWeapon(item);
-                            else addTalentToWeapon(item);
-
-                            console.log(weapon);
-                        }}
-                        class={checkIsEquipped(item)
-                            ? "btn-error"
-                            : "btn-success"}
-                        >{checkIsEquipped(item)
-                            ? "Desequipar"
-                            : "Equipar"}</button
-                    >
-                {/key}
-            </ItemPanel>
+            {#key unique}
+                <ItemPanel
+                    iconClass="w-9 h-9 object-scale-down"
+                    data={item}
+                    bind:condition={item.isEquipped}
+                    on:EquipItem={() => addTalentToWeapon(item)}
+                    on:UnEquipItem={() => removeTalentOfWeapon(item)}
+                ></ItemPanel>
+            {/key}
         </div>
     {/each}
 </div>
