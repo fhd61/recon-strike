@@ -86,6 +86,7 @@
                     <ItemPanel
                         iconClass="w-9 h-19 object-scale-down"
                         data={item}
+                        useBtn={false}
                     >
                         <button
                             class="btn-success ml-1 mb-2"
