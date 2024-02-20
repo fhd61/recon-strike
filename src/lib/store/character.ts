@@ -45,7 +45,7 @@ export const initialCharacterData: ICharacter = {
     notes: '',
   },
   attributes: {
-    hp: { currentValue: 1, maxValue: 0, bonus: {} },
+    hp: { currentValue: 1, maxValue: 1, bonus: {} },
     agi: { id: 'agi', name: 'Agility', shortName: 'agi', value: 1, bonus: {} },
     int: { id: 'int', name: 'Intelligence', shortName: 'int', value: 1, bonus: {} },
     for: { id: 'for', name: 'Force', shortName: 'for', value: 1, bonus: {} },

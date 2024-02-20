@@ -47,6 +47,8 @@
         <div class="flex text-white">
             <img
                 class="w-48 mr-4 polygonL"
+                width="192"
+                height="192"
                 src={data.dossier.portrait}
                 alt=""
             />

@@ -58,36 +58,42 @@
         | "inv_wTalents" = "dossier";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
+    let saveDbInterval: string | number | NodeJS.Timeout | undefined;
     let saveInterval: string | number | NodeJS.Timeout | undefined;
 
-    //@ts-expect-error
     onTurnEnd.on(() => {
         turnCount++;
     });
 
-    //@ts-expect-error
     onCombatEnd.on(() => {
         turnCount = 0;
     });
 
     onMount(() => {
-        let char: ICharacter | undefined = JSON.parse(
-            localStorage.getItem("character") as string,
-        );
+        const serializeChar = localStorage.getItem("character");
+        if (serializeChar) {
+            try {
+                const parsedJson = JSON.parse(serializeChar);
+                if (parsedJson !== undefined) {
+                    Character.set(parsedJson as ICharacter);
+                }
+            } catch (e) {
+                console.error("Error parsing character from localStorage:", e);
+            }
+        }
 
-        if (char) Character.set(char);
-        saveInterval = setInterval(saveLocal, 10000);
+        saveInterval = setInterval(CharacterUtils.saveToLocalStorage, 3000);
+
+        saveDbInterval = setInterval(
+            () => CharacterUtils.saveOnDb(data.supabase),
+            10000,
+        );
     });
 
     onDestroy(() => {
         clearInterval(saveInterval);
+        clearInterval(saveDbInterval);
     });
-
-    async function saveLocal() {
-        CharacterUtils.saveToLocalStorage();
-
-        CharacterUtils.saveOnDb(data.supabase);
-    }
 
     function onSelectCover() {
         const coverBonuses = {
@@ -130,7 +136,7 @@
                     bind:this={diceRollInput}
                     type="text"
                     placeholder="1d20 + 2"
-                    class="w-full input-default"
+                    class="w-full input-default placeholder:opacity-20"
                 />
             </div>
         </Panel>
@@ -195,20 +201,6 @@
                                     <HpBar
                                         isChar={false}
                                         bind:data={$Character.skills[0].hp}
-                                        on:hpInZero={() => {
-                                            for (const key1 in $Character.attributes) {
-                                                if (
-                                                    $Character.skills[0].name in
-                                                    $Character.attributes[key1]
-                                                        .bonus
-                                                )
-                                                    delete $Character
-                                                        .attributes[key1].bonus[
-                                                        $Character.skills[0]
-                                                            .name
-                                                    ];
-                                            }
-                                        }}
                                     />
                                 </div>
                             {/if}
@@ -245,9 +237,7 @@
                         <button
                             on:click={() => {
                                 inCombatMode = !inCombatMode;
-                                //@ts-expect-error
                                 if (inCombatMode) onCombatStart.trigger();
-                                //@ts-expect-error
                                 else onCombatEnd.trigger();
                             }}
                             class={inCombatMode
@@ -267,11 +257,9 @@
                             disabled={!inCombatMode}
                             on:click={() => {
                                 if (turnStarted) {
-                                    //@ts-expect-error
                                     onTurnEnd.trigger();
                                     turnStarted = false;
                                 } else {
-                                    //@ts-expect-error
                                     onTurnStart.trigger();
                                     turnStarted = true;
                                 }
@@ -467,6 +455,11 @@
                                         bg="bg-zinc-900"
                                         data={item}
                                         iconClass="w-8"
+                                        bind:condition={item.isEquipped}
+                                        on:EquipItem={() =>
+                                            CharacterUtils.equipItem(item)}
+                                        on:UnEquipItem={() =>
+                                            CharacterUtils.unEquipItem(item)}
                                     >
                                         <button
                                             on:click={() => {

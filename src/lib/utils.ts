@@ -31,7 +31,7 @@ export class WeaponsUtils {
         const talents = weapon.talents
         if (talents === undefined)
             return bonus
-            console.log(talents)
+        console.log(talents)
 
         for (let i = 0; i < talents.length; i++) {
             if (talents[i].attToModify === undefined)
@@ -55,7 +55,7 @@ export class WeaponsUtils {
 
     static bonusBaseOnTalent(talent: "Campeão de tiro" | "Tiro fatal", weapon: IWeapon) {
         const hasTalent = get(CharacterSheet).talents.find((t) => t.name == talent) !== undefined
-        
+
         if (hasTalent)
             return this.getAttributeModifier(weapon)
 
@@ -188,11 +188,13 @@ export class CharacterUtils {
     }
 
     static serializedChar() {
-        return JSON.stringify(get(CharacterSheet))
+        const char = get(CharacterSheet);
+        return JSON.stringify(char);
     }
 
     static saveToLocalStorage() {
-        localStorage.setItem("character", this.serializedChar())
+        const char = CharacterUtils.serializedChar();
+        localStorage.setItem("character", char);
     }
 
     static async saveOnDb(dbClient: SupabaseClient) {
@@ -225,9 +227,22 @@ export class CharacterUtils {
                 .from("cloud_save")
                 .upsert([{ json: [JSON.stringify(charArr)] }])
                 .select();
-
-            console.log(charArr)
         }
+    }
+
+    static addTalentToChar(talent: IItem) {
+        CharacterSheet.update((c) => {
+            c.talents.push(talent);
+            return c;
+        });
+    }
+
+    static removeTalentToChar(talent: IItem) {
+        CharacterSheet.update((c) => {
+            const index = c.talents.indexOf(talent)
+            c.talents.splice(index, 1)
+            return c;
+        });
     }
 
     static loadCharFromLocalStorage() {
@@ -240,6 +255,30 @@ export class CharacterUtils {
         }
         else
             throw new Error("Character not found, or invalid")
+    }
+
+    static equipItem(item: IItem) {
+        if (item !== undefined) {
+            for (const key in item.attToModify) {
+                const attName = EAttributeUtils.stringToAttribute(key)
+                this.addBonusToAttribute(attName, item.name, item.attToModify[key])
+            }
+        }
+
+
+        item.isEquipped = true;
+    }
+
+    static unEquipItem(item: IItem) {
+        if (item !== undefined) {
+            for (const key in item.attToModify) {
+                const attName = EAttributeUtils.stringToAttribute(key)
+                this.removeBonusOfAttribute(attName, item.name)
+            }
+        }
+
+
+        item.isEquipped = true;
     }
 
     static equipadedWeapons() {

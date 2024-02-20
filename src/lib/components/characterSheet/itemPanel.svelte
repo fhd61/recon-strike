@@ -3,35 +3,32 @@
     import { CharacterUtils, EAttributeUtils } from "$lib/utils";
     import Accordion from "./accordion.svelte";
     import { marked } from "marked";
+    import { createEventDispatcher } from "svelte";
 
     export let data: IItem;
     export let useBtn = true;
     export let bg = "bg-zinc-950";
     export let iconClass = "";
+    export let condition = false;
+    export let equipText = "Equipar";
+    export let UnEquipText = "Desequipar";
 
-    $: htmlDescription = marked(data.description);
+    let textToShow = equipItem;
 
-    export function equipItem() {
-        for (const key in data.attToModify) {
-            const value = data.attToModify[key];
-            const att = EAttributeUtils.stringToAttribute(key);
+    const dispatcher = createEventDispatcher();
 
-            console.log({ key, value, att });
-            CharacterUtils.addBonusToAttribute(att, data.name, value);
-        }
-
+    function equipItem() {
+        dispatcher("EquipItem");
         data.isEquipped = true;
     }
 
-    export function unEquipItem() {
-        for (const key in data.attToModify) {
-            const att = EAttributeUtils.stringToAttribute(key);
-
-            console.log({ key, att });
-            CharacterUtils.removeBonusOfAttribute(att, data.name);
-        }
+    function unEquipItem() {
+        dispatcher("UnEquipItem");
         data.isEquipped = false;
     }
+
+    $: htmlDescription = marked(data.description);
+    $: textToShow = condition ? unEquipItem : equipItem;
 </script>
 
 <div class={`w-[45rem] flex flex-col ${bg} p-1 m-1 polygonL`}>
@@ -53,7 +50,7 @@
                         class={`${
                             data.isEquipped ? "btn-error" : "btn-success"
                         } transition-all`}
-                        >{data.isEquipped ? "Desequipar" : "Equipar"}</button
+                        >{data.isEquipped ? UnEquipText : equipText}</button
                     >
                 {/if}
                 <slot />
