@@ -188,11 +188,13 @@ export class CharacterUtils {
     }
 
     static serializedChar() {
-        return JSON.stringify(get(CharacterSheet))
+        const char = get(CharacterSheet);
+        return JSON.stringify(char);
     }
 
     static saveToLocalStorage() {
-        localStorage.setItem("character", this.serializedChar())
+        const char = CharacterUtils.serializedChar();
+        localStorage.setItem("character", char);
     }
 
     static async saveOnDb(dbClient: SupabaseClient) {
@@ -225,8 +227,6 @@ export class CharacterUtils {
                 .from("cloud_save")
                 .upsert([{ json: [JSON.stringify(charArr)] }])
                 .select();
-
-            console.log(charArr)
         }
     }
 
