@@ -17,9 +17,8 @@
         notes: "",
     };
 
-    export let arrLength = 0
+    export let arrLength = 0;
     export const dispatcher = createEventDispatcher();
-    export let mouseInside: boolean = false;
     export let dbClient: {
         session: Session | null;
         supabase: SupabaseClient<any, "public", any>;
@@ -55,9 +54,9 @@
 
         localStorage.setItem("character", JSON.stringify($CharacterSheet));
         localStorage.setItem("index", JSON.stringify(arrLength));
-        
+
         dispatcher("createClicked");
-        console.log(dossier)
+        console.log(dossier);
     }
 
     function genName() {
@@ -66,15 +65,11 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-    class="flex justify-evenly"
-    on:mouseenter={() => (mouseInside = true)}
-    on:mouseleave={() => (mouseInside = false)}
->
+<div class="flex justify-evenly">
     <div class="flex flex-col">
         <img
             src={portraitUrl ? portraitUrl : noImage}
-            class="w-80 h-72 polygon"
+            class="w-80 h-72 polygon object-scale-downF"
             alt=""
         />
         <button

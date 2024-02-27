@@ -19,8 +19,6 @@
         };
     };
 
-    export let mouseInside: boolean = false;
-
     let index = 0;
     const tabs: tab[] = [
         { title: "Demolição", section: "tech" },
@@ -36,7 +34,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div on:mouseenter={() => (mouseInside = true)}>
+<div>
     <TabGroup
         selectedTab={0}
         class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
@@ -94,7 +92,7 @@
                                         iconClass="w-10"
                                         data={ability}
                                         on:EquipItem={() =>
-                                            equipSkill(0, ability)}
+                                            equipSkill(1, ability)}
                                     />
                                 {/each}
                             </Tab>
@@ -104,7 +102,7 @@
                                         iconClass="w-10"
                                         data={ability}
                                         on:EquipItem={() =>
-                                            equipSkill(0, ability)}
+                                            equipSkill(1, ability)}
                                     />
                                 {/each}
                             </Tab>
@@ -115,10 +113,3 @@
         </Tab>
     </TabGroup>
 </div>
-
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-    on:mouseenter={() => (mouseInside = true)}
-    on:mouseleave={() => (mouseInside = false)}
-    class="grid grid-flow-row flex-wrap justify-around items-center w-[50rem]"
-></div>

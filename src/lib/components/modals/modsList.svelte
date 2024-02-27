@@ -6,7 +6,6 @@
     import type { IWeapon } from "$lib/types/interface/IWeapon";
     import { onWModsUpdate } from "$lib/store/events";
 
-    export let mouseInside: boolean = false;
     export let index = 0;
     export let weapon: IWeapon;
     export let data: {
@@ -51,11 +50,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-    on:mouseenter={() => (mouseInside = true)}
-    on:mouseleave={() => (mouseInside = false)}
-    class="grid grid-flow-row flex-wrap justify-around items-center w-[50rem]"
->
+<div class="grid grid-flow-row flex-wrap justify-around items-center w-[50rem]">
     <TabGroup
         selectedTab={index}
         class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"

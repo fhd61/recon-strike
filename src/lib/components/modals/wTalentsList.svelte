@@ -3,7 +3,7 @@
     import ItemPanel from "../characterSheet/itemPanel.svelte";
     import type { IWeapon } from "$lib/types/interface/IWeapon";
     import { onWTalentsUpdate } from "$lib/store/events";
-    export let mouseInside: boolean = false;
+
     export let weapon: IWeapon;
     export let data: IItem[];
 
@@ -41,11 +41,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-    on:mouseenter={() => (mouseInside = true)}
-    on:mouseleave={() => (mouseInside = false)}
-    class="grid grid-flow-row flex-wrap justify-around items-center w-[50rem]"
->
+<div class="grid grid-flow-row flex-wrap justify-around items-center w-[50rem]">
     {#each data as item, i}
         <div>
             {#key unique}

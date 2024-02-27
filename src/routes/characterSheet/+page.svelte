@@ -37,14 +37,15 @@
     import type { IWeapon } from "$lib/types/interface/IWeapon.js";
     import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
     import WTalentsList from "$lib/components/modals/wTalentsList.svelte";
+    import Modal from "$lib/components/modal.svelte";
 
     export let data;
 
     let turnCount = 0;
     let inCombatMode: boolean;
     let turnStarted: boolean;
-    let mouseInsideModal: boolean;
     let weaponToAddMod: IWeapon;
+    let showModal = false;
     let modalElement: HTMLDialogElement;
     let diceRollInput: HTMLInputElement;
     let modalToShow:
@@ -221,7 +222,7 @@
                     </div>
                     <button
                         on:click={() => {
-                            modalElement.showModal();
+                            showModal = true;
                             modalToShow = "inv_ability";
                         }}
                         class="btn-success mt-2">Trocar Habilidades</button
@@ -312,7 +313,7 @@
             <div slot="content" class="h-full flex flex-col items-end">
                 <button
                     on:click={() => {
-                        modalElement.showModal();
+                        showModal = true;
                         modalToShow = "inv_talents";
                     }}
                     class="btn-success mb-2">Adicionar</button
@@ -367,7 +368,7 @@
                         <div class="flex w-full justify-end mb-1">
                             <button
                                 on:click={() => {
-                                    modalElement.showModal();
+                                    showModal = true;
                                     modalToShow = "inv_weapons";
                                 }}
                                 class="btn-success">Adicionar</button
@@ -440,7 +441,7 @@
                         <div class="flex w-full justify-end mb-1">
                             <button
                                 on:click={() => {
-                                    modalElement.showModal();
+                                    showModal = true;
                                     modalToShow = "inv_equipment";
                                 }}
                                 class="btn-success">Adicionar</button
@@ -486,14 +487,14 @@
     <button
         class="bg-[#f86b10]/80 w-32 h-8 polygonR font-semibold transition-all active:bg-[#f86b10]"
         on:click={() => {
-            modalElement.showModal();
+            showModal = true;
             modalToShow = "dossier";
         }}>Dossier</button
     >
     <button
         class="bg-[#f86b10]/80 w-8 h-8 polygonL font-semibold transition-all active:bg-[#f86b10]"
         on:click={() => {
-            modalElement.showModal();
+            showModal = true;
             modalToShow = "settings";
         }}
     >
@@ -501,61 +502,34 @@
     </button>
 </div>
 
-<!-- Show Modals -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<dialog
-    class="bg-zinc-900 text-white p-4 backdrop:bg-zinc-950/90 open:transition-all polygonL"
-    bind:this={modalElement}
-    on:click={() => {
-        if (mouseInsideModal) return;
-
-        modalElement.close();
-    }}
->
+<Modal bind:showModal>
     {#if modalToShow === "dossier"}
         <Dossier
             dbClient={{ session: data.session, supabase: data.supabase }}
-            bind:mouseInside={mouseInsideModal}
             bind:dossier={$Character.dossier}
         />
     {:else if modalToShow === "settings"}
-        <Settings bind:mouseInside={mouseInsideModal} />
+        <Settings />
     {:else if modalToShow === "inv_talents"}
-        <TalentsList
-            bind:mouseInside={mouseInsideModal}
-            data={data.defaults.charTalents}
-        />
+        <TalentsList data={data.defaults.charTalents} />
     {:else if modalToShow === "inv_equipment"}
-        <EquipmentsList
-            bind:mouseInside={mouseInsideModal}
-            data={{ ...data.defaults.equipments }}
-        />
+        <EquipmentsList data={{ ...data.defaults.equipments }} />
     {:else if modalToShow === "inv_weapons"}
-        <EquipmentsList
-            index={1}
-            bind:mouseInside={mouseInsideModal}
-            data={{ ...data.defaults.equipments }}
-        />
+        <EquipmentsList index={1} data={{ ...data.defaults.equipments }} />
     {:else if modalToShow === "inv_ability"}
-        <SkillList
-            bind:mouseInside={mouseInsideModal}
-            data={data.defaults.skills}
-        />
+        <SkillList data={data.defaults.skills} />
     {:else if modalToShow === "inv_mods"}
         <ModsList
             bind:weapon={weaponToAddMod}
-            bind:mouseInside={mouseInsideModal}
             data={data.defaults.equipments.mods}
         />
     {:else if modalToShow === "inv_wTalents"}
         <WTalentsList
             bind:weapon={weaponToAddMod}
-            bind:mouseInside={mouseInsideModal}
             data={data.defaults.equipments.w_talents}
         />
     {/if}
-</dialog>
+</Modal>
 
 <style>
     :root {
