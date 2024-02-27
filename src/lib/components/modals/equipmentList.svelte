@@ -12,7 +12,7 @@
     export let index = 0;
 
     let reRender = false;
-    let validHitDice = true;
+    let validHitDice = true
     let validDamageDice: boolean;
     const regex = /^(\d*)?d(\d+)((\s*[+-]\s*\d+\s*)+)?$/i;
     const itemAttToMod: Array<{ id: string; value: number }> = [];
@@ -31,6 +31,7 @@
         range: 10,
         critValue: 20,
         critMut: 1.3,
+        bonus: {}
     };
 
     function addModToItem() {
