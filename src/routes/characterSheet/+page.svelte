@@ -38,6 +38,7 @@
     import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
     import WTalentsList from "$lib/components/modals/wTalentsList.svelte";
     import Modal from "$lib/components/modal.svelte";
+    import EditWeapon from "$lib/components/modals/editWeapon.svelte";
 
     export let data;
 
@@ -46,8 +47,8 @@
     let turnStarted: boolean;
     let weaponToAddMod: IWeapon;
     let showModal = false;
-    let modalElement: HTMLDialogElement;
     let diceRollInput: HTMLInputElement;
+    let weaponToEdit: IWeapon
     let modalToShow:
         | "dossier"
         | "settings"
@@ -56,11 +57,17 @@
         | "inv_weapons"
         | "inv_ability"
         | "inv_mods"
-        | "inv_wTalents" = "dossier";
+        | "inv_wTalents"
+        | "edit_Weapon" = "dossier";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
     let saveDbInterval: string | number | NodeJS.Timeout | undefined;
     let saveInterval: string | number | NodeJS.Timeout | undefined;
+
+    let unique = {}
+    function restart(){
+        unique = {}
+    }
 
     onTurnEnd.on(() => {
         turnCount++;
@@ -411,6 +418,15 @@
                                                     class="btn-success"
                                                     on:click={() => {
                                                         modalToShow =
+                                                            "edit_Weapon";
+                                                        showModal = true;
+                                                        weaponToEdit = weapon
+                                                    }}>Editar</button
+                                                >
+                                                <button
+                                                    class="btn-success"
+                                                    on:click={() => {
+                                                        modalToShow =
                                                             "inv_mods";
                                                         showModal = true;
                                                         weaponToAddMod = weapon;
@@ -523,6 +539,8 @@
             bind:weapon={weaponToAddMod}
             data={data.defaults.equipments.w_talents}
         />
+    {:else if modalToShow === "edit_Weapon"}
+        <EditWeapon bind:weapon = {weaponToEdit}/>
     {/if}
 </Modal>
 

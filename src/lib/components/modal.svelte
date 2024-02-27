@@ -1,16 +1,27 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+
     export let showModal = false;
 
     let dialog: HTMLDialogElement;
+    const dispatcher = createEventDispatcher();
 
-    $: if (dialog && showModal) dialog.showModal();
+    $: {
+        if (dialog && showModal) {
+            dialog.showModal();
+            dispatcher("ModalOpen");
+        }
+    }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
 <dialog
     bind:this={dialog}
     on:close={() => (showModal = false)}
-    on:click|self={() => dialog.close()}
+    on:click|self={() => {
+        dialog.close();
+        dispatcher("ModalClose");
+    }}
     class="polygonL"
 >
     <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -25,8 +36,8 @@
         @apply bg-zinc-900 text-white;
     }
     dialog::backdrop {
-		background: rgba(0, 0, 0, 0.3);
-	}
+        background: rgba(0, 0, 0, 0.3);
+    }
     dialog > div {
         padding: 1em;
     }
