@@ -296,11 +296,6 @@
                                 <HpBar isChar={false} bind:data={coverHp} />
                             </div>
                         {/if}
-                        <hr class="border-orange-900 my-2" />
-                        <div class="flex justify-between items-center mb-2">
-                            <span>Buffs e Debuffs</span>
-                            <button class="btn-success">+ </button>
-                        </div>
                         <!-- Colocar buffs e Debuffs aqui -->
                     </div>
                 </div>
@@ -352,7 +347,7 @@
                 <TabGroup
                     class="flex w-full mb-2 justify-around items-center bg-zinc-900 h-10 polygonR capitalize"
                 >
-                    <Tab id={0} title="Equipados">
+                    <Tab id={0} title="Ativos">
                         {#each CharacterUtils.equipadedItems() as item}
                             <ItemPanel
                                 data={item}
