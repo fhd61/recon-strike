@@ -24,8 +24,11 @@
             .select()
             .eq("user_id", data.session?.user.id);
 
-        characters = JSON.parse(res.data[0].json) as ICharacter[];
-        console.log(characters);
+        const charJson = res.data[0].json;
+
+        if (charJson === null) return;
+
+        characters = JSON.parse(charJson) as ICharacter[];
 
         for (let index = 0; index < characters.length; index++) {
             if (characters[index] === null || characters[index] === undefined)
