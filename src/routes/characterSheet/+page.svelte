@@ -412,7 +412,7 @@
                                                     on:click={() => {
                                                         modalToShow =
                                                             "inv_mods";
-                                                        modalElement.showModal();
+                                                        showModal = true;
                                                         weaponToAddMod = weapon;
                                                     }}>Colocar Mods</button
                                                 >
@@ -421,7 +421,7 @@
                                                     on:click={() => {
                                                         modalToShow =
                                                             "inv_wTalents";
-                                                        modalElement.showModal();
+                                                        showModal = true;
                                                         weaponToAddMod = weapon;
                                                     }}>Colocar Talento</button
                                                 >
