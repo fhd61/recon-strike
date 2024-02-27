@@ -14,24 +14,24 @@
     let reRender = false;
     let showModal = false;
 
-    // onMount(() => {
-    //     getRows();
-    // });
+    onMount(() => {
+        getRows();
+    });
 
-    // async function getRows() {
-    //     let res = await supabase
-    //         .from("cloud_save")
-    //         .select()
-    //         .eq("user_id", data.session?.user.id);
+    async function getRows() {
+        let res = await supabase
+            .from("cloud_save")
+            .select()
+            .eq("user_id", data.session?.user.id);
 
-    //     characters = JSON.parse(res.data[0].json) as ICharacter[];
-    //     console.log(characters);
+        characters = JSON.parse(res.data[0].json) as ICharacter[];
+        console.log(characters);
 
-    //     for (let index = 0; index < characters.length; index++) {
-    //         if (characters[index] === null || characters[index] === undefined)
-    //             characters.splice(index, 1);
-    //     }
-    // }
+        for (let index = 0; index < characters.length; index++) {
+            if (characters[index] === null || characters[index] === undefined)
+                characters.splice(index, 1);
+        }
+    }
 
     setContext("dbClient", data.supabase);
 </script>
@@ -46,7 +46,7 @@
         >
     </div>
     <div class="flex flex-wrap">
-        <!-- {#each characters as char, index}
+        {#each characters as char, index}
             <CharacterSelector
                 on:characterDeleted={() => {
                     reRender = true;
@@ -54,7 +54,7 @@
                 {index}
                 data={char}
             />
-        {/each} -->
+        {/each}
     </div>
 </div>
 
