@@ -9,7 +9,6 @@
     import { CharacterSheet } from "$lib/store/character";
 
     export let data: { armor: IItem[]; fireArms: IWeapon[]; melee: IWeapon[] };
-    export let mouseInside: boolean = false;
     export let index = 0;
 
     let reRender = false;
@@ -75,7 +74,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div on:mouseenter={() => (mouseInside = true)}>
+<div>
     <TabGroup
         selectedTab={index}
         class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
@@ -87,10 +86,11 @@
                         iconClass="w-9 h-19 object-scale-down"
                         data={item}
                         bind:condition={item.isEquipped}
-                        on:EquipItem={() => CharacterUtils.addItemToInventory(item)}
-                        on:UnEquipItem={() => CharacterUtils.removeItemToInventory(item)}
-                    >
-                    </ItemPanel>
+                        on:EquipItem={() =>
+                            CharacterUtils.addItemToInventory(item)}
+                        on:UnEquipItem={() =>
+                            CharacterUtils.removeItemToInventory(item)}
+                    ></ItemPanel>
                 </div>
             {/each}
         </Tab>
@@ -301,10 +301,3 @@
         </Tab>
     </TabGroup>
 </div>
-
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-    on:mouseenter={() => (mouseInside = true)}
-    on:mouseleave={() => (mouseInside = false)}
-    class="grid grid-flow-row flex-wrap justify-around items-center w-[50rem]"
-></div>
