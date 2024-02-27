@@ -38,6 +38,8 @@ export class WeaponsUtils {
                 continue;
             if (!(name in talents[i].attToModify!))
                 continue;
+            if (talents[i].attToModify === undefined)
+                continue;
 
             bonus += talents[i].attToModify[name]
         }

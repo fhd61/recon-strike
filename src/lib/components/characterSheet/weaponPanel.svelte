@@ -14,12 +14,10 @@
     function rollHit(showPopup = true) {
         const dice = StringUtils.parseDiceNotation(data.hit);
         const att = WeaponsUtils.getAttributeModifier(data);
-        const bonus: number[] = [];
+        const bonus: number[] = [WeaponsUtils.totalBonusOf("hit", data)];
 
         if (WeaponsUtils.checkForTalent("Campeão de tiro")) bonus.push(att);
         else bonus.push(Math.ceil(att / 2));
-
-        bonus.push(WeaponsUtils.totalBonusOf("hit", data));
 
         const res = rollDice(
             data.name + " | Acerto",
@@ -36,7 +34,7 @@
     function rollDamage(showPopup = true) {
         const dice = StringUtils.parseDiceNotation(data.damage);
         const att = WeaponsUtils.getAttributeModifier(data);
-        const bonus: number[] = [];
+        const bonus: number[] = [WeaponsUtils.totalBonusOf("damage", data)];
 
         if (WeaponsUtils.checkForTalent("Tiro fatal")) bonus.push(att / 2);
 
