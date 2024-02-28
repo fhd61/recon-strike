@@ -1,3 +1,4 @@
+import * as myIcons from "$lib/myIcons"
 import type { IWeapon } from "$lib/types/interface/IWeapon"
 
 export function GET() {
@@ -6,10 +7,10 @@ export function GET() {
 
 const content: IWeapon[] = [
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Assault_Icon.webp",
+        icon: myIcons.weaponIcons.assaultRifle,
         name: "Rifle de Assalto",
         hit: "1d20",
-        modifier: "INT",
+        modifier: "int",
         damage: "1d8",
         range: 10,
         critValue: 20,
@@ -17,10 +18,10 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/SMG_Icon.webp",
+        icon: myIcons.weaponIcons.submachineGun,
         name: "Submetralhadora",
         hit: "1d20",
-        modifier: "AGI",
+        modifier: "agi",
         damage: "1d6",
         range: 7,
         critValue: 20,
@@ -28,10 +29,10 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Shotgun_Icon.webp",
+        icon: myIcons.weaponIcons.shotGun,
         name: "Escopeta",
         hit: "1d20",
-        modifier: "FOR",
+        modifier: "for",
         damage: "1d10",
         range: 5,
         critValue: 20,
@@ -39,10 +40,10 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Pistol_Icon.webp",
+        icon: myIcons.weaponIcons.pistol,
         name: "Pistola",
         hit: "1d20",
-        modifier: "AGI",
+        modifier: "agi",
         damage: "1d4",
         range: 8,
         critValue: 20,
@@ -50,10 +51,10 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Marskman_Icon.webp",
+        icon: myIcons.weaponIcons.sniperRifle,
         name: "Rifle de Precisão",
         hit: "1d20",
-        modifier: "INT",
+        modifier: "int",
         damage: "1d10",
         range: 20,
         critValue: 20,
@@ -61,10 +62,10 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/LMG_Icon.webp",
+        icon: myIcons.weaponIcons.lmg,
         name: "LMG",
         hit: "1d20",
-        modifier: "FOR",
+        modifier: "for",
         damage: "1d6",
         range: 9,
         critValue: 20,

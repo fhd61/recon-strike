@@ -19,8 +19,6 @@
         };
     };
 
-    export let mouseInside: boolean = false;
-
     let index = 0;
     const tabs: tab[] = [
         { title: "Demolição", section: "tech" },
@@ -28,15 +26,15 @@
         { title: "Medicina", section: "medical" },
     ];
 
-    function equipSkill(slot: number, skill: ISkill){
-        console.log({slot, skill})
-        CharacterUtils.swapSkill(slot, skill)
-        console.log($CharacterSheet.skills)
+    function equipSkill(slot: number, skill: ISkill) {
+        console.log({ slot, skill });
+        CharacterUtils.swapSkill(slot, skill);
+        console.log($CharacterSheet.skills);
     }
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div on:mouseenter={() => (mouseInside = true)}>
+<div>
     <TabGroup
         selectedTab={0}
         class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
@@ -54,16 +52,22 @@
                         >
                             <Tab id={0} title="Padrão">
                                 {#each data[section] as ability}
-                                    <ItemPanel iconClass="w-10" data={ability} useBtn={false}>
-                                        <button class="btn-success" on:click={() => equipSkill(0, ability)}>Equipar</button>
-                                    </ItemPanel>
+                                    <ItemPanel
+                                        iconClass="w-10"
+                                        data={ability}
+                                        on:EquipItem={() =>
+                                            equipSkill(0, ability)}
+                                    />
                                 {/each}
                             </Tab>
                             <Tab id={1} title="Melhorias">
                                 {#each data.upgrades[section] as ability}
-                                    <ItemPanel iconClass="w-10" data={ability} useBtn={false}>
-                                        <button class="btn-success" on:click={() => equipSkill(0, ability)}>Equipar</button>
-                                    </ItemPanel>
+                                    <ItemPanel
+                                        iconClass="w-10"
+                                        data={ability}
+                                        on:EquipItem={() =>
+                                            equipSkill(0, ability)}
+                                    />
                                 {/each}
                             </Tab>
                         </TabGroup>
@@ -84,16 +88,22 @@
                         >
                             <Tab id={0} title="Padrão">
                                 {#each data[section] as ability}
-                                    <ItemPanel iconClass="w-10" data={ability} useBtn={false}>
-                                        <button class="btn-success" on:click={() => equipSkill(1, ability)}>Equipar</button>
-                                    </ItemPanel>
+                                    <ItemPanel
+                                        iconClass="w-10"
+                                        data={ability}
+                                        on:EquipItem={() =>
+                                            equipSkill(1, ability)}
+                                    />
                                 {/each}
                             </Tab>
                             <Tab id={1} title="Melhorias">
                                 {#each data.upgrades[section] as ability}
-                                    <ItemPanel iconClass="w-10" data={ability} useBtn={false}>
-                                        <button class="btn-success" on:click={() => equipSkill(1, ability)}>Equipar</button>
-                                    </ItemPanel>
+                                    <ItemPanel
+                                        iconClass="w-10"
+                                        data={ability}
+                                        on:EquipItem={() =>
+                                            equipSkill(1, ability)}
+                                    />
                                 {/each}
                             </Tab>
                         </TabGroup>
@@ -103,10 +113,3 @@
         </Tab>
     </TabGroup>
 </div>
-
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-    on:mouseenter={() => (mouseInside = true)}
-    on:mouseleave={() => (mouseInside = false)}
-    class="grid grid-flow-row flex-wrap justify-around items-center w-[50rem]"
-></div>

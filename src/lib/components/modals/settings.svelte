@@ -2,9 +2,9 @@
     import { highlightJSON } from "$lib/highlight";
     import { CharacterSheet } from "$lib/store/character";
 
-    export let mouseInside: boolean = false;
-
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify($CharacterSheet));
+    const dataStr =
+        "data:text/json;charset=utf-8," +
+        encodeURIComponent(JSON.stringify($CharacterSheet));
 
     const jsonString = {
         attributes: JSON.stringify($CharacterSheet.attributes, null, 2),
@@ -18,15 +18,10 @@
         skills: highlightJSON(jsonString.skill),
         character: highlightJSON(jsonString.character),
     };
-
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-    class="w-[45rem]"
-    on:mouseenter={() => (mouseInside = true)}
-    on:mouseleave={() => (mouseInside = false)}
->
+<div class="w-[45rem]">
     <div class="btn-success p-2 mb-2">
         <a href={dataStr} download="char.json">Baixar Personagem</a>
     </div>

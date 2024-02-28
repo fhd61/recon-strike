@@ -7,9 +7,9 @@
     import Tab from "../tabs/tab.svelte";
     import WeaponPanel from "../characterSheet/weaponPanel.svelte";
     import { CharacterSheet } from "$lib/store/character";
+    import { weaponIcons } from "$lib/myIcons";
 
-    export let data: { armor: IItem[]; fireArms: IWeapon[]; melee: IWeapon[] };
-    export let mouseInside: boolean = false;
+    export let data: { armor: IItem[]; fireArms: IWeapon[]; melee: IWeapon[]; grenades: IItem[]};
     export let index = 0;
 
     let reRender = false;
@@ -32,6 +32,7 @@
         range: 10,
         critValue: 20,
         critMut: 1.3,
+        bonus: {},
     };
 
     function addModToItem() {
@@ -75,7 +76,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div on:mouseenter={() => (mouseInside = true)}>
+<div>
     <TabGroup
         selectedTab={index}
         class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
@@ -86,19 +87,31 @@
                     <ItemPanel
                         iconClass="w-9 h-19 object-scale-down"
                         data={item}
-                        useBtn={false}
-                    >
-                        <button
-                            class="btn-success ml-1 mb-2"
-                            on:click={() =>
-                                CharacterUtils.addItemToInventory(item)}
-                            >Adicionar</button
-                        >
-                    </ItemPanel>
+                        bind:condition={item.isEquipped}
+                        on:EquipItem={() =>
+                            CharacterUtils.addItemToInventory(item)}
+                        on:UnEquipItem={() =>
+                            CharacterUtils.removeItemToInventory(item)}
+                    ></ItemPanel>
                 </div>
             {/each}
         </Tab>
-        <Tab id={1} title="Armas">
+        <Tab id={1} title="Granadas">
+            {#each data.grenades as item}
+                <div>
+                    <ItemPanel
+                        iconClass="w-9 h-19 object-scale-down"
+                        data={item}
+                        bind:condition={item.isEquipped}
+                        on:EquipItem={() =>
+                            CharacterUtils.addItemToInventory(item)}
+                        on:UnEquipItem={() =>
+                            CharacterUtils.removeItemToInventory(item)}
+                    ></ItemPanel>
+                </div>
+            {/each}
+        </Tab>
+        <Tab id={2} title="Armas">
             <TabGroup
                 selectedTab={0}
                 class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
@@ -129,7 +142,7 @@
                 </Tab>
             </TabGroup>
         </Tab>
-        <Tab id={2} title="Criar Item">
+        <Tab id={3} title="Criar Item">
             <div>
                 <label class="flex flex-col">
                     Nome
@@ -191,7 +204,7 @@
                 >
             </div></Tab
         >
-        <Tab id={3} title="Criar Arma">
+        <Tab id={4} title="Criar Arma">
             <div>
                 <div class="flex flex-col">
                     <label class="flex flex-col">
@@ -291,6 +304,24 @@
                                 class="input-darker p-2"
                             />
                         </label>
+                        <label class="ml-6">
+                            <p>Icone</p>
+                            <select
+                                bind:value={tempWeapon.icon}
+                                class="p-1 w-52 h-10 capitalize bg-zinc-950/50"
+                            >
+                                <option value={weaponIcons.assaultRifle}>Rifle de Assalto</option>
+                                <option value={weaponIcons.submachineGun}>Submetralhadora</option>
+                                <option value={weaponIcons.shotGun}>Escopeta</option>
+                                <option value={weaponIcons.pistol}>Pistola</option>
+                                <option value={weaponIcons.sniperRifle}>Rifle de Precisão</option>
+                                <option value={weaponIcons.lmg}>LMG</option>
+                                <option value={weaponIcons.axe}>Machado</option>
+                                <option value={weaponIcons.knife}>Faca</option>
+                                <option value={weaponIcons.baton}>Bastão Retátil</option>
+                                <option value={weaponIcons.punch}>Soco</option>
+                            </select>
+                        </label>
                     </div>
                 </div>
                 <div class="flex justify-end mt-4">
@@ -305,10 +336,3 @@
         </Tab>
     </TabGroup>
 </div>
-
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-    on:mouseenter={() => (mouseInside = true)}
-    on:mouseleave={() => (mouseInside = false)}
-    class="grid grid-flow-row flex-wrap justify-around items-center w-[50rem]"
-></div>

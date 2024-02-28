@@ -16,6 +16,7 @@ export async function load({ fetch }) {
 
     const equipments = {
         armor: await getData("api/equipments/armor") as IItem[],
+        grenades: await getData("api/equipments/grenades") as IItem[],
         fireArms: await getData("api/equipments/weapons/fireArms") as IWeapon[],
         melee: await getData("api/equipments/weapons/melee") as IWeapon[],
         w_talents: await getData("api/wtalents") as IItem[],
@@ -36,8 +37,6 @@ export async function load({ fetch }) {
             medical: await getData("api/skills/medical/upgrade") as ISkill[]
         }
     }
-
-    //Skills upgrades
 
     return {
         defaults: {

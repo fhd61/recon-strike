@@ -37,16 +37,18 @@
     import type { IWeapon } from "$lib/types/interface/IWeapon.js";
     import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
     import WTalentsList from "$lib/components/modals/wTalentsList.svelte";
+    import Modal from "$lib/components/modal.svelte";
+    import EditWeapon from "$lib/components/modals/editWeapon.svelte";
 
     export let data;
 
     let turnCount = 0;
     let inCombatMode: boolean;
     let turnStarted: boolean;
-    let mouseInsideModal: boolean;
     let weaponToAddMod: IWeapon;
-    let modalElement: HTMLDialogElement;
+    let showModal = false;
     let diceRollInput: HTMLInputElement;
+    let weaponToEdit: IWeapon;
     let modalToShow:
         | "dossier"
         | "settings"
@@ -55,39 +57,52 @@
         | "inv_weapons"
         | "inv_ability"
         | "inv_mods"
-        | "inv_wTalents" = "dossier";
+        | "inv_wTalents"
+        | "inv_grenades"
+        | "edit_Weapon" = "dossier";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
+    let saveDbInterval: string | number | NodeJS.Timeout | undefined;
     let saveInterval: string | number | NodeJS.Timeout | undefined;
 
-    //@ts-expect-error
+    let unique = {};
+    function restart() {
+        unique = {};
+    }
+
     onTurnEnd.on(() => {
         turnCount++;
     });
 
-    //@ts-expect-error
     onCombatEnd.on(() => {
         turnCount = 0;
     });
 
     onMount(() => {
-        let char: ICharacter | undefined = JSON.parse(
-            localStorage.getItem("character") as string,
-        );
+        const serializeChar = localStorage.getItem("character");
+        if (serializeChar) {
+            try {
+                const parsedJson = JSON.parse(serializeChar);
+                if (parsedJson !== undefined) {
+                    Character.set(parsedJson as ICharacter);
+                }
+            } catch (e) {
+                console.error("Error parsing character from localStorage:", e);
+            }
+        }
 
-        if (char) Character.set(char);
-        saveInterval = setInterval(saveLocal, 10000);
+        saveInterval = setInterval(CharacterUtils.saveToLocalStorage, 3000);
+
+        saveDbInterval = setInterval(
+            () => CharacterUtils.saveOnDb(data.supabase),
+            10000,
+        );
     });
 
     onDestroy(() => {
         clearInterval(saveInterval);
+        clearInterval(saveDbInterval);
     });
-
-    async function saveLocal() {
-        CharacterUtils.saveToLocalStorage();
-
-        CharacterUtils.saveOnDb(data.supabase);
-    }
 
     function onSelectCover() {
         const coverBonuses = {
@@ -130,7 +145,7 @@
                     bind:this={diceRollInput}
                     type="text"
                     placeholder="1d20 + 2"
-                    class="w-full input-default"
+                    class="w-full input-default placeholder:opacity-20"
                 />
             </div>
         </Panel>
@@ -195,20 +210,6 @@
                                     <HpBar
                                         isChar={false}
                                         bind:data={$Character.skills[0].hp}
-                                        on:hpInZero={() => {
-                                            for (const key1 in $Character.attributes) {
-                                                if (
-                                                    $Character.skills[0].name in
-                                                    $Character.attributes[key1]
-                                                        .bonus
-                                                )
-                                                    delete $Character
-                                                        .attributes[key1].bonus[
-                                                        $Character.skills[0]
-                                                            .name
-                                                    ];
-                                            }
-                                        }}
                                     />
                                 </div>
                             {/if}
@@ -229,7 +230,7 @@
                     </div>
                     <button
                         on:click={() => {
-                            modalElement.showModal();
+                            showModal = true;
                             modalToShow = "inv_ability";
                         }}
                         class="btn-success mt-2">Trocar Habilidades</button
@@ -245,9 +246,7 @@
                         <button
                             on:click={() => {
                                 inCombatMode = !inCombatMode;
-                                //@ts-expect-error
                                 if (inCombatMode) onCombatStart.trigger();
-                                //@ts-expect-error
                                 else onCombatEnd.trigger();
                             }}
                             class={inCombatMode
@@ -267,11 +266,9 @@
                             disabled={!inCombatMode}
                             on:click={() => {
                                 if (turnStarted) {
-                                    //@ts-expect-error
                                     onTurnEnd.trigger();
                                     turnStarted = false;
                                 } else {
-                                    //@ts-expect-error
                                     onTurnStart.trigger();
                                     turnStarted = true;
                                 }
@@ -307,11 +304,6 @@
                                 <HpBar isChar={false} bind:data={coverHp} />
                             </div>
                         {/if}
-                        <hr class="border-orange-900 my-2" />
-                        <div class="flex justify-between items-center mb-2">
-                            <span>Buffs e Debuffs</span>
-                            <button class="btn-success">+ </button>
-                        </div>
                         <!-- Colocar buffs e Debuffs aqui -->
                     </div>
                 </div>
@@ -324,7 +316,7 @@
             <div slot="content" class="h-full flex flex-col items-end">
                 <button
                     on:click={() => {
-                        modalElement.showModal();
+                        showModal = true;
                         modalToShow = "inv_talents";
                     }}
                     class="btn-success mb-2">Adicionar</button
@@ -363,7 +355,7 @@
                 <TabGroup
                     class="flex w-full mb-2 justify-around items-center bg-zinc-900 h-10 polygonR capitalize"
                 >
-                    <Tab id={0} title="Equipados">
+                    <Tab id={0} title="Ativos">
                         {#each CharacterUtils.equipadedItems() as item}
                             <ItemPanel
                                 data={item}
@@ -379,7 +371,7 @@
                         <div class="flex w-full justify-end mb-1">
                             <button
                                 on:click={() => {
-                                    modalElement.showModal();
+                                    showModal = true;
                                     modalToShow = "inv_weapons";
                                 }}
                                 class="btn-success">Adicionar</button
@@ -390,60 +382,75 @@
                                 class="h-[52rem] overflow-y-auto overflow-x-hidden"
                             >
                                 {#each $Character.inventory.weapons as weapon}
-                                    <WeaponPanel
-                                        data={weapon}
-                                        bg="bg-zinc-900"
-                                        showDices={true}
-                                    >
-                                        <div
-                                            class="flex justify-between w-[44rem]"
+                                    {#key unique}
+                                        <WeaponPanel
+                                            data={weapon}
+                                            bg="bg-zinc-900"
+                                            showDices={true}
                                         >
-                                            <div>
-                                                <button
-                                                    on:click={() =>
-                                                        (weapon.isEquipped =
-                                                            !weapon.isEquipped)}
-                                                    class={`${
-                                                        weapon.isEquipped
-                                                            ? "btn-error"
-                                                            : "btn-success"
-                                                    } transition-all`}
-                                                    >{weapon.isEquipped
-                                                        ? "Desequipar"
-                                                        : "Equipar"}</button
-                                                >
-                                                <button
-                                                    on:click={() => {
-                                                        CharacterUtils.removeItemToInventory(
-                                                            weapon,
-                                                        );
-                                                    }}
-                                                    class="btn-error"
-                                                    >Deletar</button
-                                                >
+                                            <div
+                                                class="flex justify-between w-[44rem]"
+                                            >
+                                                <div>
+                                                    <button
+                                                        on:click={() =>
+                                                            (weapon.isEquipped =
+                                                                !weapon.isEquipped)}
+                                                        class={`${
+                                                            weapon.isEquipped
+                                                                ? "btn-error"
+                                                                : "btn-success"
+                                                        } transition-all`}
+                                                        >{weapon.isEquipped
+                                                            ? "Desequipar"
+                                                            : "Equipar"}</button
+                                                    >
+                                                    <button
+                                                        on:click={() => {
+                                                            CharacterUtils.removeItemToInventory(
+                                                                weapon,
+                                                            );
+                                                        }}
+                                                        class="btn-error"
+                                                        >Deletar</button
+                                                    >
+                                                </div>
+                                                <div class="">
+                                                    <button
+                                                        class="btn-success"
+                                                        on:click={() => {
+                                                            modalToShow =
+                                                                "edit_Weapon";
+                                                            showModal = true;
+                                                            weaponToEdit =
+                                                                weapon;
+                                                        }}>Editar</button
+                                                    >
+                                                    <button
+                                                        class="btn-success"
+                                                        on:click={() => {
+                                                            modalToShow =
+                                                                "inv_mods";
+                                                            showModal = true;
+                                                            weaponToAddMod =
+                                                                weapon;
+                                                        }}>Colocar Mods</button
+                                                    >
+                                                    <button
+                                                        class="btn-success"
+                                                        on:click={() => {
+                                                            modalToShow =
+                                                                "inv_wTalents";
+                                                            showModal = true;
+                                                            weaponToAddMod =
+                                                                weapon;
+                                                        }}
+                                                        >Colocar Talento</button
+                                                    >
+                                                </div>
                                             </div>
-                                            <div class="">
-                                                <button
-                                                    class="btn-success"
-                                                    on:click={() => {
-                                                        modalToShow =
-                                                            "inv_mods";
-                                                        modalElement.showModal();
-                                                        weaponToAddMod = weapon;
-                                                    }}>Colocar Mods</button
-                                                >
-                                                <button
-                                                    class="btn-success"
-                                                    on:click={() => {
-                                                        modalToShow =
-                                                            "inv_wTalents";
-                                                        modalElement.showModal();
-                                                        weaponToAddMod = weapon;
-                                                    }}>Colocar Talento</button
-                                                >
-                                            </div>
-                                        </div>
-                                    </WeaponPanel>
+                                        </WeaponPanel>
+                                    {/key}
                                 {/each}
                             </div>
                         {/if}
@@ -452,7 +459,7 @@
                         <div class="flex w-full justify-end mb-1">
                             <button
                                 on:click={() => {
-                                    modalElement.showModal();
+                                    showModal = true;
                                     modalToShow = "inv_equipment";
                                 }}
                                 class="btn-success">Adicionar</button
@@ -467,6 +474,11 @@
                                         bg="bg-zinc-900"
                                         data={item}
                                         iconClass="w-8"
+                                        bind:condition={item.isEquipped}
+                                        on:EquipItem={() =>
+                                            CharacterUtils.equipItem(item)}
+                                        on:UnEquipItem={() =>
+                                            CharacterUtils.unEquipItem(item)}
                                     >
                                         <button
                                             on:click={() => {
@@ -493,14 +505,14 @@
     <button
         class="bg-[#f86b10]/80 w-32 h-8 polygonR font-semibold transition-all active:bg-[#f86b10]"
         on:click={() => {
-            modalElement.showModal();
+            showModal = true;
             modalToShow = "dossier";
         }}>Dossier</button
     >
     <button
         class="bg-[#f86b10]/80 w-8 h-8 polygonL font-semibold transition-all active:bg-[#f86b10]"
         on:click={() => {
-            modalElement.showModal();
+            showModal = true;
             modalToShow = "settings";
         }}
     >
@@ -508,61 +520,38 @@
     </button>
 </div>
 
-<!-- Show Modals -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<dialog
-    class="bg-zinc-900 text-white p-4 backdrop:bg-zinc-950/90 open:transition-all polygonL"
-    bind:this={modalElement}
-    on:click={() => {
-        if (mouseInsideModal) return;
-
-        modalElement.close();
-    }}
->
+<Modal bind:showModal on:ModalClose={restart}>
     {#if modalToShow === "dossier"}
         <Dossier
             dbClient={{ session: data.session, supabase: data.supabase }}
-            bind:mouseInside={mouseInsideModal}
             bind:dossier={$Character.dossier}
         />
     {:else if modalToShow === "settings"}
-        <Settings bind:mouseInside={mouseInsideModal} />
+        <Settings />
     {:else if modalToShow === "inv_talents"}
-        <TalentsList
-            bind:mouseInside={mouseInsideModal}
-            data={data.defaults.charTalents}
-        />
+        <TalentsList data={data.defaults.charTalents} />
     {:else if modalToShow === "inv_equipment"}
-        <EquipmentsList
-            bind:mouseInside={mouseInsideModal}
-            data={{ ...data.defaults.equipments }}
-        />
+        <EquipmentsList data={{ ...data.defaults.equipments }} />
+    {:else if modalToShow === "inv_grenades"}
+        <EquipmentsList index={1} data={{ ...data.defaults.equipments }} />
     {:else if modalToShow === "inv_weapons"}
-        <EquipmentsList
-            index={1}
-            bind:mouseInside={mouseInsideModal}
-            data={{ ...data.defaults.equipments }}
-        />
+        <EquipmentsList index={2} data={{ ...data.defaults.equipments }} />
     {:else if modalToShow === "inv_ability"}
-        <SkillList
-            bind:mouseInside={mouseInsideModal}
-            data={data.defaults.skills}
-        />
+        <SkillList data={data.defaults.skills} />
     {:else if modalToShow === "inv_mods"}
         <ModsList
             bind:weapon={weaponToAddMod}
-            bind:mouseInside={mouseInsideModal}
             data={data.defaults.equipments.mods}
         />
     {:else if modalToShow === "inv_wTalents"}
         <WTalentsList
             bind:weapon={weaponToAddMod}
-            bind:mouseInside={mouseInsideModal}
             data={data.defaults.equipments.w_talents}
         />
+    {:else if modalToShow === "edit_Weapon"}
+        <EditWeapon bind:weapon={weaponToEdit} />
     {/if}
-</dialog>
+</Modal>
 
 <style>
     :root {

@@ -1,7 +1,7 @@
 <script lang="ts">
     import Accordion from "./accordion.svelte";
     import type { IWeapon } from "$lib/types/interface/IWeapon";
-    import { StringUtils, WeaponsUtils } from "$lib/utils";
+    import { CharacterUtils, StringUtils, WeaponsUtils } from "$lib/utils";
     import { CharacterSheet } from "$lib/store/character";
     import { rollDice } from "$lib/diceRoller";
     import { toast } from "@zerodevx/svelte-toast";
@@ -13,22 +13,11 @@
 
     function rollHit(showPopup = true) {
         const dice = StringUtils.parseDiceNotation(data.hit);
-        const talentBonus = WeaponsUtils.bonusBaseOnTalent(
-            "Campeão de tiro",
-            data,
-        );
+        const att = WeaponsUtils.getAttributeModifier(data);
+        const bonus: number[] = [WeaponsUtils.totalBonusOf("hit", data)];
 
-        const bonus: number[] = [];
-
-        bonus.push(WeaponsUtils.totalBonusOf("hit", data));
-
-        if (talentBonus >= 0) bonus.push(talentBonus);
-        else
-            bonus.push(
-                Math.ceil(
-                    Math.ceil(WeaponsUtils.getAttributeModifier(data) / 2),
-                ),
-            );
+        if (WeaponsUtils.checkForTalent("Campeão de tiro")) bonus.push(att);
+        else bonus.push(Math.ceil(att / 2));
 
         const res = rollDice(
             data.name + " | Acerto",
@@ -44,11 +33,10 @@
 
     function rollDamage(showPopup = true) {
         const dice = StringUtils.parseDiceNotation(data.damage);
-        const talentBonus = WeaponsUtils.bonusBaseOnTalent("Tiro fatal", data);
-        const bonus: number[] = [];
+        const att = WeaponsUtils.getAttributeModifier(data);
+        const bonus: number[] = [WeaponsUtils.totalBonusOf("damage", data)];
 
-        bonus.push(WeaponsUtils.totalBonusOf("damage", data));
-        if (talentBonus >= 0) bonus.push(Math.ceil(talentBonus / 2));
+        if (WeaponsUtils.checkForTalent("Tiro fatal")) bonus.push(att / 2);
 
         const res = rollDice(
             data.name + " | Dano",
@@ -86,11 +74,11 @@
     const restart = () => (unique = {});
 
     onWTalentsUpdate.on(() => {
-        restart()
-    })
+        restart();
+    });
     onWModsUpdate.on(() => {
-        restart()
-    })
+        restart();
+    });
 </script>
 
 <div class={`w-[45rem] flex flex-col ${bg} p-2 m-1 polygonL`}>

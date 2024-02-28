@@ -7,7 +7,6 @@
     import nameGenerator from "$lib/nameGenerator";
 
     export let dossier: IDossier;
-    export let mouseInside: boolean = false;
     export let dbClient: {
         session: Session | null;
         supabase: SupabaseClient<any, "public", any>;
@@ -43,11 +42,7 @@
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-    class="w-[60rem] h-[45rem] flex justify-evenly"
-    on:mouseenter={() => (mouseInside = true)}
-    on:mouseleave={() => (mouseInside = false)}
->
+<div class="w-[60rem] h-[45rem] flex justify-evenly">
     <div class="flex flex-col">
         <img
             src={portraitUrl ? portraitUrl : noImage}
@@ -68,7 +63,7 @@
                 bind:this={inputFile}
                 on:change={() => {
                     if (inputFile.files == null) return;
-                    
+
                     uploadImgToStorage(inputFile.files[0]);
                 }}
             />

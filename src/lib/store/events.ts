@@ -7,16 +7,8 @@ import { writable } from 'svelte/store';
  * @template T - The type of data to be passed with the event.
  */
 export class EventStore<T> implements IEvent<T> {
-	/**
-	 * The underlying event instance.
-	 *
-	 * @private
-	 */
 	private event: Event<T>;
 
-	/**
-	 * Creates an instance of the {@link EventStore} class.
-	 */
 	constructor() {
 		this.event = new Event<T>();
 	}
@@ -39,11 +31,6 @@ export class EventStore<T> implements IEvent<T> {
 		this.event.off(handler);
 	}
 
-	/**
-	 * Trigger the event with optional data.
-	 *
-	 * @param {...T[]} args - Optional data to be passed with the event.
-	 */
 	public trigger(...args: T[]): void {
 		this.event.trigger(...args);
 	}
@@ -64,7 +51,7 @@ export class EventStore<T> implements IEvent<T> {
  * @template T - The type of data to be passed with the event.
  * @returns {Object} - An object with methods to subscribe, unsubscribe, and trigger events.
  */
-export function createEventStore<T>(): object {
+export function createEventStore<T>() {
 	const eventStore = new EventStore<T>();
 
 	const { subscribe, set } = writable<T[] | null>(null, () => { });
@@ -75,7 +62,7 @@ export function createEventStore<T>(): object {
 	 * @param {(...args: T[]) => void} handler - The callback function to handle the event.
 	 * @returns {Function} - A function to unsubscribe when the component is destroyed.
 	 */
-	function onEvent(handler: { (...args: T[]): void }): () => void {
+	function on(handler: { (...args: T[]): void }): () => void {
 		eventStore.on(handler);
 
 		// Return a function to unsubscribe when the component is destroyed
@@ -84,13 +71,20 @@ export function createEventStore<T>(): object {
 		};
 	}
 
+	/**
+	 * Trigger the event with optional data.
+	 *
+	 * @param {...T[]} args - Optional data to be passed with the event.
+	 */
+	function trigger(...args: T[]) {
+		eventStore.trigger(...args);
+		set(args);
+	}
+
 	return {
 		subscribe,
-		on: onEvent,
-		trigger: (...args: T[]) => {
-			eventStore.trigger(...args);
-			set(args);
-		},
+		on,
+		trigger
 	};
 }
 
