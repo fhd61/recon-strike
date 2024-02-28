@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { weaponIcons } from "$lib/myIcons";
     import type { IWeapon } from "$lib/types/interface/IWeapon";
 
     export let weapon:IWeapon
@@ -109,6 +110,24 @@
                     type="number"
                     class="input-darker p-2"
                 />
+            </label>
+            <label class="ml-6">
+                <p>Icone</p>
+                <select
+                    bind:value={weapon.icon}
+                    class="p-1 w-52 h-10 capitalize bg-zinc-950/50"
+                >
+                    <option value={weaponIcons.assaultRifle}>Rifle de Assalto</option>
+                    <option value={weaponIcons.submachineGun}>Submetralhadora</option>
+                    <option value={weaponIcons.shotGun}>Escopeta</option>
+                    <option value={weaponIcons.pistol}>Pistola</option>
+                    <option value={weaponIcons.sniperRifle}>Rifle de Precisão</option>
+                    <option value={weaponIcons.lmg}>LMG</option>
+                    <option value={weaponIcons.axe}>Machado</option>
+                    <option value={weaponIcons.knife}>Faca</option>
+                    <option value={weaponIcons.baton}>Bastão Retátil</option>
+                    <option value={weaponIcons.punch}>Soco</option>
+                </select>
             </label>
         </div>
     </div>

@@ -48,7 +48,7 @@
     let weaponToAddMod: IWeapon;
     let showModal = false;
     let diceRollInput: HTMLInputElement;
-    let weaponToEdit: IWeapon
+    let weaponToEdit: IWeapon;
     let modalToShow:
         | "dossier"
         | "settings"
@@ -58,15 +58,16 @@
         | "inv_ability"
         | "inv_mods"
         | "inv_wTalents"
+        | "inv_grenades"
         | "edit_Weapon" = "dossier";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
     let saveDbInterval: string | number | NodeJS.Timeout | undefined;
     let saveInterval: string | number | NodeJS.Timeout | undefined;
 
-    let unique = {}
-    function restart(){
-        unique = {}
+    let unique = {};
+    function restart() {
+        unique = {};
     }
 
     onTurnEnd.on(() => {
@@ -381,69 +382,75 @@
                                 class="h-[52rem] overflow-y-auto overflow-x-hidden"
                             >
                                 {#each $Character.inventory.weapons as weapon}
-                                    <WeaponPanel
-                                        data={weapon}
-                                        bg="bg-zinc-900"
-                                        showDices={true}
-                                    >
-                                        <div
-                                            class="flex justify-between w-[44rem]"
+                                    {#key unique}
+                                        <WeaponPanel
+                                            data={weapon}
+                                            bg="bg-zinc-900"
+                                            showDices={true}
                                         >
-                                            <div>
-                                                <button
-                                                    on:click={() =>
-                                                        (weapon.isEquipped =
-                                                            !weapon.isEquipped)}
-                                                    class={`${
-                                                        weapon.isEquipped
-                                                            ? "btn-error"
-                                                            : "btn-success"
-                                                    } transition-all`}
-                                                    >{weapon.isEquipped
-                                                        ? "Desequipar"
-                                                        : "Equipar"}</button
-                                                >
-                                                <button
-                                                    on:click={() => {
-                                                        CharacterUtils.removeItemToInventory(
-                                                            weapon,
-                                                        );
-                                                    }}
-                                                    class="btn-error"
-                                                    >Deletar</button
-                                                >
+                                            <div
+                                                class="flex justify-between w-[44rem]"
+                                            >
+                                                <div>
+                                                    <button
+                                                        on:click={() =>
+                                                            (weapon.isEquipped =
+                                                                !weapon.isEquipped)}
+                                                        class={`${
+                                                            weapon.isEquipped
+                                                                ? "btn-error"
+                                                                : "btn-success"
+                                                        } transition-all`}
+                                                        >{weapon.isEquipped
+                                                            ? "Desequipar"
+                                                            : "Equipar"}</button
+                                                    >
+                                                    <button
+                                                        on:click={() => {
+                                                            CharacterUtils.removeItemToInventory(
+                                                                weapon,
+                                                            );
+                                                        }}
+                                                        class="btn-error"
+                                                        >Deletar</button
+                                                    >
+                                                </div>
+                                                <div class="">
+                                                    <button
+                                                        class="btn-success"
+                                                        on:click={() => {
+                                                            modalToShow =
+                                                                "edit_Weapon";
+                                                            showModal = true;
+                                                            weaponToEdit =
+                                                                weapon;
+                                                        }}>Editar</button
+                                                    >
+                                                    <button
+                                                        class="btn-success"
+                                                        on:click={() => {
+                                                            modalToShow =
+                                                                "inv_mods";
+                                                            showModal = true;
+                                                            weaponToAddMod =
+                                                                weapon;
+                                                        }}>Colocar Mods</button
+                                                    >
+                                                    <button
+                                                        class="btn-success"
+                                                        on:click={() => {
+                                                            modalToShow =
+                                                                "inv_wTalents";
+                                                            showModal = true;
+                                                            weaponToAddMod =
+                                                                weapon;
+                                                        }}
+                                                        >Colocar Talento</button
+                                                    >
+                                                </div>
                                             </div>
-                                            <div class="">
-                                                <button
-                                                    class="btn-success"
-                                                    on:click={() => {
-                                                        modalToShow =
-                                                            "edit_Weapon";
-                                                        showModal = true;
-                                                        weaponToEdit = weapon
-                                                    }}>Editar</button
-                                                >
-                                                <button
-                                                    class="btn-success"
-                                                    on:click={() => {
-                                                        modalToShow =
-                                                            "inv_mods";
-                                                        showModal = true;
-                                                        weaponToAddMod = weapon;
-                                                    }}>Colocar Mods</button
-                                                >
-                                                <button
-                                                    class="btn-success"
-                                                    on:click={() => {
-                                                        modalToShow =
-                                                            "inv_wTalents";
-                                                        showModal = true;
-                                                        weaponToAddMod = weapon;
-                                                    }}>Colocar Talento</button
-                                                >
-                                            </div>
-                                        </div>
-                                    </WeaponPanel>
+                                        </WeaponPanel>
+                                    {/key}
                                 {/each}
                             </div>
                         {/if}
@@ -513,7 +520,7 @@
     </button>
 </div>
 
-<Modal bind:showModal>
+<Modal bind:showModal on:ModalClose={restart}>
     {#if modalToShow === "dossier"}
         <Dossier
             dbClient={{ session: data.session, supabase: data.supabase }}
@@ -525,8 +532,10 @@
         <TalentsList data={data.defaults.charTalents} />
     {:else if modalToShow === "inv_equipment"}
         <EquipmentsList data={{ ...data.defaults.equipments }} />
-    {:else if modalToShow === "inv_weapons"}
+    {:else if modalToShow === "inv_grenades"}
         <EquipmentsList index={1} data={{ ...data.defaults.equipments }} />
+    {:else if modalToShow === "inv_weapons"}
+        <EquipmentsList index={2} data={{ ...data.defaults.equipments }} />
     {:else if modalToShow === "inv_ability"}
         <SkillList data={data.defaults.skills} />
     {:else if modalToShow === "inv_mods"}
@@ -540,7 +549,7 @@
             data={data.defaults.equipments.w_talents}
         />
     {:else if modalToShow === "edit_Weapon"}
-        <EditWeapon bind:weapon = {weaponToEdit}/>
+        <EditWeapon bind:weapon={weaponToEdit} />
     {/if}
 </Modal>
 
