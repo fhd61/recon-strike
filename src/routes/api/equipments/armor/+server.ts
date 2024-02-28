@@ -9,14 +9,14 @@ const content: IItem[] = [
         icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Armor/Armor_Icon.webp",
         name: "Colete Leve",
         description:
-            "Proporciona 2 pontos de defesa e concede um bônus de +1 em AGI, INT ou FOR",
+            "ferece 2 pontos de defesa e concede um bônus de +1 em AGI, INT ou FOR. Você recebe 1 slot pra equipamentos ou granadas.",
         attToModify:{ "def": 2 }
     },
     {
         icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Armor/Armor_Icon_1.webp",
         name: "Colete Médio",
         description:
-            "Proporciona 3 pontos de defesa e reduz em 1 o tempo de recarga das suas habilidades",
+            "Proporciona 3 pontos de defesa e reduz em 1 o tempo de recarga das suas habilidades. Você recebe 2 slot pra equipamentos ou granadas.",
         attToModify:{ "def": 3 }
     },
     {
