@@ -7,12 +7,13 @@
     import Tab from "../tabs/tab.svelte";
     import WeaponPanel from "../characterSheet/weaponPanel.svelte";
     import { CharacterSheet } from "$lib/store/character";
+    import { weaponIcons } from "$lib/myIcons";
 
     export let data: { armor: IItem[]; fireArms: IWeapon[]; melee: IWeapon[] };
     export let index = 0;
 
     let reRender = false;
-    let validHitDice = true
+    let validHitDice = true;
     let validDamageDice: boolean;
     const regex = /^(\d*)?d(\d+)((\s*[+-]\s*\d+\s*)+)?$/i;
     const itemAttToMod: Array<{ id: string; value: number }> = [];
@@ -31,7 +32,7 @@
         range: 10,
         critValue: 20,
         critMut: 1.3,
-        bonus: {}
+        bonus: {},
     };
 
     function addModToItem() {
@@ -287,6 +288,24 @@
                                 type="number"
                                 class="input-darker p-2"
                             />
+                        </label>
+                        <label class="ml-6">
+                            <p>Icone</p>
+                            <select
+                                bind:value={tempWeapon.icon}
+                                class="p-1 w-52 h-10 capitalize bg-zinc-950/50"
+                            >
+                                <option value={weaponIcons.assaultRifle}>Rifle de Assalto</option>
+                                <option value={weaponIcons.submachineGun}>Submetralhadora</option>
+                                <option value={weaponIcons.shotGun}>Escopeta</option>
+                                <option value={weaponIcons.pistol}>Pistola</option>
+                                <option value={weaponIcons.sniperRifle}>Rifle de Precisão</option>
+                                <option value={weaponIcons.lmg}>LMG</option>
+                                <option value={weaponIcons.axe}>Machado</option>
+                                <option value={weaponIcons.knife}>Faca</option>
+                                <option value={weaponIcons.baton}>Bastão Retátil</option>
+                                <option value={weaponIcons.punch}>Soco</option>
+                            </select>
                         </label>
                     </div>
                 </div>
