@@ -1,3 +1,4 @@
+import * as myIcons from "$lib/myIcons"
 import type { IWeapon } from "$lib/types/interface/IWeapon"
 
 export function GET() {
@@ -6,7 +7,7 @@ export function GET() {
 
 const content: IWeapon[] = [
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Assault_Icon.webp",
+        icon: myIcons.weaponIcons.assaultRifle,
         name: "Rifle de Assalto",
         hit: "1d20",
         modifier: "int",
@@ -17,7 +18,7 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/SMG_Icon.webp",
+        icon: myIcons.weaponIcons.submachineGun,
         name: "Submetralhadora",
         hit: "1d20",
         modifier: "agi",
@@ -28,7 +29,7 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Shotgun_Icon.webp",
+        icon: myIcons.weaponIcons.shotGun,
         name: "Escopeta",
         hit: "1d20",
         modifier: "for",
@@ -39,7 +40,7 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Pistol_Icon.webp",
+        icon: myIcons.weaponIcons.pistol,
         name: "Pistola",
         hit: "1d20",
         modifier: "agi",
@@ -50,7 +51,7 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/Marskman_Icon.webp",
+        icon: myIcons.weaponIcons.sniperRifle,
         name: "Rifle de Precisão",
         hit: "1d20",
         modifier: "int",
@@ -61,7 +62,7 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
-        icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Weapons/LMG_Icon.webp",
+        icon: myIcons.weaponIcons.lmg,
         name: "LMG",
         hit: "1d20",
         modifier: "for",

@@ -1,3 +1,4 @@
+import { weaponIcons } from "$lib/myIcons"
 import type { IWeapon } from "$lib/types/interface/IWeapon"
 
 export function GET() {
@@ -6,6 +7,7 @@ export function GET() {
 
 const content: IWeapon[] = [
     {
+        icon: weaponIcons.axe,
         name: "Machado",
         hit: "1d20",
         modifier: "FOR",
@@ -18,6 +20,7 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
+        icon: weaponIcons.knife,
         name: "Faca",
         hit: "1d20",
         modifier: "FOR",
@@ -30,6 +33,7 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
+        icon: weaponIcons.baton,
         name: "Bastão Retrátil",
         hit: "1d20",
         modifier: "FOR",
@@ -42,6 +46,7 @@ const content: IWeapon[] = [
         bonus: {}
     },
     {
+        icon: weaponIcons.punch,
         name: "Soco",
         hit: "1d20",
         modifier: "FOR",

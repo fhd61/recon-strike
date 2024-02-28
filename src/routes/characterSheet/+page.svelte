@@ -58,6 +58,7 @@
         | "inv_ability"
         | "inv_mods"
         | "inv_wTalents"
+        | "inv_grenades"
         | "edit_Weapon" = "dossier";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
@@ -531,8 +532,10 @@
         <TalentsList data={data.defaults.charTalents} />
     {:else if modalToShow === "inv_equipment"}
         <EquipmentsList data={{ ...data.defaults.equipments }} />
-    {:else if modalToShow === "inv_weapons"}
+    {:else if modalToShow === "inv_grenades"}
         <EquipmentsList index={1} data={{ ...data.defaults.equipments }} />
+    {:else if modalToShow === "inv_weapons"}
+        <EquipmentsList index={2} data={{ ...data.defaults.equipments }} />
     {:else if modalToShow === "inv_ability"}
         <SkillList data={data.defaults.skills} />
     {:else if modalToShow === "inv_mods"}

@@ -9,7 +9,7 @@
     import { CharacterSheet } from "$lib/store/character";
     import { weaponIcons } from "$lib/myIcons";
 
-    export let data: { armor: IItem[]; fireArms: IWeapon[]; melee: IWeapon[] };
+    export let data: { armor: IItem[]; fireArms: IWeapon[]; melee: IWeapon[]; grenades: IItem[]};
     export let index = 0;
 
     let reRender = false;
@@ -96,7 +96,22 @@
                 </div>
             {/each}
         </Tab>
-        <Tab id={1} title="Armas">
+        <Tab id={1} title="Granadas">
+            {#each data.grenades as item}
+                <div>
+                    <ItemPanel
+                        iconClass="w-9 h-19 object-scale-down"
+                        data={item}
+                        bind:condition={item.isEquipped}
+                        on:EquipItem={() =>
+                            CharacterUtils.addItemToInventory(item)}
+                        on:UnEquipItem={() =>
+                            CharacterUtils.removeItemToInventory(item)}
+                    ></ItemPanel>
+                </div>
+            {/each}
+        </Tab>
+        <Tab id={2} title="Armas">
             <TabGroup
                 selectedTab={0}
                 class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
@@ -127,7 +142,7 @@
                 </Tab>
             </TabGroup>
         </Tab>
-        <Tab id={2} title="Criar Item">
+        <Tab id={3} title="Criar Item">
             <div>
                 <label class="flex flex-col">
                     Nome
@@ -189,7 +204,7 @@
                 >
             </div></Tab
         >
-        <Tab id={3} title="Criar Arma">
+        <Tab id={4} title="Criar Arma">
             <div>
                 <div class="flex flex-col">
                     <label class="flex flex-col">
