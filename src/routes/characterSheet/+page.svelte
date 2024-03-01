@@ -115,9 +115,12 @@
         coverHp.maxValue = coverBonuses[coverSelected] * 10;
         coverHp.currentValue = coverBonuses[coverSelected] * 10;
 
-
-        if(CharacterUtils.equippedItems().find(item => item.name === "Colete Pesado"))
-            return
+        if (
+            CharacterUtils.equippedItems().find(
+                (item) => item.name === "Colete Pesado",
+            )
+        )
+            return;
 
         $Character.attributes.ga.bonus["cover"] = coverBonuses[coverSelected];
     }
@@ -365,6 +368,11 @@
                                 data={item}
                                 bg="bg-zinc-900"
                                 iconClass="w-9"
+                                bind:condition={item.isEquipped}
+                                on:EquipItem={() =>
+                                    CharacterUtils.equipItem(item)}
+                                on:UnEquipItem={() =>
+                                    CharacterUtils.unEquipItem(item)}
                             />
                         {/each}
                         {#each CharacterUtils.equippedWeapons() as weapon}
