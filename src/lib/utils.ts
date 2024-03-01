@@ -283,7 +283,7 @@ export class CharacterUtils {
         item.isEquipped = true;
     }
 
-    static equipadedWeapons() {
+    static equippedWeapons() {
         const arr = get(CharacterSheet)
             .inventory
             .weapons
@@ -292,7 +292,7 @@ export class CharacterUtils {
         return arr
     }
 
-    static equipadedItems() {
+    static equippedItems() {
         const arr = get(CharacterSheet)
             .inventory
             .equipments

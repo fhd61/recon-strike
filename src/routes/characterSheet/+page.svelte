@@ -105,20 +105,21 @@
     });
 
     function onSelectCover() {
-        if(CharacterUtils.equipadedItems().includes(data.defaults.equipments.armor[2]))
-            return
-
         const coverBonuses = {
             heavy: 3,
             medium: 2,
             light: 1,
             none: 0,
         };
+
         coverHp.maxValue = coverBonuses[coverSelected] * 10;
         coverHp.currentValue = coverBonuses[coverSelected] * 10;
 
+
+        if(CharacterUtils.equippedItems().find(item => item.name === "Colete Pesado"))
+            return
+
         $Character.attributes.ga.bonus["cover"] = coverBonuses[coverSelected];
-        console.log($Character);
     }
 </script>
 
@@ -359,14 +360,14 @@
                     class="flex w-full mb-2 justify-around items-center bg-zinc-900 h-10 polygonR capitalize"
                 >
                     <Tab id={0} title="Ativos">
-                        {#each CharacterUtils.equipadedItems() as item}
+                        {#each CharacterUtils.equippedItems() as item}
                             <ItemPanel
                                 data={item}
                                 bg="bg-zinc-900"
                                 iconClass="w-9"
                             />
                         {/each}
-                        {#each CharacterUtils.equipadedWeapons() as weapon}
+                        {#each CharacterUtils.equippedWeapons() as weapon}
                             <WeaponPanel bg="bg-zinc-900" data={weapon} />
                         {/each}
                     </Tab>
