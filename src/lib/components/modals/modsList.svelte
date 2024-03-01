@@ -56,7 +56,7 @@
         class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
     >
         <Tab id={0} title="Pontas">
-            {#each data.muzzles as mod, i}
+            {#each data.muzzles as mod}
                 <div>
                     {#key unique}
                         <ItemPanel
@@ -70,8 +70,8 @@
                 </div>
             {/each}
         </Tab>
-        <Tab id={1} title="optics">
-            {#each data.optics as mod, i}
+        <Tab id={1} title="Miras">
+            {#each data.optics as mod}
                 <div>
                     {#key unique}
                         <ItemPanel
@@ -84,8 +84,8 @@
                 </div>
             {/each}
         </Tab>
-        <Tab id={2} title="Suportes">
-            {#each data.underbarrel as mod, i}
+        <Tab id={2} title="Empunhadoras">
+            {#each data.underbarrel as mod}
                 <div>
                     {#key unique}
                         <ItemPanel
