@@ -9,7 +9,12 @@
     import { CharacterSheet } from "$lib/store/character";
     import { weaponIcons } from "$lib/myIcons";
 
-    export let data: { armor: IItem[]; fireArms: IWeapon[]; melee: IWeapon[]; grenades: IItem[]};
+    export let data: {
+        armor: IItem[];
+        fireArms: IWeapon[];
+        melee: IWeapon[];
+        grenades: IItem[];
+    };
     export let index = 0;
 
     let reRender = false;
@@ -79,7 +84,7 @@
 <div>
     <TabGroup
         selectedTab={index}
-        class="flex w-full mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
+        class="flex mb-2 justify-around items-center bg-zinc-950 h-10 polygonR capitalize"
     >
         <Tab id={0} title="Colete">
             {#each data.armor as item}
@@ -87,8 +92,8 @@
                     <ItemPanel
                         iconClass="w-9 h-19 object-scale-down"
                         data={item}
-                        equipText = "Adicionar"
-                        unEquipText = "Remover"
+                        equipText="Adicionar"
+                        unEquipText="Remover"
                         bind:condition={item.isEquipped}
                         on:EquipItem={() =>
                             CharacterUtils.addItemToInventory(item)}
@@ -104,8 +109,8 @@
                     <ItemPanel
                         iconClass="w-9 h-19 object-scale-down"
                         data={item}
-                        equipText = "Adicionar"
-                        unEquipText = "Remover"
+                        equipText="Adicionar"
+                        unEquipText="Remover"
                         bind:condition={item.isEquipped}
                         on:EquipItem={() =>
                             CharacterUtils.addItemToInventory(item)}
@@ -147,7 +152,7 @@
             </TabGroup>
         </Tab>
         <Tab id={3} title="Criar Item">
-            <div>
+            <div class="w-[45rem]">
                 <label class="flex flex-col">
                     Nome
                     <input
@@ -206,8 +211,8 @@
                 <button on:click={createItem} class="btn-success"
                     >Criar Item</button
                 >
-            </div></Tab
-        >
+            </div>
+        </Tab>
         <Tab id={4} title="Criar Arma">
             <div>
                 <div class="flex flex-col">
@@ -314,15 +319,27 @@
                                 bind:value={tempWeapon.icon}
                                 class="p-1 w-52 h-10 capitalize bg-zinc-950/50"
                             >
-                                <option value={weaponIcons.assaultRifle}>Rifle de Assalto</option>
-                                <option value={weaponIcons.submachineGun}>Submetralhadora</option>
-                                <option value={weaponIcons.shotGun}>Escopeta</option>
-                                <option value={weaponIcons.pistol}>Pistola</option>
-                                <option value={weaponIcons.sniperRifle}>Rifle de Precisão</option>
+                                <option value={weaponIcons.assaultRifle}
+                                    >Rifle de Assalto</option
+                                >
+                                <option value={weaponIcons.submachineGun}
+                                    >Submetralhadora</option
+                                >
+                                <option value={weaponIcons.shotGun}
+                                    >Escopeta</option
+                                >
+                                <option value={weaponIcons.pistol}
+                                    >Pistola</option
+                                >
+                                <option value={weaponIcons.sniperRifle}
+                                    >Rifle de Precisão</option
+                                >
                                 <option value={weaponIcons.lmg}>LMG</option>
                                 <option value={weaponIcons.axe}>Machado</option>
                                 <option value={weaponIcons.knife}>Faca</option>
-                                <option value={weaponIcons.baton}>Bastão Retátil</option>
+                                <option value={weaponIcons.baton}
+                                    >Bastão Retátil</option
+                                >
                                 <option value={weaponIcons.punch}>Soco</option>
                             </select>
                         </label>
