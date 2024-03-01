@@ -105,6 +105,9 @@
     });
 
     function onSelectCover() {
+        if(CharacterUtils.equipadedItems().includes(data.defaults.equipments.armor[2]))
+            return
+
         const coverBonuses = {
             heavy: 3,
             medium: 2,

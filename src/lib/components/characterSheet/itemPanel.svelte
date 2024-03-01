@@ -11,7 +11,7 @@
     export let iconClass = "";
     export let condition = false;
     export let equipText = "Equipar";
-    export let UnEquipText = "Desequipar";
+    export let unEquipText = "Desequipar";
 
     let textToShow = equipItem;
 
@@ -50,7 +50,7 @@
                         class={`${
                             data.isEquipped ? "btn-error" : "btn-success"
                         } transition-all`}
-                        >{data.isEquipped ? UnEquipText : equipText}</button
+                        >{data.isEquipped ? unEquipText : equipText}</button
                     >
                 {/if}
                 <slot />

@@ -23,7 +23,7 @@ const content: IItem[] = [
         icon:"https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons/Armor/Armor_Icon_2.webp",
         name: "Colete Pesado",
         description:
-            "Garante 5 pontos de defesa, aumenta seu HP em +2 e diminui o deslocamento em -3",
+            "Garante 5 pontos de defesa, aumenta seu HP em +2 e diminui o deslocamento em -3 e você não recebe Bônus de GA de nem uma cobertura exceto os bônus do escudo balístico",
         attToModify:{ "def": 5, "hp": 2, "speed": -3 }
     },
 ]

@@ -87,6 +87,8 @@
                     <ItemPanel
                         iconClass="w-9 h-19 object-scale-down"
                         data={item}
+                        equipText = "Adicionar"
+                        unEquipText = "Remover"
                         bind:condition={item.isEquipped}
                         on:EquipItem={() =>
                             CharacterUtils.addItemToInventory(item)}
@@ -102,6 +104,8 @@
                     <ItemPanel
                         iconClass="w-9 h-19 object-scale-down"
                         data={item}
+                        equipText = "Adicionar"
+                        unEquipText = "Remover"
                         bind:condition={item.isEquipped}
                         on:EquipItem={() =>
                             CharacterUtils.addItemToInventory(item)}
