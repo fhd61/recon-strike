@@ -368,7 +368,6 @@
                                 data={item}
                                 bg="bg-zinc-900"
                                 iconClass="w-9"
-                                bind:condition={item.isEquipped}
                                 on:EquipItem={() =>
                                     CharacterUtils.equipItem(item)}
                                 on:UnEquipItem={() =>
