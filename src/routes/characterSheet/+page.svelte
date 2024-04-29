@@ -11,6 +11,7 @@
     import Ability from "$lib/components/characterSheet/ability.svelte";
     import {
         CharacterSheet as Character,
+        EAttribute,
         type ICharacter,
     } from "$lib/store/character";
     import { onDestroy, onMount } from "svelte";
@@ -215,6 +216,9 @@
                                         {$Character.skills[0].name}
                                     </p>
                                     <HpBar
+                                        on:hpInZero={() => {
+                                            CharacterUtils.removeBonusOfAttribute(EAttribute.ga, $Character.skills[0].name)
+                                        }}
                                         isChar={false}
                                         bind:data={$Character.skills[0].hp}
                                     />
@@ -228,6 +232,9 @@
                                         {$Character.skills[1].name}
                                     </p>
                                     <HpBar
+                                        on:hpInZero={() => {
+                                            CharacterUtils.removeBonusOfAttribute(EAttribute.ga, $Character.skills[1].name)
+                                        }}
                                         isChar={false}
                                         bind:data={$Character.skills[1].hp}
                                     />
