@@ -1,15 +1,13 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import type { ICharacter } from "$lib/store/character";
-    import type { SupabaseClient } from "@supabase/supabase-js";
-    import { createEventDispatcher, getContext } from "svelte";
+    import { CharacterUtils } from "$lib/utils.js";
+    import { createEventDispatcher } from "svelte";
 
     export let data: ICharacter;
     export let index: number;
 
-
-    const dispatcher = createEventDispatcher()
-    const dbClient: SupabaseClient = getContext("dbClient");
+    const dispatcher = createEventDispatcher();
 
     function LoadChar() {
         localStorage.setItem("character", JSON.stringify(data));
@@ -18,25 +16,13 @@
         goto("/characterSheet");
     }
 
-    async function DeleteChar() {
-        const { data: dbChar, error: err } = await dbClient
-            .from("cloud_save")
-            .select("json");
+    function DeleteChar() {
+        CharacterUtils.deleteLocalCharacter(index);
+        dispatcher("characterDeleted");
+    }
 
-        if (err) {
-            console.log(err);
-            return;
-        }
-
-        const charArr = JSON.parse(dbChar[0].json) as ICharacter[];
-
-        charArr.splice(index, 1)
-
-        await dbClient
-            .from("cloud_save")
-            .upsert([{ json: [JSON.stringify(charArr)] }]);
-        
-        dispatcher("characterDeleted")
+    function DownloadChar() {
+        CharacterUtils.exportCharToFile(data);
     }
 </script>
 
@@ -64,5 +50,8 @@
         </div>
     </button>
 
-    <button on:click={DeleteChar} class="btn-error">Deletar</button>
+    <div class="flex gap-2 mt-2">
+        <button on:click={DeleteChar} class="btn-error">Deletar</button>
+        <button on:click={DownloadChar} class="btn-success">Baixar</button>
+    </div>
 </div>

@@ -1,12 +1,11 @@
 <script lang="ts">
     import type { IDossier } from "$lib/types/interface/IDossier";
-    import { v4 as uuidv4 } from "uuid";
-    import type { Session, SupabaseClient } from "@supabase/supabase-js";
     import Icon from "@iconify/svelte";
     import callSingGenerator from "$lib/callSingGenerator";
     import nameGenerator from "$lib/nameGenerator";
     import { CharacterSheet, type ICharacter } from "$lib/store/character";
-    import { createEventDispatcher, getContext } from "svelte";
+    import { CharacterUtils } from "$lib/utils.js";
+    import { createEventDispatcher } from "svelte";
 
     let dossier: IDossier = {
         name: "",
@@ -19,34 +18,19 @@
 
     export let arrLength = 0;
     export const dispatcher = createEventDispatcher();
-    export let dbClient: {
-        session: Session | null;
-        supabase: SupabaseClient<any, "public", any>;
-    };
 
     let inputFile: HTMLInputElement;
     let portraitUrl = "";
-    let noImage =
-        "https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/avatars/Placeholder/noImage.png";
+    let noImage = "";
 
     $: portraitUrl = dossier.portrait;
 
-    async function uploadImgToStorage(file: File) {
-        const fileName = uuidv4().toString() + file.type.split("/")[1];
-        const { data } = await dbClient.supabase.auth.getUser();
-
-        const path = data.user?.id + "/" + fileName;
-
-        await dbClient.supabase.storage.from("avatars").upload(path, file);
-
-        const url = await dbClient.supabase.storage
-            .from("avatars")
-            .getPublicUrl(path);
-
-        dossier.portrait = url.data.publicUrl;
-        console.log(portraitUrl);
-
-        return url;
+    function uploadImgLocally(file: File) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            dossier.portrait = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
     }
 
     function create() {
@@ -55,8 +39,12 @@
         localStorage.setItem("character", JSON.stringify($CharacterSheet));
         localStorage.setItem("index", JSON.stringify(arrLength));
 
+        // Save to local character list
+        const chars = CharacterUtils.getLocalCharacters();
+        chars.push($CharacterSheet);
+        CharacterUtils.saveLocalCharacters(chars);
+
         dispatcher("createClicked");
-        console.log(dossier);
     }
 
     function genName() {
@@ -84,7 +72,7 @@
                 accept="image/png, image/jpg, image/webp"
                 bind:this={inputFile}
                 on:change={() => {
-                    uploadImgToStorage(inputFile.files[0]);
+                    if (inputFile.files?.[0]) uploadImgLocally(inputFile.files[0]);
                 }}
             />
         </button>

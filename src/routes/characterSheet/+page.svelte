@@ -63,8 +63,7 @@
         | "edit_Weapon" = "dossier";
     let coverSelected: "heavy" | "medium" | "light" | "none" = "none";
     let coverHp: IHp = { maxValue: 30, currentValue: 30, bonus: {} };
-    let saveDbInterval: string | number | NodeJS.Timeout | undefined;
-    let saveInterval: string | number | NodeJS.Timeout | undefined;
+    let saveInterval: ReturnType<typeof setInterval> | undefined;
 
     let unique = {};
     function restart() {
@@ -93,16 +92,10 @@
         }
 
         saveInterval = setInterval(CharacterUtils.saveToLocalStorage, 3000);
-
-        saveDbInterval = setInterval(
-            () => CharacterUtils.saveOnDb(data.supabase),
-            10000,
-        );
     });
 
     onDestroy(() => {
         clearInterval(saveInterval);
-        clearInterval(saveDbInterval);
     });
 
     function onSelectCover() {
@@ -540,10 +533,7 @@
 
 <Modal bind:showModal on:ModalClose={restart}>
     {#if modalToShow === "dossier"}
-        <Dossier
-            dbClient={{ session: data.session, supabase: data.supabase }}
-            bind:dossier={$Character.dossier}
-        />
+        <Dossier bind:dossier={$Character.dossier} />
     {:else if modalToShow === "settings"}
         <Settings />
     {:else if modalToShow === "inv_talents"}

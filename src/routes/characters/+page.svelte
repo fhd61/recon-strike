@@ -4,46 +4,51 @@
     import Modal from "$lib/components/modal.svelte";
     import CreateChar from "$lib/components/modals/createChar.svelte";
     import type { ICharacter } from "$lib/store/character.js";
-    import { onMount, setContext } from "svelte";
-    export let data;
-
-    let { supabase } = data;
-    $: ({ supabase } = data);
+    import { CharacterUtils } from "$lib/utils.js";
+    import { onMount } from "svelte";
 
     let characters: ICharacter[] = [];
     let reRender = false;
     let showModal = false;
+    let fileInput: HTMLInputElement;
 
     onMount(() => {
         getRows();
     });
 
-    async function getRows() {
-        let res = await supabase
-            .from("cloud_save")
-            .select()
-            .eq("user_id", data.session?.user.id);
-
-        const charJson = res.data[0].json;
-
-        if (charJson === null) return;
-
-        characters = JSON.parse(charJson) as ICharacter[];
-
-        for (let index = 0; index < characters.length; index++) {
-            if (characters[index] === null || characters[index] === undefined)
-                characters.splice(index, 1);
-        }
+    function getRows() {
+        characters = CharacterUtils.getLocalCharacters();
     }
 
-    setContext("dbClient", data.supabase);
+    async function importChar() {
+        const file = fileInput.files?.[0];
+        if (!file) return;
+
+        try {
+            const char = await CharacterUtils.importCharFromFile(file);
+            characters.push(char);
+            CharacterUtils.saveLocalCharacters(characters);
+            reRender = !reRender;
+        } catch (err) {
+            console.error(err);
+        }
+
+        fileInput.value = "";
+    }
 </script>
 
 <div class="flex flex-col text-white">
     <div class="flex justify-end mt-2">
-        <form action="/logout" method="post">
-            <button class="btn-error">Logout</button>
-        </form>
+        <button class="btn-success mx-2" on:click={() => fileInput.click()}
+            >Importar Personagem</button
+        >
+        <input
+            type="file"
+            accept=".json"
+            bind:this={fileInput}
+            class="hidden"
+            on:change={importChar}
+        />
         <button class="btn-success mx-2" on:click={() => (showModal = true)}
             >Criar Personagem</button
         >
@@ -52,12 +57,17 @@
         {#each characters as char, index}
             <CharacterSelector
                 on:characterDeleted={() => {
-                    reRender = true;
+                    getRows();
                 }}
                 {index}
                 data={char}
             />
         {/each}
+        {#if characters.length === 0}
+            <p class="text-center w-full mt-8 opacity-50"
+                >Nenhum personagem encontrado. Crie ou importe um.</p
+            >
+        {/if}
     </div>
 </div>
 
@@ -67,6 +77,5 @@
         on:createClicked={() => {
             goto("/characterSheet");
         }}
-        dbClient={data}
     />
 </Modal>

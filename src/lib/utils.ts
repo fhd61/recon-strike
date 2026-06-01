@@ -4,7 +4,6 @@ import type { IItem } from "./types/interface/IItem";
 import type { IWeapon } from "./types/interface/IWeapon";
 import type { IBonus } from "./types/interface/IBonus";
 import type { ISkill } from "./types/interface/ISkill";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import type { IAttribute } from "./types/interface/IBaseAttribute";
 
 export class MathUtils {
@@ -199,39 +198,6 @@ export class CharacterUtils {
         localStorage.setItem("character", char);
     }
 
-    static async saveOnDb(dbClient: SupabaseClient) {
-        const { data: cloud_save, error: err } = await dbClient
-            .from("cloud_save")
-            .select("json")
-            .eq("user_id", (await dbClient.auth.getUser()).data.user?.id);
-        const index = localStorage.getItem("index")
-        const tempArr: ICharacter[] = [];
-        const charToSave = get(CharacterSheet)
-
-        if (err) {
-            console.log(err);
-            return;
-        }
-        if (cloud_save[0] == null) {
-            tempArr.push(charToSave);
-
-            await dbClient
-                .from("cloud_save")
-                .upsert([{ json: [JSON.stringify(tempArr)] }])
-                .select();
-            console.log(tempArr)
-        } else {
-            const charArr = JSON.parse(cloud_save[0].json) as ICharacter[];
-
-            charArr[Number.parseInt(index!)] = charToSave;
-
-            await dbClient
-                .from("cloud_save")
-                .upsert([{ json: [JSON.stringify(charArr)] }])
-                .select();
-        }
-    }
-
     static addTalentToChar(talent: IItem) {
         CharacterSheet.update((c) => {
             c.talents.push(talent);
@@ -299,5 +265,53 @@ export class CharacterUtils {
             .filter(item => item.isEquipped === true)
 
         return arr
+    }
+
+    static exportCharToFile(char?: ICharacter) {
+        const character = char || get(CharacterSheet);
+        const name = character.dossier.name || "character";
+        const blob = new Blob([JSON.stringify(character, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${name}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    static importCharFromFile(file: File): Promise<ICharacter> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const char = JSON.parse(e.target?.result as string) as ICharacter;
+                    resolve(char);
+                } catch {
+                    reject(new Error("Arquivo de personagem inválido"));
+                }
+            };
+            reader.onerror = () => reject(new Error("Falha ao ler o arquivo"));
+            reader.readAsText(file);
+        });
+    }
+
+    static getLocalCharacters(): ICharacter[] {
+        try {
+            const raw = localStorage.getItem("characters");
+            if (raw) return JSON.parse(raw) as ICharacter[];
+        } catch { /* empty */ }
+        return [];
+    }
+
+    static saveLocalCharacters(arr: ICharacter[]) {
+        localStorage.setItem("characters", JSON.stringify(arr));
+    }
+
+    static deleteLocalCharacter(index: number) {
+        const arr = this.getLocalCharacters();
+        if (index >= 0 && index < arr.length) {
+            arr.splice(index, 1);
+            this.saveLocalCharacters(arr);
+        }
     }
 }

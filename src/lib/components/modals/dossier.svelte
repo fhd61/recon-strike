@@ -1,39 +1,23 @@
 <script lang="ts">
     import type { IDossier } from "$lib/types/interface/IDossier";
-    import { v4 as uuidv4 } from "uuid";
-    import type { Session, SupabaseClient } from "@supabase/supabase-js";
     import Icon from "@iconify/svelte";
     import callSingGenerator from "$lib/callSingGenerator";
     import nameGenerator from "$lib/nameGenerator";
 
     export let dossier: IDossier;
-    export let dbClient: {
-        session: Session | null;
-        supabase: SupabaseClient<any, "public", any>;
-    };
 
     let inputFile: HTMLInputElement;
     let portraitUrl = dossier.portrait;
-    let noImage =
-        "https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/avatars/Placeholder/noImage.png";
+    let noImage = "";
 
     $: portraitUrl = dossier.portrait;
 
-    async function uploadImgToStorage(file: File) {
-        const fileName = uuidv4().toString() + file.type.split("/")[1];
-        const { data } = await dbClient.supabase.auth.getUser();
-
-        const path = data.user?.id + "/" + fileName;
-
-        await dbClient.supabase.storage.from("avatars").upload(path, file);
-
-        const url = await dbClient.supabase.storage
-            .from("avatars")
-            .getPublicUrl(path);
-
-        dossier.portrait = url.data.publicUrl;
-
-        return url;
+    function uploadImgLocally(file: File) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            dossier.portrait = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
     }
 
     function genName() {
@@ -62,9 +46,7 @@
                 accept="image/png, image/jpg, image/webp"
                 bind:this={inputFile}
                 on:change={() => {
-                    if (inputFile.files == null) return;
-
-                    uploadImgToStorage(inputFile.files[0]);
+                    if (inputFile.files?.[0]) uploadImgLocally(inputFile.files[0]);
                 }}
             />
         </div>

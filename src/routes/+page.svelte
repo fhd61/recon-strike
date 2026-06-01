@@ -2,14 +2,8 @@
     import { goto } from "$app/navigation";
     import typewriter from "$lib/animations/typewriter.js";
     import Logo from "$lib/components/logo.svelte";
-    import Icon from "@iconify/svelte";
     import { onMount } from "svelte";
-    import { fade, slide } from "svelte/transition";
-
-    export let data;
-
-    let { supabase } = data;
-    $: ({ supabase } = data);
+    import { fade } from "svelte/transition";
 
     let loadingTexts = [
         "",
@@ -26,16 +20,10 @@
             else textIndex++;
         }, 1300);
 
-        isLogged();
-    });
-
-    async function isLogged() {
-        if (data.session) {
+        setTimeout(() => {
             goto("/characters");
-        } else {
-            console.log("User is not logged in");
-        }
-    }
+        }, loadingTexts.length * 1300);
+    });
 </script>
 
 <svelte:head>
@@ -50,30 +38,11 @@
     <div class="flex flex-col justify-center items-center text-center">
         <Logo style="w-96 h-96" />
         <div class="h-16">
-            {#if textIndex === loadingTexts.length - 1}
-                <form action="/login" method="post">
-                    <button
-                        in:slide
-                        type="submit"
-                        class="flex justify-center items-center h-full w-72 p-1 bg-orange-600 polygonL hover:bg-orange-700 active:bg-orange-500 transition-all"
-                    >
-                        <Icon
-                            icon="ic:baseline-discord"
-                            width="52"
-                            class="mr-2"
-                        />
-                        <span class="font-semibold text-lg"
-                            >Login com Discord</span
-                        >
-                    </button>
-                </form>
-            {:else}
-                {#key textIndex}
-                    <p in:typewriter={{speed: 30}} class="text-lg h-full">
-                        {loadingTexts[textIndex]}
-                    </p>
-                {/key}
-            {/if}
+            {#key textIndex}
+                <p in:typewriter={{speed: 30}} class="text-lg h-full">
+                    {loadingTexts[textIndex]}
+                </p>
+            {/key}
         </div>
     </div>
 </div>
