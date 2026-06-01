@@ -10,10 +10,7 @@
     const dispatcher = createEventDispatcher();
 
     function LoadChar() {
-        localStorage.setItem("character", JSON.stringify(data));
-        localStorage.setItem("index", index.toString());
-
-        goto("/characterSheet");
+        goto(`/characterSheet?index=${index}`);
     }
 
     function DeleteChar() {
@@ -37,6 +34,7 @@
                 height="192"
                 src={data.dossier.portrait}
                 alt=""
+                on:error={(e) => (e.target.src = "/placeholder-portrait.svg")}
             />
             <div class="text-left mt-4">
                 <p class="text-lg">Nome: {data.dossier.name}</p>

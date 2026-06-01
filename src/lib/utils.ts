@@ -193,9 +193,16 @@ export class CharacterUtils {
         return JSON.stringify(char);
     }
 
-    static saveToLocalStorage() {
+    static saveToLocalStorage(charIndex?: number) {
         const char = CharacterUtils.serializedChar();
         localStorage.setItem("character", char);
+        if (charIndex !== undefined) {
+            const chars = CharacterUtils.getLocalCharacters();
+            if (charIndex >= 0 && charIndex < chars.length) {
+                chars[charIndex] = get(CharacterSheet);
+                CharacterUtils.saveLocalCharacters(chars);
+            }
+        }
     }
 
     static addTalentToChar(talent: IItem) {
@@ -219,7 +226,7 @@ export class CharacterUtils {
         if (rawData) {
             const char = JSON.parse(rawData) as ICharacter
 
-            return char
+            return this.fixIconUrls(char)
         }
         else
             throw new Error("Character not found, or invalid")
@@ -285,7 +292,7 @@ export class CharacterUtils {
             reader.onload = (e) => {
                 try {
                     const char = JSON.parse(e.target?.result as string) as ICharacter;
-                    resolve(char);
+                    resolve(this.fixIconUrls(char));
                 } catch {
                     reject(new Error("Arquivo de personagem inválido"));
                 }
@@ -295,10 +302,32 @@ export class CharacterUtils {
         });
     }
 
+    private static SUPABASE_ICONS = "https://uhsavcywrzkrmgossgif.supabase.co/storage/v1/object/public/icons";
+
+    static fixIconUrls<T>(value: T): T {
+        if (typeof value === "string") {
+            if (value.startsWith(this.SUPABASE_ICONS)) {
+                return ("/" + value.slice(this.SUPABASE_ICONS.length)) as T;
+            }
+            return value;
+        }
+        if (Array.isArray(value)) {
+            return value.map(v => this.fixIconUrls(v)) as T;
+        }
+        if (value && typeof value === "object") {
+            const result: Record<string, unknown> = {};
+            for (const key of Object.keys(value as Record<string, unknown>)) {
+                result[key] = this.fixIconUrls((value as Record<string, unknown>)[key]);
+            }
+            return result as T;
+        }
+        return value;
+    }
+
     static getLocalCharacters(): ICharacter[] {
         try {
             const raw = localStorage.getItem("characters");
-            if (raw) return JSON.parse(raw) as ICharacter[];
+            if (raw) return (JSON.parse(raw) as ICharacter[]).map(c => this.fixIconUrls(c));
         } catch { /* empty */ }
         return [];
     }
@@ -312,6 +341,21 @@ export class CharacterUtils {
         if (index >= 0 && index < arr.length) {
             arr.splice(index, 1);
             this.saveLocalCharacters(arr);
+        }
+    }
+
+    static charToShareUrl(char: ICharacter): string {
+        const json = JSON.stringify(char);
+        const base64 = btoa(unescape(encodeURIComponent(json)));
+        return `${location.origin}/characters?char=${base64}`;
+    }
+
+    static parseShareParam(param: string): ICharacter | null {
+        try {
+            const json = decodeURIComponent(escape(atob(param)));
+            return JSON.parse(json) as ICharacter;
+        } catch {
+            return null;
         }
     }
 }

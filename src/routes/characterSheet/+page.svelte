@@ -34,6 +34,8 @@
     import Ca from "$lib/components/characterSheet/stats/ca.svelte";
     import Def from "$lib/components/characterSheet/stats/def.svelte";
     import { CharacterUtils } from "$lib/utils.js";
+    import { goto } from "$app/navigation";
+    import { page } from "$app/stores";
     import ModsList from "$lib/components/modals/modsList.svelte";
     import type { IWeapon } from "$lib/types/interface/IWeapon.js";
     import WeaponPanel from "$lib/components/characterSheet/weaponPanel.svelte";
@@ -78,20 +80,36 @@
         turnCount = 0;
     });
 
-    onMount(() => {
+    let charIndex: number | undefined;
+
+    $: loadCharacter($page.url.searchParams.get("index"));
+
+    function loadCharacter(idxParam: string | null) {
+        if (idxParam !== null) {
+            const idx = parseInt(idxParam, 10);
+            const chars = CharacterUtils.getLocalCharacters();
+            if (!isNaN(idx) && idx >= 0 && idx < chars.length) {
+                charIndex = idx;
+                Character.set(chars[idx]);
+                return;
+            }
+        }
+        charIndex = undefined;
         const serializeChar = localStorage.getItem("character");
         if (serializeChar) {
             try {
                 const parsedJson = JSON.parse(serializeChar);
                 if (parsedJson !== undefined) {
-                    Character.set(parsedJson as ICharacter);
+                    Character.set(CharacterUtils.fixIconUrls(parsedJson as ICharacter));
                 }
             } catch (e) {
                 console.error("Error parsing character from localStorage:", e);
             }
         }
+    }
 
-        saveInterval = setInterval(CharacterUtils.saveToLocalStorage, 3000);
+    onMount(() => {
+        saveInterval = setInterval(() => CharacterUtils.saveToLocalStorage(charIndex), 3000);
     });
 
     onDestroy(() => {
@@ -513,22 +531,46 @@
 <div
     class="w-full h-[4.5vh] bg-black text-white flex items-center justify-between p-2"
 >
-    <button
-        class="bg-[#f86b10]/80 w-32 h-8 polygonR font-semibold transition-all active:bg-[#f86b10]"
-        on:click={() => {
-            showModal = true;
-            modalToShow = "dossier";
-        }}>Dossier</button
-    >
-    <button
-        class="bg-[#f86b10]/80 w-8 h-8 polygonL font-semibold transition-all active:bg-[#f86b10]"
-        on:click={() => {
-            showModal = true;
-            modalToShow = "settings";
-        }}
-    >
-        <Icon icon="codicon:debug-console" class="translate-x-1" width={23} />
-    </button>
+    <div class="flex gap-2">
+        <button
+            class="bg-zinc-700 w-20 h-8 polygonR transition-all active:bg-zinc-600"
+            on:click={() => goto("/characters")}
+        >
+            Voltar
+        </button>
+        <button
+            class="bg-[#f86b10]/80 w-24 h-8 polygonR font-semibold transition-all active:bg-[#f86b10]"
+            on:click={() => {
+                showModal = true;
+                modalToShow = "dossier";
+            }}>Dossier</button
+        >
+    </div>
+    <div class="flex gap-2">
+        <button
+            class="bg-zinc-700 w-32 h-8 polygonR transition-all active:bg-zinc-600"
+            on:click={async () => {
+                const url = CharacterUtils.charToShareUrl($Character);
+                try {
+                    await navigator.clipboard.writeText(url);
+                    toast.push("Link copiado!");
+                } catch {
+                    prompt("Copie o link:", url);
+                }
+            }}
+        >
+            Compartilhar
+        </button>
+        <button
+            class="bg-[#f86b10]/80 w-8 h-8 polygonL font-semibold transition-all active:bg-[#f86b10]"
+            on:click={() => {
+                showModal = true;
+                modalToShow = "settings";
+            }}
+        >
+            <Icon icon="codicon:debug-console" class="translate-x-1" width={23} />
+        </button>
+    </div>
 </div>
 
 <Modal bind:showModal on:ModalClose={restart}>

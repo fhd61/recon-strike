@@ -3,7 +3,7 @@
     import Icon from "@iconify/svelte";
     import callSingGenerator from "$lib/callSingGenerator";
     import nameGenerator from "$lib/nameGenerator";
-    import { CharacterSheet, type ICharacter } from "$lib/store/character";
+    import type { ICharacter } from "$lib/store/character";
     import { CharacterUtils } from "$lib/utils.js";
     import { createEventDispatcher } from "svelte";
 
@@ -16,12 +16,11 @@
         notes: "",
     };
 
-    export let arrLength = 0;
     export const dispatcher = createEventDispatcher();
 
     let inputFile: HTMLInputElement;
     let portraitUrl = "";
-    let noImage = "";
+    let noImage = "/placeholder-portrait.svg";
 
     $: portraitUrl = dossier.portrait;
 
@@ -34,17 +33,28 @@
     }
 
     function create() {
-        $CharacterSheet.dossier = dossier;
+        const newChar: ICharacter = {
+            dossier: { ...dossier },
+            attributes: {
+                hp: { currentValue: 1, maxValue: 1, bonus: {} },
+                agi: { id: "agi", name: "Agility", shortName: "agi", value: 1, bonus: {} },
+                int: { id: "int", name: "Intelligence", shortName: "int", value: 1, bonus: {} },
+                for: { id: "for", name: "Force", shortName: "for", value: 1, bonus: {} },
+                vig: { id: "agi", name: "Vigor", shortName: "vig", value: 1, bonus: {} },
+                def: { id: "def", name: "Defense", shortName: "def", value: 0, bonus: {} },
+                speed: { id: "speed", name: "Speed", shortName: "speed", value: 9, bonus: {} },
+                ga: { id: "ga", name: "ga", shortName: "ac", value: 0, bonus: {}, use: "agi" },
+            },
+            skills: [],
+            inventory: { equipments: [], weapons: [] },
+            talents: [],
+        };
 
-        localStorage.setItem("character", JSON.stringify($CharacterSheet));
-        localStorage.setItem("index", JSON.stringify(arrLength));
-
-        // Save to local character list
         const chars = CharacterUtils.getLocalCharacters();
-        chars.push($CharacterSheet);
+        chars.push(newChar);
         CharacterUtils.saveLocalCharacters(chars);
 
-        dispatcher("createClicked");
+        dispatcher("createClicked", { index: chars.length - 1 });
     }
 
     function genName() {
@@ -59,6 +69,7 @@
             src={portraitUrl ? portraitUrl : noImage}
             class="w-80 h-72 polygon object-scale-downF"
             alt=""
+            on:error={(e) => (e.target.src = "/placeholder-portrait.svg")}
         />
         <button
             on:click={() => inputFile.click()}

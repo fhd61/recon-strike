@@ -20,7 +20,7 @@
     <summary class="flex justify-between items-center p-1">
         <div class="flex items-center">
             {#if icon}
-                <img src={icon} class={iconClass} alt="" />
+                <img src={icon} class={iconClass} alt="" on:error={(e) => (e.target.style.display = "none")} />
             {/if}
             <p class="ml-2">{label}</p>
         </div>

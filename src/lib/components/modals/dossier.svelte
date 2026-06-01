@@ -8,7 +8,7 @@
 
     let inputFile: HTMLInputElement;
     let portraitUrl = dossier.portrait;
-    let noImage = "";
+    let noImage = "/placeholder-portrait.svg";
 
     $: portraitUrl = dossier.portrait;
 
@@ -32,6 +32,7 @@
             src={portraitUrl ? portraitUrl : noImage}
             class="w-80 h-72 polygon"
             alt=""
+            on:error={(e) => (e.target.src = "/placeholder-portrait.svg")}
         />
         <div
             class="bg-zinc-700 hover:bg-orange-600 mt-2 p-1 text-center polygonR transition-all"

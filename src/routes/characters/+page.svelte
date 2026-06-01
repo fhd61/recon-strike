@@ -6,14 +6,23 @@
     import type { ICharacter } from "$lib/store/character.js";
     import { CharacterUtils } from "$lib/utils.js";
     import { onMount } from "svelte";
+    import { page } from "$app/stores";
 
     let characters: ICharacter[] = [];
-    let reRender = false;
     let showModal = false;
     let fileInput: HTMLInputElement;
 
     onMount(() => {
         getRows();
+        const shareParam = $page.url.searchParams.get("char");
+        if (shareParam) {
+            const char = CharacterUtils.parseShareParam(shareParam);
+            if (char) {
+                characters = [...characters, char];
+                CharacterUtils.saveLocalCharacters(characters);
+            }
+            history.replaceState({}, "", "/characters");
+        }
     });
 
     function getRows() {
@@ -26,9 +35,8 @@
 
         try {
             const char = await CharacterUtils.importCharFromFile(file);
-            characters.push(char);
+            characters = [...characters, char];
             CharacterUtils.saveLocalCharacters(characters);
-            reRender = !reRender;
         } catch (err) {
             console.error(err);
         }
@@ -36,6 +44,10 @@
         fileInput.value = "";
     }
 </script>
+
+<svelte:head>
+    <title>SHD</title>
+</svelte:head>
 
 <div class="flex flex-col text-white">
     <div class="flex justify-end mt-2">
@@ -73,9 +85,8 @@
 
 <Modal bind:showModal>
     <CreateChar
-        arrLength={characters.length}
-        on:createClicked={() => {
-            goto("/characterSheet");
+        on:createClicked={(e) => {
+            goto(`/characterSheet?index=${e.detail.index}`);
         }}
     />
 </Modal>
