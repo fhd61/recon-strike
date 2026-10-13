@@ -1,45 +1,39 @@
-## A fazer
+# Recon Strike
 
-### Talentos e Items/Equipamentos
+Character sheet manager for a tactical tabletop RPG (inspired by **The Division** franchase). It lets you create, import, export and play with your sheets, including a combat system, talents, skills and inventory.
 
-- [x] Importa a lista deles do banco de dados 
-- [x] Implementar os modificadores
-- [X] Equipar mods nas armas
-- [x] Equipar taletos nas armas
-- [X] Menu para criar items e armas 
-- [x] Importa a armas corpo a corpo 
-- [ ] Menu para editar os items **(Seria legal)**
-- [x] Fazer as rolagens de arma usarem os mods e os talentos
+## Screenshots
 
-### Habilidades
+![Character sheet](media/character-sheet.png)
+![Character list](media/character-list.png)
 
-- [x] Importa a lista deles do banco de dados 
-- [x] Importa os upgrades 
-- [x] Sistema de cooldown 
-- [x] Menu para trocar as Habilidades 
-- [x] Mostar barra de vida da skill 
-- [x] Importar os upgrades
+## Features
 
-### Sistema de combate
+- **Characters**: create, import, download (JSON) and delete sheets
+- **Talents & Items/Equipment**: imported from the database, with modifiers, equippable on weapons, and weapon rolls that use mods/talents
+- **Skills**: database-backed skill list, upgrades, cooldown system and skill swapping
+- **Combat system**: enter/leave combat mode, turns and a cover system
 
-- [x] Entrar e sair do modo de combate 
-- [x] Passar turnos
-- [x] Sistema de cover
-- [ ] Buffs e debuffs **(Talvez vai de base)**
+## Tech Stack
 
-### Save na nuvem
+- [SvelteKit](https://kit.svelte.dev/) + TypeScript
+- [Tailwind CSS](https://tailwindcss.com/) + [shadcn-svelte](https://www.shadcn-svelte.com/) (bits-ui)
+- [Vercel](https://vercel.com/) (deployment)
 
-- [x] Login e logout 
-- [x] Enviar um personagem da nuvem
-- [x] Baixar e carregar um personagem da nuvem
-- [x] Mais de um personagem por conta **(Seria legal)**
-- [x] Poder baixar o json do personagem
+## Running the project
 
-### Modo Stream **(Seria legal)**
+Requirements: Node.js >= 18
 
-- [ ] Pagina com o hud do personagem
-- [ ] Ser acessível sem esta logado com a conta dona do personagem
-- [ ] Mostrar rolagem mais recente
-- [ ] Atualizar em realtime
+```bash
+# install dependencies
+npm install
 
----
+# start dev environment
+npm run dev
+
+# production build
+npm run build
+
+# preview the build
+npm run preview
+```
