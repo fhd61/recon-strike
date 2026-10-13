@@ -1,4 +1,4 @@
-# Recon Strike
+<img src="media/banner.png" width="836"></img>
 
 Character sheet manager for a tactical tabletop RPG (inspired by **The Division** franchase). It lets you create, import, export and play with your sheets, including a combat system, talents, skills and inventory.
 
